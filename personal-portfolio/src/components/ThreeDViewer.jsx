@@ -1,7 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Lightformer, useGLTF } from '@react-three/drei'
-import gearsModel from '../assets/gears.glb'
 import * as THREE from 'three'
 
 function useGearMaterials () {
@@ -123,7 +122,7 @@ export default function ThreeDViewer () {
         <ambientLight intensity = { .5 }/>
         <directionalLight position = { [10, 10, 10] } intensity = { 16 }/>
         <Suspense fallback = { null }>
-          <Model modelPath = { gearsModel }/>
+            <Model modelPath = '/gears.glb'/>
         </Suspense>
       </Canvas>
     </div>
