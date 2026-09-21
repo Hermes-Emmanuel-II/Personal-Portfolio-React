@@ -518,6 +518,8 @@
 }
 
 @media (max-width: 600px) {
+    body { margin-inline: 1rem; }
+
                         .status { display: none; }
 
                             .inter span { font-size: 5.5rem; }
