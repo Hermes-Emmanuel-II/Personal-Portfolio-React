@@ -213,7 +213,7 @@
 
                                 #hero .quick button svg { display: none; }
 
-                            .inter span { font-size: 6.5rem; }
+                            .inter span { font-size: 6rem; }
 
                     #work, #about, #contact { margin-inline: 0; }
 
@@ -518,11 +518,13 @@
 }
 
 @media (max-width: 600px) {
-    body { margin-inline: 1rem; }
+    html { font-size: .675rem; }
 
-                        .status { display: none; }
+        body { margin-inline: 34.15px; }
 
-                            .inter span { font-size: 5.5rem; }
+                            .status { display: none; }
+
+                                .inter span { font-size: 5rem; }
 }
 
 @media (max-width: 550px) {

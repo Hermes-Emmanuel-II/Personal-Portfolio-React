@@ -27,9 +27,7 @@
         --fs-1-3: 1rem; /* Body sm */
         --fs-1-4: .75rem; /* Body xsm */
 
-        --fs-2-1: 7.5rem; /* Trans-section text */
-        --fs-2-2: 3rem; /* Header lg */
-        --fs-2-3: 2rem; /* Header md */
+        --fs-2-1: 7rem; /* Trans-section text */
 
         --gradient: linear-gradient(to right,
             pink,
