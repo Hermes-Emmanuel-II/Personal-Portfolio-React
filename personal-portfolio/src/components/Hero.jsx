@@ -51,17 +51,17 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
 
         let last = null
         function publish () {
+            if (visible) return
             const width = cta.getBoundingClientRect().width
             if (!width || width === last) return
             last = width
             host.style.setProperty('--cta-w', `${ width }px`)
         }
-
         publish()
         const observer = new ResizeObserver(publish)
         observer.observe(cta)
         return () => observer.disconnect()
-    }, [])
+    }, [visible])
 
      function handleDownload () {
         const link = document.createElement('a')

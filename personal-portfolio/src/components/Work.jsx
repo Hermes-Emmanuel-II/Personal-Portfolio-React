@@ -25,6 +25,11 @@ export function SectionHeader (props) {
     return <div className = 'section-header'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
 }
 
+function withDesktopPreview (src) {
+    const url = `https://${ src }`
+    return url + (url.includes('?') ? '&' : '?') + 'desktopPreview'
+}
+
 export default function Work ({ onOpenRecents }) {
     const stack = [
         { icon: blender, text: 'Blender' },
@@ -45,7 +50,7 @@ export default function Work ({ onOpenRecents }) {
         {
             title: 'Personal Portfolio',
             text: '<p><span>You are here!</span> E&shy;ssen&shy;tia&shy;lly has all of my public pro&shy;fe&shy;ssio&shy;nal data.</p>',
-            src: 'portfolio-html-css-javascript-silk.vercel.app',
+            src: 'personal-portfolio-react-lime.vercel.app/',
             figma: '',
             notes: '<p>Tools employed include <span>HTML5</span> + <span>CSS3</span> + <span>React JavaScript</span>. <span>Git</span> for version control. <span>Blender</span> and <span>Three.js</span> for 3D asset in hero section. Demonstrated understanding of <a href = "https://en.wikipedia.org/wiki/React_(software)#Hooks" target = "_blank">hooks</a>, <a href = "https://en.wikipedia.org/wiki/Routing" target = "_blank">routing</a>, and complex styling such as <a href = "https://en.wikipedia.org/wiki/Mask_(computing)" target = "_blank">mask subtraction</a>, and <a href = "https://en.wikipedia.org/wiki/Filter_(graphics)" target = "_blank">glass filters</a>.</p>',
             github: 'personal-portfolio',
@@ -313,7 +318,7 @@ export default function Work ({ onOpenRecents }) {
                                     <iframe
                                         key = { project.title }
                                         ref = { el => { iframeRefs.current[project.title] = el } }
-                                        src = { `https://${ project.src }` }
+                                        src = { withDesktopPreview(project.src) }
                                         frameBorder = '0'
                                         scrolling = 'no'
                                         className = 'in-h in-w'
