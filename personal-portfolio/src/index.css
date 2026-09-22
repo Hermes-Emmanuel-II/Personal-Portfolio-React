@@ -706,18 +706,18 @@
                                         transform: scale(-1, 1);
                                     }
 
-                                    #webgl-background-top {
+                                    .webgl-background-top {
                                         top: -6.375rem;
                                         left: 13.25rem;
                                     }
 
-                                    #webgl-background-bottom {
+                                    .webgl-background-bottom {
                                         bottom: -6.375rem;
                                         right: 13.25rem;
                                         transform: scaleY(-1);
                                     }
 
-                                            #webgl-background-bottom > div > div { position: relative; }
+                                            .webgl-background-bottom > div > div { position: relative; }
 
                                                 .gears-bg-layer canvas {
                                                     width: 100% !important;
@@ -1057,7 +1057,7 @@
                                     pointer-events: none;
                                 }
 
-                                    #aura {
+                                    .aura {
                                         height: 18.5rem;
                                         aspect-ratio: 2 / 1;
                                         z-index: -1;
@@ -1067,7 +1067,7 @@
                                         will-change: transform;
                                     }
 
-                                    #aura::before {
+                                    .aura::before {
                                         inset: 0;
                                         content: '';
                                         position: absolute;
@@ -1083,7 +1083,7 @@
                                         animation: aura 15s linear infinite;
                                     }
 
-                                    #hero-text {
+                                    .hero-text {
                                         max-width: 41.5rem;
                                         height: fit-content;
                                         align-self: center;
@@ -3922,7 +3922,7 @@
                                     pointer-events: none;
                                 }
 
-                                    #contact-aura {
+                                    .contact-aura {
                                         height: 18.5rem;
                                         aspect-ratio: 2 / 1;
                                         z-index: -1;
@@ -3932,7 +3932,7 @@
                                         will-change: transform;
                                     }
 
-                                    #contact-aura::before {
+                                    .contact-aura::before {
                                         inset: 0;
                                         content: '';
                                         position: absolute;
@@ -4004,9 +4004,9 @@
                                                 font-family: var(--font-1);
                                             }
 
-                                        #footer { padding-bottom: 1.5rem; }
+                                        .footer { padding-bottom: 1.5rem; }
 
-                                            #footer-logo {
+                                            .footer-logo {
                                                 width: 3rem;
                                                 height: 3rem;
                                                 background-size: contain;
@@ -4014,17 +4014,17 @@
                                                 background-repeat: no-repeat;
                                             }
 
-                                            #footer-text,
-                                            #footer-text span {
+                                            .footer-text,
+                                            .footer-text span {
                                                 color: var(--lum-2);
                                                 font-size: var(--fs-dsk-sm);
                                             }
 
-                                                #current-year { color: var(--lum-2); }
+                                                .current-year { color: var(--lum-2); }
 
-                                            #footer-socials { margin-left: auto; }
+                                            .footer-socials { margin-left: auto; }
 
-                                                #footer-socials a {
+                                                .footer-socials a {
                                                     width: 3.5rem;
                                                     height: 2.5rem;
                                                     display: block;
@@ -4032,17 +4032,17 @@
                                                     transition: color var(--tran-1) .25s, scale var(--tran-1) .25s;
                                                 }
 
-                                                #footer-socials a,
-                                                #footer-socials a * { cursor: pointer; }
+                                                .footer-socials a,
+                                                .footer-socials a * { cursor: pointer; }
 
-                                                    #footer-socials svg {
+                                                    .footer-socials svg {
                                                         width: 100%;
                                                         height: 100%;
                                                         transition: fill .25s ease .25s;
                                                     }
 
-                                                #footer-socials a:hover,
-                                                #footer-socials a:focus-visible {
+                                                .footer-socials a:hover,
+                                                .footer-socials a:focus-visible {
                                                     color: var(--lum-1);
                                                     scale: 1.125;
                                                 }
@@ -4275,7 +4275,7 @@
                                         #beyond > article:nth-child(2) > span {
                                             font-family: var(--font-2);
                                             font-size: var(--fs-1-2);
-                                            line-height: 1;
+                                            line-height: 1.25em;
                                         }
 
                                         #beyond > article:nth-child(2) .bar-x { background-color: var(--lum-2); }
@@ -4308,9 +4308,4 @@
                                                 margin-left: calc(1rem - var(--ring-halo));
                                                 right: 0;
                                                 bottom: 0;
-                                            }
-
-                                            .beyond-viewer .gears {
-                                                height: 5rem;
-                                                width: 5rem;
                                             }

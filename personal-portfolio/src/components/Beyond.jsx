@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 import { CompletionRing } from './About'
 import { useWidthCheck } from './Header'
 import { Bar } from './Hero'
-import ThreeDViewer from './ThreeDViewer'
 import color from '../color.js'
 
 import aftereffects from '../assets/external-icons/aftereffects.png'
@@ -296,7 +295,6 @@ export default function Beyond () {
                     ) : null }
                 </div>
                 <div className = 'center beyond-viewer gap-xlg'>
-                    { entries.length > 1 && currentEntry ? <ThreeDViewer/> : null }
                     <span className = 'center in-h'>{ currentEntry ? currentEntry.notes : null }</span>
                     { entries.length > 1 && currentEntry ? (
                         <CompletionRing key = { `${ currentIndex }-${ entryIndex }` } duration = { cycle } relative/>

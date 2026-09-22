@@ -157,9 +157,9 @@
 
                         body:has(.hamburger-menu.active) #hero { margin-top: calc(108px + 1.5rem); }
 
-                            body:has(.hamburger-menu.active) #aura { align-self: center; }
+                            body:has(.hamburger-menu.active) .aura { align-self: center; }
 
-                            body:has(.hamburger-menu.active) :is(#hero-text, .quick,                         .pin-spacer, #work, #about, #contact .section-header,                         #contact .content) { opacity: 0; }
+                            body:has(.hamburger-menu.active) :is(.hero-text, .quick,                         .pin-spacer, #work, #about, #contact .section-header,                         #contact .content) { opacity: 0; }
 
     /* HERO */
                         #hero {
@@ -172,7 +172,7 @@
                             margin-top: 0;
                         }
 
-                            #aura + .gears {
+                            .aura + .gears {
                                 position: absolute;
                                 width: 50vw;
                                 height: 50vw;
@@ -182,14 +182,14 @@
                                 opacity: .75;
                             }
 
-                            #hero-text {
+                            .hero-text {
                                 order: 3;
                                 max-width: none;
                                 text-align: left;
                             }
 
-                                #hero-text .main-heading,
-                                #hero-text .heading { align-items: flex-start; }
+                                .hero-text .main-heading,
+                                .hero-text .heading { align-items: flex-start; }
 
                                 .heading {
                                     min-width: var(--cta-w);
@@ -582,8 +582,10 @@
     /* HERO */
             #hero > div.center.quick.absolute { width: calc(218.56px + 2rem); }
 
+            #hero .gears { display: none; }
+
     /* CONTACT */
-                                        #footer-socials a {
+                                        .footer-socials a {
                                             width: 2.75rem;
                                             height: 2rem;
                                             padding-inline: .325rem;

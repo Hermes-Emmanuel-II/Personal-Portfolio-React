@@ -172,10 +172,10 @@ function GearsCanvas () {
 export default function GearsBackground () {
     return (
         <div className = 'gears-bg' aria-hidden = 'true'>
-            <div id = 'webgl-background-top' className = 'gears-bg-layer square'>
+            <div className = 'webgl-background-top gears-bg-layer square'>
                 <GearsCanvas/>
             </div>
-            <div id = 'webgl-background-bottom' className = 'gears-bg-layer square'>
+            <div className = 'webgl-background-bottom gears-bg-layer square'>
                 <GearsCanvas/>
             </div>
         </div>

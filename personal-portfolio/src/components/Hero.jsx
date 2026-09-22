@@ -73,9 +73,9 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
     }
 
     return <section id = 'hero' ref = { heroRef } className = 'center'>
-        <div id = 'aura' className = 'absolute'></div>
+        <div className = 'aura absolute'></div>
         <ThreeDViewer/>
-        <article id = 'hero-text' ref = { heroTextRef } className = 'column gap-lg'>
+        <article className = 'hero-text column gap-lg' ref = { heroTextRef }>
             <div className = 'main-heading emphasis column'>
                 <p className = 'gradient-text'>Frontend Developer</p>
                 <p className = 'gradient-text absolute'>Frontend Developer</p>
