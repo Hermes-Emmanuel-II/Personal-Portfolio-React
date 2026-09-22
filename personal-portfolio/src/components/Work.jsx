@@ -30,6 +30,20 @@ function withDesktopPreview (src) {
     return url + (url.includes('?') ? '&' : '?') + 'desktopPreview'
 }
 
+function useTabletUp () {
+    const query = '(min-width: 768px)'
+    const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+
+    useEffect(() => {
+        const mq = window.matchMedia(query)
+        const handleChange = (e) => setMatches(e.matches)
+        mq.addEventListener('change', handleChange)
+        return () => mq.removeEventListener('change', handleChange)
+    }, [])
+
+    return matches
+}
+
 export default function Work ({ onOpenRecents }) {
     const stack = [
         { icon: blender, text: 'Blender' },
@@ -52,6 +66,7 @@ export default function Work ({ onOpenRecents }) {
             text: '<p><span>You are here!</span> E&shy;ssen&shy;tia&shy;lly has all of my public pro&shy;fe&shy;ssio&shy;nal data.</p>',
             src: 'personal-portfolio-react-lime.vercel.app/',
             figma: '',
+            mobileImage: null,
             notes: '<p>Tools employed include <span>HTML5</span> + <span>CSS3</span> + <span>React JavaScript</span>. <span>Git</span> for version control. <span>Blender</span> and <span>Three.js</span> for 3D asset in hero section. Demonstrated understanding of <a href = "https://en.wikipedia.org/wiki/React_(software)#Hooks" target = "_blank">hooks</a>, <a href = "https://en.wikipedia.org/wiki/Routing" target = "_blank">routing</a>, and complex styling such as <a href = "https://en.wikipedia.org/wiki/Mask_(computing)" target = "_blank">mask subtraction</a>, and <a href = "https://en.wikipedia.org/wiki/Filter_(graphics)" target = "_blank">glass filters</a>.</p>',
             github: 'personal-portfolio',
             tags: 'site',
@@ -109,7 +124,7 @@ export default function Work ({ onOpenRecents }) {
     }, [inspectOpen])
 
     function refresh() {
-        if (!result[current]) return
+        if (!canLoadPreview || !result[current] || !requestedPreviews[result[current].title] || !inView) return
         const iframe = iframeRefs.current[result[current].title]
         const src = iframe.src
         iframe.src = 'about:blank'
@@ -196,6 +211,13 @@ export default function Work ({ onOpenRecents }) {
         observer.observe(el)
         return () => observer.disconnect()
     }, [])
+
+    const canLoadPreview = useTabletUp()
+
+    const [requestedPreviews, setRequestedPreviews] = useState({})
+    function requestPreview (title) {
+        setRequestedPreviews(prev => ({ ...prev, [title]: true }))
+    }
 
     return <section id = 'work' ref = { workRef } className = 'column center'>
         <SectionHeader symbol = '\\' title = 'work' />
@@ -314,17 +336,49 @@ export default function Work ({ onOpenRecents }) {
                         <section className = 'relative block in-h'>
                             <Trail once = { false } />
                             <div className = 'iframe-clip relative'>
-                                { result.map((project, index) => (
-                                    <iframe
-                                        key = { project.title }
-                                        ref = { el => { iframeRefs.current[project.title] = el } }
-                                        src = { withDesktopPreview(project.src) }
-                                        frameBorder = '0'
-                                        scrolling = 'no'
-                                        className = 'in-h in-w'
-                                        style = {{ display: index === current ? 'block' : 'none' }}
-                                    />
-                                )) }
+                                { result.map((project, index) => {
+                                    const isCurrent = index === current
+                                    const requested = !!requestedPreviews[project.title]
+                                    const isLive = canLoadPreview && requested && inView && isCurrent
+
+                                    if (!canLoadPreview) {
+                                        return <div
+                                            key = { project.title }
+                                            className = 'in-h in-w'
+                                            style = {{
+                                                display: isCurrent ? 'block' : 'none',
+                                                backgroundColor: 'var(--accent-1)',
+                                                ...(project.mobileImage ? {
+                                                    backgroundImage: `url(${ project.mobileImage })`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center'
+                                                } : {})
+                                            }}
+                                        />
+                                    }
+
+                                    return <div key = { project.title } className = 'relative in-h in-w' style = {{ display: isCurrent ? 'block' : 'none' }}>
+                                        <iframe
+                                            ref = { el => { iframeRefs.current[project.title] = el } }
+                                            src = { isLive ? withDesktopPreview(project.src) : 'about:blank' }
+                                            frameBorder = '0'
+                                            scrolling = 'no'
+                                            className = 'in-h in-w'
+                                        />
+                                        { !requested && (
+                                            <Glass
+                                                as = 'button'
+                                                type = 'button'
+                                                className = 'absolute in-h in-w center column gap-md relative preview-facade'
+                                                style = { project.figma ? { backgroundImage: `url(${ project.figma })`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined }
+                                                onClick = { () => requestPreview(project.title) }
+                                                tabIndex = { inView ? 0 : -1 } data-keep-tabbable
+                                            >
+                                                <Idea text = 'Load Live Preview' cltxt = 'fa-solid fa-play' />
+                                            </Glass>
+                                        ) }
+                                    </div>
+                                }) }
                             </div>
                             <Clarity
                                 icon = {
@@ -335,7 +389,8 @@ export default function Work ({ onOpenRecents }) {
                                 }
                                 text = 'Refresh preview'
                                 onClick = { refresh }
-                                tabIndex = { inView ? 0 : -1 } data-keep-tabbable
+                                className = { !canLoadPreview ? 'none' : '' }
+                                tabIndex = { (canLoadPreview && inView) ? 0 : -1 } data-keep-tabbable
                             />
                         </section>
                         <section className = 'relative block in-h column gap-lg description'>
