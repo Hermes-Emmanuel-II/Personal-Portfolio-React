@@ -124,7 +124,7 @@ export default function Work ({ onOpenRecents }) {
     }, [inspectOpen])
 
     function refresh() {
-        if (!canLoadPreview || !result[current] || !requestedPreviews[result[current].title] || !inView) return
+        if (!canLoadPreview || !result[current] || !inView) return
         const iframe = iframeRefs.current[result[current].title]
         const src = iframe.src
         iframe.src = 'about:blank'
@@ -214,11 +214,6 @@ export default function Work ({ onOpenRecents }) {
 
     const canLoadPreview = useTabletUp()
 
-    const [requestedPreviews, setRequestedPreviews] = useState({})
-    function requestPreview (title) {
-        setRequestedPreviews(prev => ({ ...prev, [title]: true }))
-    }
-
     return <section id = 'work' ref = { workRef } className = 'column center'>
         <SectionHeader symbol = '\\' title = 'work' />
         <article className = 'content center column gap-lg relative'>
@@ -295,17 +290,17 @@ export default function Work ({ onOpenRecents }) {
                         <tbody>
                             <tr>
                                 <td>Brand Design</td>
-                                <td>Strategic and visual identity creation for businesses, including logos, color palettes, and guidelines.</td>
-                                <td>Identity, Guidelines, Logos</td>
+                                <td>Stra&shy;te&shy;gic and vi&shy;sual iden&shy;tity crea&shy;tion for bu&shy;si&shy;ness&shy;es, in&shy;clu&shy;ding lo&shy;gos, co&shy;lor pa&shy;le&shy;ttes, and guide&shy;lines.</td>
+                                <td>Iden&shy;tity, Guide&shy;lines, Logos</td>
                             </tr>
                             <tr>
                                 <td>Mobile App Design</td>
-                                <td>Designing intuitive and engaging user experiences specifically for native mobile applications (iOS/Android).</td>
-                                <td>UX/UI, Interaction, Mobile</td>
+                                <td>De&shy;si&shy;gning in&shy;tui&shy;tive and en&shy;ga&shy;ging user ex&shy;pe&shy;rien&shy;ces spe&shy;ci&shy;fi&shy;ca&shy;lly for na&shy;tive mo&shy;bile app&shy;li&shy;ca&shy;tions (iOS/An&shy;droid).</td>
+                                <td>UX/UI, In&shy;te&shy;rac&shy;tion, Mobile</td>
                             </tr>
                             <tr>
                                 <td>Website Design</td>
-                                <td>Structuring, styling, and laying out responsive web pages for optimal user experience across various devices.</td>
+                                <td>Struc&shy;tu&shy;ring, sty&shy;ling, and la&shy;ying out res&shy;pon&shy;sive web pages for op&shy;timal user ex&shy;pe&shy;ri&shy;ence across va&shy;rious de&shy;vi&shy;ces.</td>
                                 <td>Respon&shy;sive&shy;ness, Layout, Web</td>
                             </tr>
                         </tbody>
@@ -338,8 +333,7 @@ export default function Work ({ onOpenRecents }) {
                             <div className = 'iframe-clip relative'>
                                 { result.map((project, index) => {
                                     const isCurrent = index === current
-                                    const requested = !!requestedPreviews[project.title]
-                                    const isLive = canLoadPreview && requested && inView && isCurrent
+                                    const isLive = canLoadPreview && inView && isCurrent
 
                                     if (!canLoadPreview) {
                                         return <div
@@ -357,27 +351,16 @@ export default function Work ({ onOpenRecents }) {
                                         />
                                     }
 
-                                    return <div key = { project.title } className = 'relative in-h in-w' style = {{ display: isCurrent ? 'block' : 'none' }}>
-                                        <iframe
-                                            ref = { el => { iframeRefs.current[project.title] = el } }
-                                            src = { isLive ? withDesktopPreview(project.src) : 'about:blank' }
-                                            frameBorder = '0'
-                                            scrolling = 'no'
-                                            className = 'in-h in-w'
-                                        />
-                                        { !requested && (
-                                            <Glass
-                                                as = 'button'
-                                                type = 'button'
-                                                className = 'absolute in-h in-w center column gap-md relative preview-facade'
-                                                style = { project.figma ? { backgroundImage: `url(${ project.figma })`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined }
-                                                onClick = { () => requestPreview(project.title) }
-                                                tabIndex = { inView ? 0 : -1 } data-keep-tabbable
-                                            >
-                                                <Idea text = 'Load Live Preview' cltxt = 'fa-solid fa-play' />
-                                            </Glass>
-                                        ) }
-                                    </div>
+                                    return <iframe
+                                        key = { project.title }
+                                        ref = { el => { iframeRefs.current[project.title] = el } }
+                                        src = { isLive ? withDesktopPreview(project.src) : 'about:blank' }
+                                        loading = 'lazy'
+                                        frameBorder = '0'
+                                        scrolling = 'no'
+                                        className = 'in-h in-w'
+                                        style = {{ display: isCurrent ? 'block' : 'none' }}
+                                    />
                                 }) }
                             </div>
                             <Clarity
