@@ -574,6 +574,11 @@
 }
 
 @media (max-width: 550px) {
+    /* HEADER */
+            header { zoom: calc(.75 / .675); }
+
+            .hamburger-menu { top: calc(3rem - ((36px - 31.88px) / 2)); }
+
     /* HERO */
             #hero > div.center.quick.absolute { width: calc(218.56px + 2rem); }
 
