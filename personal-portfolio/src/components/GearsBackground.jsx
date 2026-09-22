@@ -1,14 +1,15 @@
-import { useMemo, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import * as THREE from 'three'
 
 const SETTINGS = {
-    particleSize: 0.35,
+    particleSize: 0.55,
     lineOpacity: 0.15,
     gearARadius: 12, gearATeeth: 8,
     gearBRadius: 21, gearBTeeth: 8,
-    toothDepth: 5, depth: 5, layers: 6, detailDensity: 0.05,
+    toothDepth: 5, depth: 5, layers: 3, detailDensity: 0.11,
     depthRange: 15,
-    minBrightness: 0.02
+    minBrightness: 0.2
 }
 
 function clamp (value, min, max) {
@@ -27,7 +28,7 @@ function generateGearPositions (offsetX, offsetY, phaseOffset, teeth, radius) {
         const maxR = isTooth ? outerRadius : innerRadius
         for (let a = i * segmentAngle + phaseOffset; a < (i + 1) * segmentAngle + phaseOffset; a += SETTINGS.detailDensity) {
             const jitterA = a + (Math.random() - 0.5) * 0.05
-            for (let r = 5; r <= maxR; r += 1.5) {
+            for (let r = 5; r <= maxR; r += 2.25) {
                 const x = r * Math.cos(jitterA)
                 const y = r * Math.sin(jitterA)
                 for (let l = 0; l < SETTINGS.layers; l++) {
@@ -66,6 +67,12 @@ function useGearGeometry () {
             linePositions: new Float32Array(linePositions)
         }
     }, [])
+}
+
+function CanvasHandle ({ onReady }) {
+    const { gl } = useThree()
+    useEffect(() => { onReady(gl.domElement) }, [gl, onReady])
+    return null
 }
 
 function GearPair () {
@@ -155,28 +162,80 @@ function GearPair () {
                     transparent
                     opacity = { .875 }
                     sizeAttenuation
+                    blending = { THREE.AdditiveBlending }
+                    depthWrite = { false }
                 />
             </points>
         </group>
     )
 }
 
-function GearsCanvas () {
+function GearsCanvas ({ onCanvasReady }) {
     return (
-        <Canvas camera = {{ position: [0, 0, 80], fov: 75 }}>
+        <Canvas
+            camera = {{ position: [0, 0, 80], fov: 75 }}
+            gl = {{ preserveDrawingBuffer: true, powerPreference: 'low-power', antialias: false }}
+            dpr = { [1, 1.5] }
+        >
+            { onCanvasReady && <CanvasHandle onReady = { onCanvasReady }/> }
             <GearPair/>
         </Canvas>
     )
 }
 
+function MirrorCanvas ({ sourceEl }) {
+    const canvasRef = useRef(null)
+    const rafRef = useRef(null)
+
+    useEffect(() => {
+        const canvas = canvasRef.current
+        if (!canvas || !sourceEl) return
+
+        const ctx = canvas.getContext('2d', { alpha: true })
+
+        function resize () {
+            const rect = canvas.parentElement.getBoundingClientRect()
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
+            const w = Math.max(1, Math.round(rect.width * dpr))
+            const h = Math.max(1, Math.round(rect.height * dpr))
+            if (canvas.width !== w) canvas.width = w
+            if (canvas.height !== h) canvas.height = h
+        }
+
+        resize()
+        const ro = new ResizeObserver(resize)
+        ro.observe(canvas.parentElement)
+
+        function draw () {
+            if (sourceEl.width && sourceEl.height) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.drawImage(sourceEl, 0, 0, canvas.width, canvas.height)
+            }
+            rafRef.current = requestAnimationFrame(draw)
+        }
+        draw()
+
+        return () => {
+            ro.disconnect()
+            cancelAnimationFrame(rafRef.current)
+        }
+    }, [sourceEl])
+
+    return <canvas ref = { canvasRef } className = 'block in-w in-h'/>
+}
+
 export default function GearsBackground () {
+    const [sourceEl, setSourceEl] = useState(null)
+
     return (
         <div className = 'gears-bg' aria-hidden = 'true'>
             <div className = 'webgl-background-top gears-bg-layer square'>
-                <GearsCanvas/>
+                <GearsCanvas onCanvasReady = { setSourceEl }/>
             </div>
             <div className = 'webgl-background-bottom gears-bg-layer square'>
-                <GearsCanvas/>
+                { sourceEl
+                    ? <MirrorCanvas sourceEl = { sourceEl }/>
+                    : null }
             </div>
         </div>
     )
