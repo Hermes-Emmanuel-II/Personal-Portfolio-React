@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -6,15 +6,16 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import About from './components/About'
-import Beyond from './components/Beyond'
 import Contact from './components/Contact'
 import GearsBackground from './components/GearsBackground'
 import HamburgerMenu from './components/HamburgerMenu'
-import Header from './components/Header'
+import Header, { useWidthCheck } from './components/Header'
 import Hero from './components/Hero'
 import Recents from './components/Recents'
 import Work from './components/Work'
 import disable from './disable.js'
+
+const Beyond = lazy(() => import('./components/Beyond'))
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
@@ -126,12 +127,16 @@ export default function App () {
     const [menuOpen, setMenuOpen] = useState(false)
     const menuOpenRef = useRef(menuOpen)
     const { pathname } = useLocation()
+    const isDesktop = useWidthCheck()
 
     function closeMenu () {
         setMenuOpen(false)
     }
 
-    useEffect(() => disable(), [])
+    useEffect(() => {
+        if (!isDesktop) return
+        return disable()
+    }, [isDesktop])
 
     useEffect(() => { setMenuOpen(false) }, [pathname])
     useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
@@ -191,6 +196,22 @@ export default function App () {
     }, [])
 
     useEffect(() => {
+        let scrollTimer
+        function handleScroll () {
+            document.body.classList.add('is-scrolling')
+            clearTimeout(scrollTimer)
+            scrollTimer = setTimeout(() => {
+                document.body.classList.remove('is-scrolling')
+            }, 100)
+        }
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+            clearTimeout(scrollTimer)
+        }
+    }, [])
+
+    useEffect(() => {
         let timer
         function onResize () {
             clearTimeout(timer)
@@ -232,7 +253,11 @@ export default function App () {
             <Header menuOpen = { menuOpen } onToggleMenu = { setMenuOpen }/>
             <Routes>
                 <Route path = '/' element = { <Home menuOpen = { menuOpen } closeMenu = { closeMenu }/> } />
-                <Route path = '/beyond' element = { <Beyond/> } />
+                <Route path = '/beyond' element = {
+                    <Suspense fallback = { <div className = 'loading-screen absolute center in-w in-h'>Loading…</div> }>
+                        <Beyond/>
+                    </Suspense>
+                } />
             </Routes>
         </div>
     )

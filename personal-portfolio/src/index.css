@@ -364,6 +364,10 @@
             margin-inline: max(8rem, calc((100% - var(--page-max)) / 2));
         }
 
+        body.is-scrolling *,
+        body.is-scrolling *::before,
+        body.is-scrolling *::after { pointer-events: none !important; }
+
         button {
             color: var(--lum-2);
             font-family: var(--font-1);

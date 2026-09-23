@@ -103,6 +103,7 @@ export default function Work ({ onOpenRecents }) {
     const [filter, setFilter] = useState('site')
     const scale = levels[zoom]
     const iframeRefs = useRef({})
+    const loadedPreviews = useRef({})
 
     const result = projects.filter(project => {
         const tagList = project.tags.split(',').map(tag => tag.trim().toLowerCase())
@@ -351,10 +352,13 @@ export default function Work ({ onOpenRecents }) {
                                         />
                                     }
 
+                                    if (isLive) loadedPreviews.current[project.title] = true
+                                    const shouldRender = loadedPreviews.current[project.title]
+
                                     return <iframe
                                         key = { project.title }
                                         ref = { el => { iframeRefs.current[project.title] = el } }
-                                        src = { isLive ? withDesktopPreview(project.src) : 'about:blank' }
+                                        src = { shouldRender ? withDesktopPreview(project.src) : 'about:blank' }
                                         loading = 'lazy'
                                         frameBorder = '0'
                                         scrolling = 'no'

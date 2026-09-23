@@ -36,10 +36,12 @@ export function Clarity ({ text, children, icon, className = '', tabIndex, onCli
         }
     }
 
+    function handleMouseDown (e) { e.preventDefault() }
+
     return <div className = { `clarity relative ${ className }` } onClick = { onClick } { ...rest }>
         <Glass
             className = 'round center square relative'
-            { ...(focusable ? { tabIndex, 'data-keep-tabbable': true, onKeyDown: handleKeyDown } : {}) }
+            { ...(focusable ? { tabIndex, 'data-keep-tabbable': true, onKeyDown: handleKeyDown, onMouseDown: handleMouseDown } : {}) }
         >
             { icon || <Explanation/> }
             <div className = 'lin-grad-tran-hack round absolute'></div>
@@ -75,7 +77,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
     const hamburgerRef = useRef(null)
     const location = useLocation()
     const isDesktop = useWidthCheck()
-    const options = { threshold: Array.from({ length: 11 }, (_, i) => i * 0.1) }
+    const options = { threshold: Array.from({ length: 6 }, (_, i) => i * 0.2) }
 
     function handleNavClick (e, id) {
         e.preventDefault()
