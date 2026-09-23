@@ -501,7 +501,6 @@
                                         .contact-form div:first-child img { top: 6.325rem; }
 
     /* BEYOND (SEPARATE ROUTE) */
-
                         #beyond {
                             --beyond-header-h: 107.21px;
                             flex-direction: column-reverse;
@@ -555,10 +554,6 @@
                 right: 3rem;
             }
 
-            .hamburger-menu.active .bar:first-child { transform: translateY(calc((.125rem + .03125rem) / 2)) rotate(45deg); }
-
-            .hamburger-menu.active .bar:last-child { transform: translateY(calc(-1 * ((.125rem + .03125rem) / 2))) rotate(-45deg); }
-
                             .status { display: none; }
 
     /* HAMBURGER MENU */
@@ -582,7 +577,11 @@
     /* HERO */
             #hero > div.center.quick.absolute { width: calc(218.56px + 2rem); }
 
-            #hero .gears { display: none; }
+            .crosshair-orbit {
+                zoom: calc(.75 / .675);
+                --cx: calc(50% + .75px);
+                --cy: calc(50% + (.125rem / 2));
+            }
 
     /* CONTACT */
                                         .footer-socials a {

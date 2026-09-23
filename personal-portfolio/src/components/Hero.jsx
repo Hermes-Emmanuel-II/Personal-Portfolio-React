@@ -31,6 +31,7 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
     const ctaRef = useRef(null)
     const [inView, setInView] = useState(true)
     const isDesktop = useWidthCheck()
+    const showViewer = useWidthCheck('(min-width: 550.1px)')
     const tabbable = isDesktop && inView
 
     useEffect(() => {
@@ -74,7 +75,7 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
 
     return <section id = 'hero' ref = { heroRef } className = 'center'>
         <div className = 'aura absolute'></div>
-        <ThreeDViewer/>
+        { showViewer && <ThreeDViewer/> }
         <article className = 'hero-text column gap-lg' ref = { heroTextRef }>
             <div className = 'main-heading emphasis column'>
                 <p className = 'gradient-text'>Frontend Developer</p>

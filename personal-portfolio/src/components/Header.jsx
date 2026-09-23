@@ -52,19 +52,20 @@ export function Clarity ({ text, children, icon, className = '', tabIndex, onCli
     </div>
 }
 
-export function useWidthCheck () {
-    const desktop = '(min-width: 1024.1px)'
-    const [isDesktop, setIsDesktop] = useState(
-        () => window.matchMedia(desktop).matches
+export function useWidthCheck (query = '(min-width: 1024.1px)') {
+    const [matches, setMatches] = useState(
+        () => window.matchMedia(query).matches
     )
 
     useEffect(() => {
-        const handleChange = (e) => setIsDesktop(e.matches)
-        window.matchMedia(desktop).addEventListener('change', handleChange)
-        return () => window.matchMedia(desktop).removeEventListener('change', handleChange)
-    }, [])
+        const mql = window.matchMedia(query)
+        setMatches(mql.matches)
+        const handleChange = (e) => setMatches(e.matches)
+        mql.addEventListener('change', handleChange)
+        return () => mql.removeEventListener('change', handleChange)
+    }, [query])
 
-    return isDesktop
+    return matches
 }
 
 export default function Header ({ menuOpen = false, onToggleMenu }) {

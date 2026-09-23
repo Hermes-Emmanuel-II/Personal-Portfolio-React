@@ -128,6 +128,7 @@ export default function App () {
     const menuOpenRef = useRef(menuOpen)
     const { pathname } = useLocation()
     const isDesktop = useWidthCheck()
+    const showGearsBg = useWidthCheck('(min-width: 550.1px)')
 
     function closeMenu () {
         setMenuOpen(false)
@@ -249,7 +250,7 @@ export default function App () {
 
     return (
         <div className = 'column gap-lg'>
-            <GearsBackground/>
+            { showGearsBg && <GearsBackground/> }
             <Header menuOpen = { menuOpen } onToggleMenu = { setMenuOpen }/>
             <Routes>
                 <Route path = '/' element = { <Home menuOpen = { menuOpen } closeMenu = { closeMenu }/> } />

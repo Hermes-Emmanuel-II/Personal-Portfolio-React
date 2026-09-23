@@ -2092,15 +2092,15 @@
 
                                                 #about .content article div img {
                                                     object-fit: cover;
-                                                    border-radius: calc(2rem - 2px);
-                                                    width: calc(100% - 1rem - 4px);
+                                                    border-radius: calc(2rem - .125rem);
+                                                    width: calc(100% - 1rem - .25rem);
                                                     outline: var(--border);
                                                     outline-offset: .5rem;
                                                 }
 
                                                 .crosshair-orbit {
                                                     --cx: calc(50% + (.25rem / 2));
-                                                    --cy: calc(50% + (.25rem / 2));
+                                                    --cy: calc(50% + (.125rem / 2));
                                                     left: calc(var(--cx) - 2.0625rem);
                                                     top: calc(var(--cy) - 2.0625rem);
                                                     width: 4rem;
