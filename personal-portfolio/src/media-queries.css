@@ -103,8 +103,8 @@
                         }
 
                         body:has(.hamburger-menu.active) header {
-                            position: fixed;
-                            width: calc(100% - 16rem);
+                            position: sticky;
+                            top: 0;
                         }
 
                         body:has(.hamburger-menu.active) :is(header, .hamburger-overlay > ul) { z-index: 6; }
@@ -154,8 +154,6 @@
                                         color: var(--accent-2);
                                         transition-delay: .25s;
                                     }
-
-                        body:has(.hamburger-menu.active) #hero { margin-top: calc(108px + 1.5rem); }
 
                             body:has(.hamburger-menu.active) .aura { align-self: center; }
 
@@ -557,8 +555,6 @@
                             .status { display: none; }
 
     /* HAMBURGER MENU */
-                body:has(.hamburger-menu.active) header { width: calc(100% - 6rem); }
-
             .hamburger-overlay.active { padding: 2rem 3rem; }
 
     /* SECTION TRANSITIONS (INTER) */
@@ -577,9 +573,13 @@
     /* HERO */
             #hero > div.center.quick.absolute { width: calc(218.56px + 2rem); }
 
+            .main-heading { font-size: 3.75rem; }
+
+                .main-heading p { line-height: 1.125em; }
+
             .crosshair-orbit {
                 zoom: calc(.75 / .675);
-                --cx: calc(50% + .75px);
+                --cx: calc(50% + .875px);
                 --cy: calc(50% + (.125rem / 2));
             }
 

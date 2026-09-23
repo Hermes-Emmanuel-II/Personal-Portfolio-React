@@ -214,7 +214,10 @@ export default function App () {
 
     useEffect(() => {
         let timer
+        let lastWidth = window.innerWidth
         function onResize () {
+            if (window.innerWidth === lastWidth) return
+            lastWidth = window.innerWidth
             clearTimeout(timer)
             timer = setTimeout(() => ScrollTrigger.refresh(), 350)
         }
