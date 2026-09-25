@@ -1098,7 +1098,6 @@
                                         .main-heading {
                                             font-family: var(--font-2);
                                             font-size: 3rem;
-                                            gap: 1rem;
                                             color: var(--lum-1);
                                             position: relative;
                                         }
@@ -1112,7 +1111,7 @@
 
                                             .main-heading p {
                                                 overflow: visible;
-                                                text-box: trim-start cap alphabetic;
+                                                text-box: trim-start 1rem alphabetic;
                                                 line-height: 1.25em;
                                             }
 

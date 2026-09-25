@@ -102,11 +102,6 @@
                             position: fixed;
                         }
 
-                        body:has(.hamburger-menu.active) header {
-                            position: sticky;
-                            top: 0;
-                        }
-
                         body:has(.hamburger-menu.active) :is(header, .hamburger-overlay > ul) { z-index: 6; }
 
                             html:has(.hamburger-menu.active) .home { display: none; }
