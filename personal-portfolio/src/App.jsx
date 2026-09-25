@@ -125,15 +125,16 @@ function Home ({ menuOpen, closeMenu }) {
     const [recentsOpen, setRecentsOpen] = useState(false)
     const openRecents = useCallback(() => setRecentsOpen(true), [])
     const closeRecents = useCallback(() => setRecentsOpen(false), [])
+    const showInter = useWidthCheck()
 
     return <>
         <HamburgerMenu isOpen = { menuOpen } onClose = { closeMenu } onOpenRecents = { openRecents }/>
         <Hero onOpenRecents = { openRecents } recentsOpen = { recentsOpen }/>
-        <Inter text = 'WORK'/>
+        { showInter && <Inter text = 'WORK'/> }
         <Work onOpenRecents = { openRecents }/>
-        <Inter text = 'ABOUT'/>
+        { showInter && <Inter text = 'ABOUT'/> }
         <About/>
-        <Inter text = 'HELLO'/>
+        { showInter && <Inter text = 'HELLO'/> }
         <Contact/>
         <Recents isOpen = { recentsOpen } onClose = { closeRecents }/>
     </>
@@ -144,7 +145,6 @@ export default function App () {
     const menuOpenRef = useRef(menuOpen)
     const { pathname } = useLocation()
     const isDesktop = useWidthCheck()
-    const showGearsBg = isDesktop
 
     const closeMenu = useCallback(() => setMenuOpen(false), [])
 
@@ -155,6 +155,20 @@ export default function App () {
 
     useEffect(() => { setMenuOpen(false) }, [pathname])
     useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+
+    useEffect(() => {
+        if (pathname !== '/') return
+        const sections = ['hero', 'work', 'about', 'contact'].map(id => document.getElementById(id)).filter(Boolean)
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => entry.target.classList.toggle('offscreen', !entry.isIntersecting))
+        }, { rootMargin: '25% 0px' })
+        sections.forEach(section => observer.observe(section))
+        return () => {
+            observer.disconnect()
+            sections.forEach(section => section.classList.remove('offscreen'))
+        }
+    }, [pathname])
+
     useLayoutEffect(() => {
         document.documentElement.classList.toggle('menu-open', menuOpen)
     }, [menuOpen])
@@ -260,6 +274,7 @@ export default function App () {
             })
         ]).then(() => {
             if (cancelled) return
+
             setTimeout(() => {
                 if (!cancelled) ScrollTrigger.refresh()
             }, 100)
@@ -269,7 +284,7 @@ export default function App () {
 
     return (
         <div className = 'column gap-lg'>
-            { showGearsBg && <GearsBackground/> }
+            <GearsBackground/>
             <Header menuOpen = { menuOpen } onToggleMenu = { setMenuOpen }/>
             <Routes>
                 <Route path = '/' element = { <Home menuOpen = { menuOpen } closeMenu = { closeMenu }/> } />

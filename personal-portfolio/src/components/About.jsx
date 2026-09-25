@@ -306,22 +306,35 @@ function About () {
                             <div className = { `service-panel analytics in-w in-h column ${ currentIndex == 3 ? 'active' : '' }` }>
                                 <div className = 'analytics-chrome column in-w'>
                                     <div className = 'analytics-chrome-tabs flex'>
-                                        <div className = 'analytics-chrome-tab flex center'>
+                                        <span className = 'analytics-tab-search center'><i className = 'fa-solid fa-chevron-down'></i></span>
+                                        <div className = 'analytics-chrome-tab active flex'>
                                             <span className = 'analytics-favicon square'></span>
-                                            <span className = 'nowrap'>Audience Overview</span>
+                                            <span className = 'analytics-tab-title nowrap'>Audience Overview</span>
+                                            <span className = 'analytics-chrome-close'>×</span>
+                                        </div>
+                                        <div className = 'analytics-chrome-tab flex'>
+                                            <span className = 'analytics-favicon google square round'></span>
+                                            <span className = 'analytics-tab-title nowrap'>Google</span>
                                             <span className = 'analytics-chrome-close'>×</span>
                                         </div>
                                         <span className = 'analytics-chrome-add'>+</span>
+                                        <div className = 'analytics-window-controls flex'>
+                                            <i className = 'fa-solid fa-minus'></i>
+                                            <i className = 'fa-regular fa-square'></i>
+                                            <i className = 'fa-solid fa-xmark'></i>
+                                        </div>
                                     </div>
                                     <div className = 'analytics-chrome-bar flex center'>
                                         <i className = 'fa-solid fa-arrow-left'></i>
                                         <i className = 'fa-solid fa-arrow-right'></i>
                                         <i className = 'fa-solid fa-rotate-right'></i>
                                         <div className = 'analytics-url flex center'>
-                                            <i className = 'fa-solid fa-lock'></i>
+                                            <i className = 'fa-solid fa-sliders'></i>
                                             <span className = 'nowrap'></span>
+                                            <i className = 'fa-regular fa-star analytics-star'></i>
                                         </div>
-                                        <i className = 'fa-regular fa-star'></i>
+                                        <span className = 'analytics-avatar round square'></span>
+                                        <i className = 'fa-solid fa-ellipsis-vertical'></i>
                                     </div>
                                 </div>
                                 <ul className = 'analytics-tabs flex gap-lg' ref = { analyticsTabsRef }>
@@ -491,22 +504,35 @@ function About () {
                             <div className = { `service-panel miro in-w in-h relative ${ currentIndex == 1 ? 'active' : '' }` }>
                                 <div className = 'analytics-chrome column in-w'>
                                     <div className = 'analytics-chrome-tabs flex'>
-                                        <div className = 'analytics-chrome-tab flex center'>
+                                        <span className = 'analytics-tab-search center'><i className = 'fa-solid fa-chevron-down'></i></span>
+                                        <div className = 'analytics-chrome-tab active flex'>
                                             <span className = 'analytics-favicon square'></span>
-                                            <span className = 'nowrap'>Miro - FlexFund</span>
+                                            <span className = 'analytics-tab-title nowrap'>Miro - FlexFund</span>
+                                            <span className = 'analytics-chrome-close'>×</span>
+                                        </div>
+                                        <div className = 'analytics-chrome-tab flex'>
+                                            <span className = 'analytics-favicon google square round'></span>
+                                            <span className = 'analytics-tab-title nowrap'>Google</span>
                                             <span className = 'analytics-chrome-close'>×</span>
                                         </div>
                                         <span className = 'analytics-chrome-add'>+</span>
+                                        <div className = 'analytics-window-controls flex'>
+                                            <i className = 'fa-solid fa-minus'></i>
+                                            <i className = 'fa-regular fa-square'></i>
+                                            <i className = 'fa-solid fa-xmark'></i>
+                                        </div>
                                     </div>
                                     <div className = 'analytics-chrome-bar flex center'>
                                         <i className = 'fa-solid fa-arrow-left'></i>
                                         <i className = 'fa-solid fa-arrow-right'></i>
                                         <i className = 'fa-solid fa-rotate-right'></i>
                                         <div className = 'analytics-url flex center'>
-                                            <i className = 'fa-solid fa-lock'></i>
+                                            <i className = 'fa-solid fa-sliders'></i>
                                             <span className = 'nowrap'></span>
+                                            <i className = 'fa-regular fa-star analytics-star'></i>
                                         </div>
-                                        <i className = 'fa-regular fa-star'></i>
+                                        <span className = 'analytics-avatar round square'></span>
+                                        <i className = 'fa-solid fa-ellipsis-vertical'></i>
                                     </div>
                                 </div>
                                 <div className = 'miro-grid absolute in-w in-h'></div>
@@ -761,9 +787,8 @@ function About () {
                             <div className = 'iphone-status-bar absolute flex in-w center'>
                                 <span className = 'iphone-time'>12:12</span>
                                 <div className = 'dynamic-island flex center absolute ctr-abs-x'>
-                                    <span className = 'island-camera'></span>
-                                    <span className = 'emphasis'>---</span>
                                     <span className = 'island-sensor'></span>
+                                    <span className = 'island-camera'></span>
                                 </div>
                                 <div className = 'iphone-status-icons flex'>
                                     <i className = 'fa-solid fa-signal'></i>

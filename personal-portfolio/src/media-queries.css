@@ -95,9 +95,6 @@
     /* HAMBURGER MENU */
         html.menu-open { overflow: hidden; }
 
-                        /* No `*` here: a universal selector keyed off html.menu-open made the browser
-                           restyle every element on each toggle. Descendants inherit pointer-events,
-                           and both 3D canvases set pointer-events: none themselves (see the .jsx files). */
                         html.menu-open :is(.gears-bg, .gears) {
                             pointer-events: none !important;
                             z-index: 5;
@@ -123,9 +120,6 @@
 
                 .hamburger-overlay.active { display: block; }
 
-                /* Faux header border shown while the menu is open. It's fixed at the height
-                   where the header's bottom border sits, so it stays under the X even after
-                   the page has been scrolled and the real header is off screen. */
                 .hamburger-overlay::before {
                     content: '';
                     position: fixed;
@@ -189,7 +183,8 @@
                                 width: 50vw;
                                 height: 50vw;
                                 right: -15vw;
-                                bottom: -15vw;
+                                top: calc(100vh - 35vw);
+                                top: calc(100svh - 35vw);
                                 z-index: -1;
                                 opacity: .75;
                             }
@@ -215,7 +210,7 @@
                                 order: 3;
                                 top: 1.5rem;
                                 translate: none;
-                                width: calc(var(--quick-w, 242.83px) + 2rem); /* --quick-w is measured in Hero.jsx */
+                                width: calc(var(--quick-w) + 2rem);
                                 max-width: 100%;
                             }
 
@@ -231,7 +226,10 @@
                                 .inter span { font-size: 6rem; }
 
     /* WORK */
-                        #work { margin-inline: 0; }
+                        #work {
+                            margin-inline: 0;
+                            margin-top: 5rem;
+                        }
 
                                 .stack-wrapper { width: calc((5rem * 4) + (1.5rem * 3)) }
 
@@ -299,7 +297,10 @@
                                         .description > img { display: none; }
 
     /* ABOUT */
-                        #about { margin-inline: 0; }
+                        #about {
+                            margin-inline: 0;
+                            margin-top: 5rem;
+                        }
 
                                     .services-wrapper > section {
                                         flex-direction: column-reverse;
@@ -324,7 +325,7 @@
 
                                                                 .analytics .analytics-url span::before { content: 'analytics.google.com/analytics/web'; }
 
-                                                                .miro .analytics-url span::before { content: 'https://miro.com/web/user/alpha_channel/010101010flex'; }
+                                                                .miro .analytics-url span::before { content: 'miro.com/app/board/uXjVK_alpha010101010flex'; }
 
                                                         .analytics-chrome-tabs { padding-left: 0; }
 
@@ -508,7 +509,10 @@
                         .inspect-wrapper > section:first-child { border-radius: 2rem 2rem 0 0; }
 
     /* CONTACT */
-                        #contact { margin-inline: 0; }
+                        #contact {
+                            margin-inline: 0;
+                            margin-top: 5rem;
+                        }
 
                                     .contact-form > div:first-child { flex-direction: column; }
 

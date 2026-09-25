@@ -26,20 +26,21 @@ export default function Recents ({ isOpen, onClose }) {
   const [current, setCurrent] = useState(0)
 
   useEffect(() => {
+    if (!isOpen) return
     const interval = setInterval(() => {
       setProgress(prev => (prev >= 100 ? 0 : prev + 1))
     }, 100)
     return () => clearInterval(interval)
-  }, [])
+  }, [isOpen])
 
   useEffect(() => {
-    if (displayItems.length === 0) return
+    if (!isOpen || displayItems.length === 0) return
     const interval = setInterval(() => {
       setCurrent(prev => (prev + 1) % displayItems.length)
       setProgress(0)
     }, 10000)
     return () => clearInterval(interval)
-  }, [displayItems.length])
+  }, [isOpen, displayItems.length])
 
   if (displayItems.length === 0) {
     return (

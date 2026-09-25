@@ -50,6 +50,14 @@
     100% { transform: rotate(360deg) scale(1); opacity: 100%; }
 }
 
+@keyframes aura-spin {
+    0% { rotate: 0deg; scale: 1; opacity: 100%; }
+    25% { rotate: 90deg; scale: 1.25; opacity: 50%; }
+    50% { rotate: 180deg; scale: 1; opacity: 75%; }
+    75% { rotate: 270deg; scale: 1.25; opacity: 50%; }
+    100% { rotate: 360deg; scale: 1; opacity: 100%; }
+}
+
 @keyframes beyond-slide {
     from { transform: translate(0); }
     to { transform: translateX(2rem); }
@@ -361,15 +369,14 @@
 
             body {
                 --page-max: 100rem;
-                overflow-x: clip; /* iOS Safari ignores overflow-x on html alone */
-                /* Padding, not margin: overflow clips at the padding edge, so full-bleed
-                   backgrounds (#contact::before, the auras) can still reach the screen edges */
+                overflow: clip;
                 padding-inline: max(8rem, calc((100% - var(--page-max)) / 2));
-                /* Containing block for the hero aura, so the clip above also catches it.
-                   Without this it's positioned against the page itself, escapes the clip,
-                   and widens the page on phones (Safari then zooms out to fit). */
                 position: relative;
             }
+
+                            .offscreen *,
+                            .offscreen *::before,
+                            .offscreen *::after { animation-play-state: paused !important; }
 
                 body.is-scrolling *,
                 body.is-scrolling *::before,
@@ -593,7 +600,7 @@
                                     }
 
                             #hero > .quick {
-                                top: calc(100vh - 2rem); /* 2rem above the bottom of the first screen */
+                                top: calc(100vh - 2rem);
                                 translate: 0 -100%;
                             }
 
@@ -1063,7 +1070,7 @@
                         #hero::before {
                             content: '';
                             position: absolute;
-                            inset: 0 0 auto; /* first screen of the page, full width */
+                            inset: 0 0 auto;
                             height: 100vh;
                             z-index: -2;
                             background: linear-gradient(to bottom, var(--accent-1) 0%, transparent 75%);
@@ -1078,7 +1085,8 @@
                                 filter: blur(10rem);
                                 pointer-events: none;
                                 overflow: visible;
-                                will-change: transform;
+                                will-change: rotate, scale, opacity;
+                                animation: aura-spin 15s linear infinite;
                             }
 
                             .aura::before {
@@ -1094,7 +1102,6 @@
                                     var(--accent-2) 360deg
                                 );
                                 border-radius: calc((100vw / 3) / 2);
-                                animation: aura 15s linear infinite;
                             }
 
                             .hero-text {
@@ -1891,7 +1898,7 @@
                 .inspect-popup {
                     width: calc((46.5rem / var(--fig-dsk-w)) * 100vw);
                     height: calc((32rem / var(--fig-dsk-h)) * 100vh);
-                    z-index: 4;
+                    z-index: 10;
                     padding: 0;
                 }
 
@@ -2158,11 +2165,6 @@
                                         text-transform: uppercase;
                                     }
 
-                                    .subhead .bar-x {
-                                        background: linear-gradient(to right, var(--accent-1) 0%, transparent 75%);
-                                        background-color: none;
-                                    }
-
                                         :is(.services-wrapper, .workflow-wrapper) > div .nav-arrow:first-child { rotate: -90deg; }
 
                                         :is(.services-wrapper, .workflow-wrapper) > div .nav-arrow:last-child { rotate: 90deg; }
@@ -2289,52 +2291,120 @@
                                                 }
 
                                                     .analytics-chrome {
-                                                        background: #DEE1E6;
-                                                        color: #3C4043;
-                                                        border-bottom: .5px solid #C6CAD0;
+                                                        background: #202124;
+                                                        color: #E8EAED;
+                                                        border-bottom: .5px solid #000;
                                                     }
 
                                                         .analytics-chrome-tabs {
-                                                            gap: .5rem;
-                                                            padding: .25rem;
+                                                            gap: .125rem;
+                                                            padding: .25rem .25rem 0;
                                                             align-items: flex-end;
                                                             font-size: .5rem;
                                                         }
 
+                                                            .analytics-tab-search {
+                                                                flex-shrink: 0;
+                                                                width: .875rem;
+                                                                height: .875rem;
+                                                                margin: 0 .25rem .25rem 0;
+                                                                border-radius: .25rem;
+                                                                background: #35363A;
+                                                                color: #C4C7C5;
+                                                                font-size: .3125rem;
+                                                            }
+
                                                             .analytics-chrome-tab {
+                                                                position: relative;
+                                                                flex: 0 1 6.5rem;
+                                                                min-width: 0;
+                                                                align-items: center;
                                                                 gap: .375rem;
-                                                                padding: .375rem .5rem .25rem .375rem;
-                                                                background: #F5F5F5;
-                                                                border-top-right-radius: .5rem;
+                                                                padding: .375rem .375rem .375rem .5rem;
+                                                                color: #9AA0A6;
+                                                                border-radius: .5rem .5rem 0 0;
+                                                            }
+
+                                                            .analytics-chrome-tab.active {
+                                                                background: #35363A;
+                                                                color: #E8EAED;
+                                                            }
+
+                                                            .analytics-chrome-tab.active::before,
+                                                            .analytics-chrome-tab.active::after {
+                                                                content: '';
+                                                                position: absolute;
+                                                                bottom: 0;
+                                                                width: .375rem;
+                                                                height: .375rem;
+                                                            }
+
+                                                            .analytics-chrome-tab.active::before {
+                                                                right: 100%;
+                                                                background: radial-gradient(circle at 0 0, transparent .375rem, #35363A calc(.375rem + .5px));
+                                                            }
+
+                                                            .analytics-chrome-tab.active::after {
+                                                                left: 100%;
+                                                                background: radial-gradient(circle at 100% 0, transparent .375rem, #35363A calc(.375rem + .5px));
                                                             }
 
                                                                 .analytics-favicon {
                                                                     width: .5rem;
                                                                     flex-shrink: 0;
-                                                                    background: #5EA1F2;
-                                                                    border-radius: 50%;
+                                                                    background: #F9AB00;
+                                                                    border-radius: .125rem;
                                                                     transform: translateY(-.5px);
                                                                 }
 
+                                                                .analytics-chrome .analytics-favicon.google {
+                                                                    border-radius: 50%;
+                                                                    background: conic-gradient(from -40deg, #EA4335 0 90deg, #FBBC05 0 150deg, #34A853 0 250deg, #4285F4 0 360deg);
+                                                                    -webkit-mask: radial-gradient(circle, transparent 30%, #000 34%);
+                                                                    mask: radial-gradient(circle, transparent 30%, #000 34%);
+                                                                }
+
+                                                                .analytics-tab-title {
+                                                                    flex: 1;
+                                                                    min-width: 0;
+                                                                    overflow: hidden;
+                                                                    text-overflow: ellipsis;
+                                                                }
+
                                                                 .analytics-chrome-close {
-                                                                    color: #7A7A7A;
+                                                                    flex-shrink: 0;
+                                                                    color: #9AA0A6;
                                                                     font-size: .5rem;
                                                                     scale: 1.5;
                                                                 }
 
                                                             .analytics-chrome-add {
-                                                                padding-bottom: 2.5px;
-                                                                color: #5F6368;
+                                                                flex-shrink: 0;
+                                                                padding: 0 .375rem .375rem;
+                                                                color: #C4C7C5;
                                                                 scale: 1.5;
+                                                            }
+
+                                                            .analytics-window-controls {
+                                                                flex-shrink: 0;
+                                                                align-self: flex-start;
+                                                                gap: .625rem;
+                                                                margin-left: auto;
+                                                                padding: .3125rem 1rem 0 .5rem;
+                                                                color: #C4C7C5;
+                                                                font-size: .3125rem;
                                                             }
 
                                                         .analytics-chrome-bar {
                                                             height: fit-content;
                                                             gap: .5rem;
                                                             padding: .25rem .5rem;
-                                                            background: #F5F5F5;
+                                                            background: #35363A;
+                                                            color: #C4C7C5;
                                                             font-size: .5rem;
                                                         }
+
+                                                            .analytics-chrome-bar > :nth-child(2) { color: #5F6368; }
 
                                                             .analytics-url {
                                                                 flex: 1;
@@ -2343,12 +2413,24 @@
                                                                 padding: .25rem .5rem;
                                                                 justify-content: flex-start;
                                                                 overflow: hidden;
-                                                                background: #E8EAED;
-                                                                border-radius: .5rem;
-                                                                color: #3C4043;
+                                                                background: #202124;
+                                                                border-radius: 1rem;
+                                                                color: #E8EAED;
                                                             }
 
-                                                                .analytics-url svg { height: .375rem; }
+                                                                .analytics-url svg {
+                                                                    height: .375rem;
+                                                                    flex-shrink: 0;
+                                                                    color: #C4C7C5;
+                                                                }
+
+                                                                .analytics-url .analytics-star { margin-left: auto; }
+
+                                                            .analytics-avatar {
+                                                                width: .625rem;
+                                                                flex-shrink: 0;
+                                                                background: linear-gradient(135deg, #8AB4F8, #1A73E8);
+                                                            }
 
                                                                 .analytics .analytics-url span::before { content: 'analytics.google.com/anal...'; }
 
@@ -2668,9 +2750,9 @@
                                                     overflow: hidden;
                                                 }
 
-                                                                .miro .analytics-favicon { background: #FFA500; }
+                                                                .miro .analytics-favicon { background: #FFD02F; }
 
-                                                                .miro .analytics-url span::before { content: 'https://miro.com/web/use...'; }
+                                                                .miro .analytics-url span::before { content: 'miro.com/app/board/uXjVK...'; }
 
                                                     .miro-grid {
                                                         z-index: 0;
@@ -3043,58 +3125,60 @@
                                                         .vsc-status span:last-child { margin-left: auto; }
 
                                                 .iphone-status-bar {
-                                                    padding: .5rem 1.25rem;
+                                                    padding: .5rem 1.5rem;
                                                     z-index: 3;
                                                     justify-content: space-between;
+                                                    color: var(--lum-1);
+                                                    font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif;
                                                 }
 
-                                                    .iphone-time { font-size: 0.5rem; }
+                                                    .iphone-time {
+                                                        font-size: .5rem;
+                                                        font-weight: 600;
+                                                        letter-spacing: -.01em;
+                                                    }
 
-                                                    .iphone-status-bar:has(~.maze.active) .iphone-time { color: var(--BGC); }
+                                                    .iphone-status-bar:has(~.maze.active) { color: var(--BGC); }
 
                                                     .dynamic-island {
-                                                        top: 0.5rem;
+                                                        top: .375rem;
                                                         width: 3rem;
-                                                        height: 1rem;
-                                                        background-color: #111;
-                                                        border-radius: .5rem;
-                                                        padding: .25rem .375rem .25rem .25rem;
-                                                        justify-content: space-between;
+                                                        height: 1.0625rem;
+                                                        background-color: #000;
+                                                        border-radius: 1rem;
+                                                        padding: 0 .3125rem;
+                                                        justify-content: flex-end;
+                                                        gap: .25rem;
                                                     }
 
                                                         .island-camera {
-                                                            width: 0.5rem;
-                                                            height: 0.5rem;
-                                                            background-color: #333;
+                                                            width: .4375rem;
+                                                            height: .4375rem;
                                                             border-radius: 50%;
-                                                            border: 1px solid #1a1a1a;
-                                                        }
-
-                                                        .island-camera + span {
-                                                            font-size: .675rem;
-                                                            color: orange;
+                                                            background: radial-gradient(circle at 35% 35%, #4A4F6E 0 10%, #1A1C2E 32%, #08080C 72%);
+                                                            box-shadow: inset 0 0 0 1px #121218;
                                                         }
 
                                                         .island-sensor {
-                                                            width: 0.25rem;
-                                                            height: 0.25rem;
-                                                            background-color: var(--accent-2);
+                                                            width: .25rem;
+                                                            height: .25rem;
+                                                            background-color: #30D158;
                                                             border-radius: 50%;
                                                         }
 
-                                                    .iphone-status-icons { gap: .5rem; }
+                                                    .iphone-status-icons {
+                                                        gap: .5rem;
+                                                        align-items: center;
+                                                        font-size: .375rem;
+                                                    }
 
                                                         .iphone-status-icons svg:first-child {
                                                             width: .5rem;
                                                             transform: scaleX(1.75);
                                                         }
 
-                                                        .iphone-status-icons svg:last-child {
-                                                            color: var(--accent-2);
-                                                            width: .625rem;
-                                                        }
+                                                        .iphone-status-icons svg:last-child { font-size: .5rem; }
 
-                                                        .iphone-status-bar:has(~.maze.active) .iphone-status-icons svg:first-child { color: var(--BGC); }
 
                                                 .service-panel.hotjar {
                                                     background: var(--lum-2);
@@ -3945,7 +4029,10 @@
                                 filter: blur(9rem);
                                 pointer-events: none;
                                 overflow: hidden;
-                                will-change: transform;
+                                transform: none;
+                                translate: -50% -50%;
+                                will-change: rotate, scale, opacity;
+                                animation: aura-spin 15s linear infinite;
                             }
 
                             .contact-aura::before {
@@ -3963,7 +4050,6 @@
                                     #00FFFF 360deg
                                 );
                                 border-radius: calc((100vw / 3) / 2);
-                                animation: aura 15s linear infinite;
                             }
 
                                 #contact .content p { color: var(--lum-2); }
