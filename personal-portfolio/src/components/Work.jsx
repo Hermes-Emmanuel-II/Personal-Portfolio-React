@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, memo, useEffect, useRef, useState } from 'react'
 
 import { Clarity, Glass, Trail } from './Header'
 import { Bar, Idea } from './Hero'
@@ -44,7 +44,7 @@ function useTabletUp () {
     return matches
 }
 
-export default function Work ({ onOpenRecents }) {
+function Work ({ onOpenRecents }) {
     const stack = [
         { icon: blender, text: 'Blender' },
         { icon: bootstrap, text: 'Bootstrap' },
@@ -472,3 +472,5 @@ export default function Work ({ onOpenRecents }) {
         </article>
     </section>
 }
+
+export default memo(Work)

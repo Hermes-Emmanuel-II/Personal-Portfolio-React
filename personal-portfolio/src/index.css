@@ -1025,10 +1025,7 @@
                             .home,
                             .home * { cursor: pointer; }
 
-                                        .back-button .explanation-tooltip {
-                                            left: 50%;
-                                            transform: translateX(-50%);
-                                        }
+                                        .back-button .explanation-tooltip { left: 0; }
 
                 /* HERO */
                                             .cta button .trail-wrapper-once .trail-once {
@@ -4207,6 +4204,9 @@
                                     #beyond article:first-child > div:first-child div:hover,
                                     #beyond article:first-child > div:first-child div:focus-visible,
                                     #beyond article:first-child > div:first-child div.active { color: var(--accent-2) }
+
+                                    #beyond article:first-child > div:first-child > div,
+                                    #beyond article:first-child > div:first-child > div * { cursor: pointer; }
 
                                         #beyond article:first-child > div:first-child div img {
                                             z-index: 0;

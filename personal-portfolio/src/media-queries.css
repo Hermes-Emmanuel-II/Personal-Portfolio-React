@@ -93,18 +93,20 @@
                                     .hamburger-menu.active .bar:last-child { transform: translateY(-.125rem) rotate(-45deg); }
 
     /* HAMBURGER MENU */
-        html:has(.hamburger-menu.active) { overflow: hidden; }
+        html.menu-open { overflow: hidden; }
 
-                        body:has(.hamburger-menu.active)                     :is(.gears-bg, .gears-bg *, .gears, .gears *) { pointer-events: none !important; }
-
-                        body:has(.hamburger-menu.active)                     :is(.gears-bg, .gears) {
+                        /* No `*` here: a universal selector keyed off html.menu-open made the browser
+                           restyle every element on each toggle. Descendants inherit pointer-events,
+                           and both 3D canvases set pointer-events: none themselves (see the .jsx files). */
+                        html.menu-open :is(.gears-bg, .gears) {
+                            pointer-events: none !important;
                             z-index: 5;
                             position: fixed;
                         }
 
-                    body:has(.hamburger-menu.active) :is(header, .hamburger-overlay > ul) { z-index: 6; }
+                    html.menu-open :is(header, .hamburger-overlay > ul) { z-index: 6; }
 
-                            html:has(.hamburger-menu.active) .home { display: none; }
+                            html.menu-open .home { display: none; }
 
                 .hamburger-overlay {
                     display: none;
@@ -120,6 +122,21 @@
                 }
 
                 .hamburger-overlay.active { display: block; }
+
+                /* Faux header border shown while the menu is open. It's fixed at the height
+                   where the header's bottom border sits, so it stays under the X even after
+                   the page has been scrolled and the real header is off screen. */
+                .hamburger-overlay::before {
+                    content: '';
+                    position: fixed;
+                    top: calc(var(--header-h, 108px) - 2px);
+                    left: 8rem;
+                    right: 8rem;
+                    border-top: var(--border);
+                    pointer-events: none;
+                }
+
+                        html.menu-open header { border-bottom-color: transparent; }
 
                         ul ul {
                             gap: 1.25rem;
@@ -151,9 +168,9 @@
                                         transition-delay: .25s;
                                     }
 
-                            body:has(.hamburger-menu.active) .aura { align-self: center; }
+                            html.menu-open .aura { align-self: center; }
 
-                        body:has(.hamburger-menu.active) :is(.hero-text, .quick,                         .pin-spacer, #work, #about, #contact .section-header,                         #contact .content) { opacity: 0; }
+                        html.menu-open :is(.hero-text, .quick,                         .pin-spacer, #work, #about, #contact .section-header,                         #contact .content) { opacity: 0; }
 
     /* HERO */
                         #hero {
@@ -198,7 +215,7 @@
                                 order: 3;
                                 top: 1.5rem;
                                 translate: none;
-                                width: fit-content;
+                                width: calc(var(--quick-w, 242.83px) + 2rem); /* --quick-w is measured in Hero.jsx */
                                 max-width: 100%;
                             }
 
@@ -556,6 +573,11 @@
     /* HAMBURGER MENU */
                 .hamburger-overlay.active { padding: 2rem 3rem; }
 
+            .hamburger-overlay::before {
+                left: 3rem;
+                right: 3rem;
+            }
+
     /* SECTION TRANSITIONS (INTER) */
                                 .inter span { font-size: min(5rem, 15vw); }
 
@@ -570,9 +592,7 @@
                             .hamburger-menu { top: calc(3rem - ((36px - 31.88px) / 2)); }
 
     /* HERO */
-                            #hero > div.center.quick.absolute { width: fit-content; }
-
-                                .main-heading { font-size: 3.75rem; }
+                                                .main-heading { font-size: 3.75rem; }
 
                                     .main-heading p { line-height: 1.125em; }
 

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Glass, Trail, useWidthCheck } from './Header'
@@ -23,12 +23,14 @@ export function Bar ({ vert = true, style }) {
     return <div className = { vert == true ? 'bar-y' : 'bar-x' } style = { style }></div>
 }
 
-export default function Hero ({ onOpenRecents, recentsOpen }) {
+function Hero ({ onOpenRecents, recentsOpen }) {
     const [visible, setVisible] = useState(false)
 
     const heroRef = useRef(null)
     const heroTextRef = useRef(null)
     const ctaRef = useRef(null)
+    const quickRef = useRef(null)
+    const quickWidthRef = useRef(null)
     const [inView, setInView] = useState(true)
     const isDesktop = useWidthCheck()
     const showViewer = isDesktop
@@ -63,6 +65,42 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
         observer.observe(cta)
         return () => observer.disconnect()
     }, [visible])
+
+    useLayoutEffect(() => {
+        const quick = quickRef.current
+        if (!quick) return
+
+        function measure () {
+            const prevWidth = quick.style.width
+            quick.style.width = 'max-content'
+
+            const cs = getComputedStyle(quick)
+            const visible = [...quick.children].filter(el => getComputedStyle(el).display !== 'none')
+            const gap = parseFloat(cs.columnGap) || 0
+            const width = visible.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0)
+                + gap * Math.max(0, visible.length - 1)
+                + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+                + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
+
+            quick.style.width = prevWidth
+            if (!width || width === quickWidthRef.current) return
+            quickWidthRef.current = width
+            quick.style.setProperty('--quick-w', `${ width }px`)
+        }
+
+        measure()
+        document.fonts.ready.then(measure)
+        const observer = new ResizeObserver(measure)
+        ;[...quick.children].forEach(el => observer.observe(el))
+        const mql = window.matchMedia('(max-width: 1024px)')
+        mql.addEventListener('change', measure)
+        window.addEventListener('resize', measure)
+        return () => {
+            observer.disconnect()
+            mql.removeEventListener('change', measure)
+            window.removeEventListener('resize', measure)
+        }
+    }, [])
 
      function handleDownload () {
         const link = document.createElement('a')
@@ -112,7 +150,7 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
                 </Glass>
             </Glass>
         </article>
-        <div className = 'center quick absolute'>
+        <div ref = { quickRef } className = 'center quick absolute'>
             <Idea
                 text = 'Résumé'
                 cltxt = 'fa-solid fa-info'
@@ -141,3 +179,5 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
         </div>
     </section>
 }
+
+export default memo(Hero)

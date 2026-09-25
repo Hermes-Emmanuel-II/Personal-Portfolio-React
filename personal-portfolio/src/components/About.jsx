@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Glass, Trail } from './Header'
@@ -110,7 +110,7 @@ const beyondPreviews = [
 
 const BEYOND_PREVIEW_CYCLE_MS = 10000
 
-export default function About () {
+function About () {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [panelPhase, setPanelPhase] = useState('')
@@ -1124,3 +1124,5 @@ export default function About () {
         </article>
     </section>
 }
+
+export default memo(About)

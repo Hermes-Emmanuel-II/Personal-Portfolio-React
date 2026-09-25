@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 import { Glass, Trail } from './Header'
 import { Idea } from './Hero'
 import { SectionHeader } from './Work'
 import gears from '../assets/gears.png'
 
-export default function Contact () {
+function Contact () {
     const [form, setForm] = useState({ name: '', email: '', message: '' })
     const [sent, setSent] = useState(false)
 
@@ -91,3 +91,5 @@ export default function Contact () {
         </article>
     </section>
 }
+
+export default memo(Contact)

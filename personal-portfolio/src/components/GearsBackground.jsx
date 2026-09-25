@@ -176,6 +176,7 @@ function GearsCanvas ({ onCanvasReady }) {
             camera = {{ position: [0, 0, 80], fov: 75 }}
             gl = {{ preserveDrawingBuffer: true, powerPreference: 'low-power', antialias: false }}
             dpr = { [1, 1.5] }
+            style = {{ pointerEvents: 'none' }}
         >
             { onCanvasReady && <CanvasHandle onReady = { onCanvasReady }/> }
             <GearPair/>

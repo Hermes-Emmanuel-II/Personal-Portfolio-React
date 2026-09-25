@@ -109,7 +109,7 @@ function CylinderRing({
 export default function ThreeDViewer () {
   return (
     <div className = 'gears relative pointer-events-none'>
-      <Canvas camera = {{ position: [2.5, 0, 5], fov: 50 }} dpr = { [1, 1.5] } className = 'in-w in-h'>
+      <Canvas camera = {{ position: [2.5, 0, 5], fov: 50 }} dpr = { [1, 1.5] } className = 'in-w in-h' style = {{ pointerEvents: 'none' }}>
         <Environment resolution = { 256 }>
           <CylinderRing
             count = { 8 }

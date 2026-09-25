@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, memo, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -46,7 +46,7 @@ export function smoothScrollTo (target, opts = {}) {
     })
 }
 
-export function Inter ({ text }) {
+export const Inter = memo(function Inter ({ text }) {
     const containerRef = useRef(null)
     const spanRef = useRef(null)
     const timeoutRef = useRef(null)
@@ -119,11 +119,12 @@ export function Inter ({ text }) {
     return <div ref = { containerRef } className = 'inter relative in-w'>
         <span ref = { spanRef } data-text = { text } className = 'absolute emphasis'>{ text }</span>
     </div>
-}
+})
 
 function Home ({ menuOpen, closeMenu }) {
     const [recentsOpen, setRecentsOpen] = useState(false)
-    const openRecents = () => setRecentsOpen(true)
+    const openRecents = useCallback(() => setRecentsOpen(true), [])
+    const closeRecents = useCallback(() => setRecentsOpen(false), [])
 
     return <>
         <HamburgerMenu isOpen = { menuOpen } onClose = { closeMenu } onOpenRecents = { openRecents }/>
@@ -134,7 +135,7 @@ function Home ({ menuOpen, closeMenu }) {
         <About/>
         <Inter text = 'HELLO'/>
         <Contact/>
-        <Recents isOpen = { recentsOpen } onClose = { () => setRecentsOpen(false) }/>
+        <Recents isOpen = { recentsOpen } onClose = { closeRecents }/>
     </>
 }
 
@@ -145,9 +146,7 @@ export default function App () {
     const isDesktop = useWidthCheck()
     const showGearsBg = isDesktop
 
-    function closeMenu () {
-        setMenuOpen(false)
-    }
+    const closeMenu = useCallback(() => setMenuOpen(false), [])
 
     useEffect(() => {
         if (!isDesktop) return
@@ -156,6 +155,9 @@ export default function App () {
 
     useEffect(() => { setMenuOpen(false) }, [pathname])
     useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+    useLayoutEffect(() => {
+        document.documentElement.classList.toggle('menu-open', menuOpen)
+    }, [menuOpen])
     useEffect(() => {
         if (!scrollNormalizer) return
         if (menuOpen) {
@@ -258,7 +260,6 @@ export default function App () {
             })
         ]).then(() => {
             if (cancelled) return
-
             setTimeout(() => {
                 if (!cancelled) ScrollTrigger.refresh()
             }, 100)
