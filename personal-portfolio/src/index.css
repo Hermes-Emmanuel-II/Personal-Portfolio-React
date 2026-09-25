@@ -365,6 +365,10 @@
                 /* Padding, not margin: overflow clips at the padding edge, so full-bleed
                    backgrounds (#contact::before, the auras) can still reach the screen edges */
                 padding-inline: max(8rem, calc((100% - var(--page-max)) / 2));
+                /* Containing block for the hero aura, so the clip above also catches it.
+                   Without this it's positioned against the page itself, escapes the clip,
+                   and widens the page on phones (Safari then zooms out to fit). */
+                position: relative;
             }
 
                 body.is-scrolling *,
@@ -588,7 +592,10 @@
                                         text-wrap: nowrap;
                                     }
 
-                            .quick { bottom: 2rem; }
+                            #hero > .quick {
+                                top: calc(100vh - 2rem); /* 2rem above the bottom of the first screen */
+                                translate: 0 -100%;
+                            }
 
                                 .quick button {
                                     font-size: var(--fs-1-3);
@@ -1059,7 +1066,8 @@
                         #hero::before {
                             content: '';
                             position: absolute;
-                            inset: 0;
+                            inset: 0 0 auto; /* first screen of the page, full width */
+                            height: 100vh;
                             z-index: -2;
                             background: linear-gradient(to bottom, var(--accent-1) 0%, transparent 75%);
                             opacity: 50%;
