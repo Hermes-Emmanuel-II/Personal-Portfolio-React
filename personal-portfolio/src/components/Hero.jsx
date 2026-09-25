@@ -31,7 +31,7 @@ export default function Hero ({ onOpenRecents, recentsOpen }) {
     const ctaRef = useRef(null)
     const [inView, setInView] = useState(true)
     const isDesktop = useWidthCheck()
-    const showViewer = useWidthCheck('(min-width: 550.1px)')
+    const showViewer = isDesktop
     const tabbable = isDesktop && inView
 
     useEffect(() => {

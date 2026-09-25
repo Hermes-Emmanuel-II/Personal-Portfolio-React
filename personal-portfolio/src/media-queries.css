@@ -102,7 +102,7 @@
                             position: fixed;
                         }
 
-                        body:has(.hamburger-menu.active) :is(header, .hamburger-overlay > ul) { z-index: 6; }
+                    body:has(.hamburger-menu.active) :is(header, .hamburger-overlay > ul) { z-index: 6; }
 
                             html:has(.hamburger-menu.active) .home { display: none; }
 
@@ -113,9 +113,10 @@
                     padding: 2rem 8rem;
                     overflow-y: auto;
                     width: 100vw;
-                    height: calc(100vh - 108px);
+                    height: calc(100vh - var(--header-h, 108px));
+                    height: calc(100dvh - var(--header-h, 108px));
                     inset: 0;
-                    top: 108px;
+                    top: var(--header-h, 108px);
                 }
 
                 .hamburger-overlay.active { display: block; }
@@ -152,15 +153,16 @@
 
                             body:has(.hamburger-menu.active) .aura { align-self: center; }
 
-                            body:has(.hamburger-menu.active) :is(.hero-text, .quick,                         .pin-spacer, #work, #about, #contact .section-header,                         #contact .content) { opacity: 0; }
+                        body:has(.hamburger-menu.active) :is(.hero-text, .quick,                         .pin-spacer, #work, #about, #contact .section-header,                         #contact .content) { opacity: 0; }
 
     /* HERO */
                         #hero {
                             flex-direction: column;
                             justify-content: center;
                             align-items: flex-start;
-                            height: calc(100vh - 107.21px - 1.5rem - 2rem);
-                            min-height: calc(318.98px + 7rem);
+                            height: calc(100vh - var(--header-h, 107.21px) - 1.5rem - 2rem);
+                            height: calc(100svh - var(--header-h, 107.21px) - 1.5rem - 2rem);
+                            min-height: min-content;
                             gap: 0;
                             margin-top: 0;
                         }
@@ -195,7 +197,8 @@
                                 position: relative;
                                 order: 3;
                                 top: 1.5rem;
-                                width: calc(242.83px + 2rem);
+                                width: fit-content;
+                                max-width: 100%;
                             }
 
                                 #hero .quick .bar-y { display: none; }
@@ -243,7 +246,7 @@
                                             right: 0;
                                             margin-inline: auto;
                                             width: calc(50% + 4px);
-                                            min-width: 285.05px;
+                                            min-width: min(285.05px, 100%);
                                             max-width: none;
                                             border-radius: 1rem 1rem 0 0;
                                             z-index: 2;
@@ -253,7 +256,7 @@
 
                                         .iframe-clip {
                                             width: 50%;
-                                            min-width: 285.05px;
+                                            min-width: min(285.05px, 100%);
                                             border-radius: 1rem 1rem 0 0;
                                             max-width: none;
                                             margin-inline: auto;
@@ -495,7 +498,7 @@
 
     /* BEYOND (SEPARATE ROUTE) */
                         #beyond {
-                            --beyond-header-h: 107.21px;
+                            --beyond-header-h: var(--header-h, 107.21px);
                             flex-direction: column-reverse;
                             height: auto;
                             margin: 0;
@@ -535,48 +538,48 @@
 
 @media (max-width: 600px) {
     /* HEADER */
-            header {
-                padding-block: 3rem;
-                width: 100%;
-            }
+                        header {
+                            padding-block: 3rem;
+                            width: 100%;
+                        }
 
-            .home { display: none; }
+                            .home { display: none; }
 
-            .hamburger-menu {
-                top: calc(3rem - ((36px - 30.5px) / 2));
-                right: 3rem;
-            }
+                            .hamburger-menu {
+                                top: calc(3rem - ((36px - 30.5px) / 2));
+                                right: 3rem;
+                            }
 
                             .status { display: none; }
 
     /* HAMBURGER MENU */
-            .hamburger-overlay.active { padding: 2rem 3rem; }
+                .hamburger-overlay.active { padding: 2rem 3rem; }
 
     /* SECTION TRANSITIONS (INTER) */
-                                .inter span { font-size: 5rem; }
+                                .inter span { font-size: min(5rem, 15vw); }
 
     /* SHARED / REUSABLE COMPONENTS */
-        body { margin-inline: 3rem; }
+            body { padding-inline: 3rem; }
 }
 
 @media (max-width: 550px) {
     /* HEADER */
-            header { zoom: calc(.75 / .675); }
+                        header { zoom: calc(.75 / .675); }
 
-            .hamburger-menu { top: calc(3rem - ((36px - 31.88px) / 2)); }
+                            .hamburger-menu { top: calc(3rem - ((36px - 31.88px) / 2)); }
 
     /* HERO */
-            #hero > div.center.quick.absolute { width: calc(218.56px + 2rem); }
+                            #hero > div.center.quick.absolute { width: fit-content; }
 
-            .main-heading { font-size: 3.75rem; }
+                                .main-heading { font-size: 3.75rem; }
 
-                .main-heading p { line-height: 1.125em; }
+                                    .main-heading p { line-height: 1.125em; }
 
-            .crosshair-orbit {
-                zoom: calc(.75 / .675);
-                --cx: calc(50% + .875px);
-                --cy: calc(50% + (.125rem / 2));
-            }
+                                        .crosshair-orbit {
+                                            zoom: calc(.75 / .675);
+                                            --cx: calc(50% + .875px);
+                                            --cy: calc(50% + (.125rem / 2));
+                                        }
 
     /* CONTACT */
                                         .footer-socials a {

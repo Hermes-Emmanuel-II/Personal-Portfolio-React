@@ -187,7 +187,27 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
         }
     }, [location.pathname])
 
-    return <header className = "flex">
+    const headerRef = useRef(null)
+
+    useEffect(() => {
+        const el = headerRef.current
+        if (!el) return
+        const root = document.documentElement
+        function publish () {
+            const h = el.getBoundingClientRect().height
+            if (h) root.style.setProperty('--header-h', `${ h }px`)
+        }
+        publish()
+        const ro = new ResizeObserver(publish)
+        ro.observe(el)
+        window.addEventListener('resize', publish)
+        return () => {
+            ro.disconnect()
+            window.removeEventListener('resize', publish)
+        }
+    }, [])
+
+    return <header ref = { headerRef } className = "flex">
         <section className = "flex gap-xlg">
             { location.pathname !== '/' && <Link
                 to = '/'

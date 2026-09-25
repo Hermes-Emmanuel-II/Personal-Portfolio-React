@@ -19,7 +19,22 @@ const Beyond = lazy(() => import('./components/Beyond'))
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
-const scrollNormalizer = ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
+const isTouchOnly = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+
+ScrollTrigger.config({ ignoreMobileResize: true })
+
+const scrollNormalizer = isTouchOnly ? null : ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
+
+let lvhProbe = null
+export function stableViewportHeight () {
+    if (!lvhProbe) {
+        lvhProbe = document.createElement('div')
+        lvhProbe.setAttribute('aria-hidden', 'true')
+        lvhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none;'
+        document.body.appendChild(lvhProbe)
+    }
+    return lvhProbe.getBoundingClientRect().height || window.innerHeight
+}
 
 export function smoothScrollTo (target, opts = {}) {
     const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize)
@@ -56,7 +71,7 @@ export function Inter ({ text }) {
         ScrollTrigger.create({
             trigger: containerRef.current,
             start: 'top bottom',
-            end: () => `+=${ window.innerHeight * 2.5 }`,
+            end: () => `+=${ stableViewportHeight() * 2.5 }`,
             onEnter: startBouncerTimer,
             onEnterBack: startBouncerTimer,
             onLeave: killBouncerTimer,
@@ -73,7 +88,7 @@ export function Inter ({ text }) {
             scrollTrigger: {
                 trigger: containerRef.current,
                 start: 'top top',
-                end: '+=75%',
+                end: () => `+=${ stableViewportHeight() * 0.75 }`,
                 scrub: 1,
                 pin: true,
                 pinSpacing: true,
@@ -128,7 +143,7 @@ export default function App () {
     const menuOpenRef = useRef(menuOpen)
     const { pathname } = useLocation()
     const isDesktop = useWidthCheck()
-    const showGearsBg = useWidthCheck('(min-width: 550.1px)')
+    const showGearsBg = isDesktop
 
     function closeMenu () {
         setMenuOpen(false)
