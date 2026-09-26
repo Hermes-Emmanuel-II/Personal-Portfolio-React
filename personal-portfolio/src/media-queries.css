@@ -38,6 +38,7 @@
                                 width: calc(1.5rem + 2rem);
                                 right: 8rem;
                                 border-radius: calc(2.5rem / 3);
+                                touch-action: manipulation;
                             }
 
                             .hamburger-menu::before {
@@ -555,7 +556,21 @@
                                 }
 
     /* SHARED / REUSABLE COMPONENTS */
+        .gradient-text { animation: none; }
+
+                                .trail-wrapper { container-type: size; }
+
+                                    .trail-wrapper .trail {
+                                        offset-path: none !important;
+                                        top: -1px;
+                                        left: -1px;
+                                        translate: -50% -50%;
+                                        animation: trail-lap 5s linear infinite;
+                                    }
+
                                         .quick > .clarity > .explanation-tooltip { top: calc(100% - 26.5rem); }
+
+                                                .stats .glass .idea span { animation: none; }
 }
 
 @media (max-width: 600px) {

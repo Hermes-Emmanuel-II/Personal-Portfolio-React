@@ -161,7 +161,7 @@ export default function App () {
         const sections = ['hero', 'work', 'about', 'contact'].map(id => document.getElementById(id)).filter(Boolean)
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => entry.target.classList.toggle('offscreen', !entry.isIntersecting))
-        }, { rootMargin: '25% 0px' })
+        }, { rootMargin: '100% 0px' })
         sections.forEach(section => observer.observe(section))
         return () => {
             observer.disconnect()
@@ -228,6 +228,7 @@ export default function App () {
     }, [])
 
     useEffect(() => {
+        if (isTouchOnly) return
         let scrollTimer
         function handleScroll () {
             document.body.classList.add('is-scrolling')

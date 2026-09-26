@@ -35,12 +35,22 @@ function CaretIcon () {
 }
 
 export function CompletionRing ({ duration, relative = false, onIteration }) {
+    function handleIteration (e) {
+        if (onIteration && e.animationName === 'ring-spin') onIteration()
+    }
+
     return <div
         className = { `completion-ring square round ${ relative ? 'relative' : 'absolute' }` }
-        style = {{ animation: `sweep ${ duration }ms linear infinite` }}
-        onAnimationIteration = { onIteration }
+        style = {{ '--ring-dur': `${ duration }ms` }}
+        onAnimationIteration = { handleIteration }
         aria-hidden = 'true'
-    ></div>
+    >
+        <div className = 'ring-band absolute round'>
+            <span className = 'ring-spin absolute'></span>
+            <span className = 'ring-cover absolute'></span>
+            <span className = 'ring-fill absolute'></span>
+        </div>
+    </div>
 }
 
 const services = [

@@ -145,17 +145,29 @@
     }
 }
 
+@keyframes ring-cover {
+    0% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes ring-fill {
+    0% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+
+@keyframes ring-spin { to { rotate: 360deg; } }
+
 @keyframes simulation {
-    0% { left: 12%; top: 10%; }
-    15% { left: 65%; top: 14%; }
-    20% { left: 62%; top: 18%; }
-    35% { left: 62%; top: 18%; }
-    55% { left: calc(2.5rem + 6%); top: 68%; }
-    60% { left: calc(2.5rem + 10%); top: 72%; }
-    70% { left: calc(2.5rem + 10%); top: 72%; }
-    85% { left: calc(2.5rem + 36%); top: 78%; }
-    90% { left: calc(2.5rem + 32%); top: 74%; }
-    100% { left: 12%; top: 10%; }
+    0% { translate: 12% 10%; }
+    15% { translate: 65% 14%; }
+    20% { translate: 62% 18%; }
+    35% { translate: 62% 18%; }
+    55% { translate: calc(2.5rem + 6%) 68%; }
+    60% { translate: calc(2.5rem + 10%) 72%; }
+    70% { translate: calc(2.5rem + 10%) 72%; }
+    85% { translate: calc(2.5rem + 36%) 78%; }
+    90% { translate: calc(2.5rem + 32%) 74%; }
+    100% { translate: 12% 10%; }
 }
 
 @keyframes slide {
@@ -189,6 +201,13 @@
 }
 
 @keyframes sweep { to { --angle: 360deg; } }
+
+@keyframes trail-lap {
+    0%, 100% { transform: translate(0, 0); }
+    35% { transform: translate(100cqw, 0); }
+    50% { transform: translate(100cqw, 100cqh); }
+    85% { transform: translate(0, 100cqh); }
+}
 
 @keyframes trail-move-fade {
     0% { offset-distance: 0%; opacity: 0; }
@@ -697,14 +716,40 @@
                                         margin: calc(var(--ring-halo) * -1);
                                         right: calc(2.5rem + 4px);
                                         bottom: calc(2.5rem + 4px);
-                                        background:
-                                            radial-gradient(circle closest-side,
-                                                var(--BGC) calc(100% - var(--ring-halo) - var(--ring-stroke) - (var(--ring-aa) / 2)),
-                                                transparent calc(100% - var(--ring-halo) - var(--ring-stroke) + (var(--ring-aa) / 2)),
-                                                transparent calc(100% - var(--ring-halo) - (var(--ring-aa) / 2)),
-                                                var(--BGC) calc(100% - var(--ring-halo) + (var(--ring-aa) / 2))),
-                                            conic-gradient(from 0deg, var(--accent-2) var(--angle), var(--accent-1) 0deg);
+                                        background-color: var(--BGC);
                                     }
+
+                                        .ring-band {
+                                            inset: var(--ring-halo);
+                                            overflow: hidden;
+                                            background-color: var(--accent-1);
+                                            -webkit-mask: radial-gradient(circle closest-side,
+                                                transparent calc(100% - var(--ring-stroke) - (var(--ring-aa) / 2)),
+                                                #000 calc(100% - var(--ring-stroke) + (var(--ring-aa) / 2)));
+                                            mask: radial-gradient(circle closest-side,
+                                                transparent calc(100% - var(--ring-stroke) - (var(--ring-aa) / 2)),
+                                                #000 calc(100% - var(--ring-stroke) + (var(--ring-aa) / 2)));
+                                        }
+
+                                            .ring-band > span {
+                                                inset: 0 50% 0 0;
+                                                background-color: var(--accent-2);
+                                            }
+
+                                            .ring-band > .ring-spin {
+                                                transform-origin: 100% 50%;
+                                                animation: ring-spin var(--ring-dur) linear infinite;
+                                            }
+
+                                            .ring-band > .ring-cover {
+                                                background-color: var(--accent-1);
+                                                animation: ring-cover var(--ring-dur) step-end infinite;
+                                            }
+
+                                            .ring-band > .ring-fill {
+                                                inset: 0 0 0 50%;
+                                                animation: ring-fill var(--ring-dur) step-end infinite;
+                                            }
 
             /* TARGETED STYLING */
                 /* GEARS BACKGROUND */
@@ -2390,7 +2435,7 @@
                                                                 align-self: flex-start;
                                                                 gap: .625rem;
                                                                 margin-left: auto;
-                                                                padding: .3125rem 1rem 0 .5rem;
+                                                                padding: .3125rem .5rem 0 .5rem;
                                                                 color: #C4C7C5;
                                                                 font-size: .3125rem;
                                                             }
@@ -3858,9 +3903,17 @@
                                             .services section:last-of-type > div:nth-child(2).panel-slide-in-y { animation: panel-slide-in-y 1.2s ease forwards; }
 
                                             .cursor {
-                                                width: 2rem;
+                                                inset: 0;
+                                                aspect-ratio: auto;
+                                                pointer-events: none;
                                                 animation: simulation 20s ease-in-out infinite;
                                             }
+
+                                                .cursor > * {
+                                                    display: block;
+                                                    width: 2rem;
+                                                    height: 2rem;
+                                                }
 
                                                 .cursor svg {
                                                     stroke-width: 2.5rem;
