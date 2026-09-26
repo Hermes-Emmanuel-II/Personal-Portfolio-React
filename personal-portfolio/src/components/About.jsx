@@ -35,22 +35,12 @@ function CaretIcon () {
 }
 
 export function CompletionRing ({ duration, relative = false, onIteration }) {
-    function handleIteration (e) {
-        if (onIteration && e.animationName === 'ring-spin') onIteration()
-    }
-
     return <div
         className = { `completion-ring square round ${ relative ? 'relative' : 'absolute' }` }
-        style = {{ '--ring-dur': `${ duration }ms` }}
-        onAnimationIteration = { handleIteration }
+        style = {{ animation: `sweep ${ duration }ms linear infinite` }}
+        onAnimationIteration = { onIteration }
         aria-hidden = 'true'
-    >
-        <div className = 'ring-band absolute round'>
-            <span className = 'ring-spin absolute'></span>
-            <span className = 'ring-cover absolute'></span>
-            <span className = 'ring-fill absolute'></span>
-        </div>
-    </div>
+    ></div>
 }
 
 const services = [
@@ -285,7 +275,7 @@ function About () {
         }
     }, [])
 
-    return <section id = 'about' ref = { aboutRef } className = 'column center'>
+    return <section id = 'about' ref = { aboutRef } className = 'column center relative'>
         <SectionHeader symbol = '//' title = 'about'/>
         <article className = 'content relative column gap-lg'>
             <article className = 'relative block'>
@@ -304,25 +294,25 @@ function About () {
                 <section key = { resetSeq } className = 'services flex relative' style = {{ '--cycle': `${ cycle }ms` }}>
                     <section className = 'column gap relative'>
                         <span>{ services[currentIndex].service }</span>
-                        <p className = 'block'>{ services[currentIndex].text }</p>
+                        <p className = 'block in-h'>{ services[currentIndex].text }</p>
                         <div className = 'flex gap'>
-                            <img key = { `${ currentIndex }-one-${ transitionSeqRef.current }` } src = { services[currentIndex].one } style = { iconStyle(1) }/>
-                            <img key = { `${ currentIndex }-two-${ transitionSeqRef.current }` } src = { services[currentIndex].two } style = { iconStyle(2) }/>
-                            <img key = { `${ currentIndex }-three-${ transitionSeqRef.current }` } src = { services[currentIndex].three } style = { iconStyle(3) }/>
+                            <img className = 'square' key = { `${ currentIndex }-one-${ transitionSeqRef.current }` } src = { services[currentIndex].one } style = { iconStyle(1) }/>
+                            <img className = 'square' key = { `${ currentIndex }-two-${ transitionSeqRef.current }` } src = { services[currentIndex].two } style = { iconStyle(2) }/>
+                            <img className = 'square' key = { `${ currentIndex }-three-${ transitionSeqRef.current }` } src = { services[currentIndex].three } style = { iconStyle(3) }/>
                         </div>
                     </section>
                     <section className = 'relative'>
-                        <div className = { panelClass('x') } style = { panelStyle() }>
-                            <div className = { `service-panel analytics in-w in-h column ${ currentIndex == 3 ? 'active' : '' }` }>
+                        <div className = { `${ panelClass('x') } relative` } style = { panelStyle() }>
+                            <div className = { `service-panel analytics in-w in-h column nowrap ${ currentIndex == 3 ? 'active' : '' }` }>
                                 <div className = 'analytics-chrome column in-w'>
                                     <div className = 'analytics-chrome-tabs flex'>
                                         <span className = 'analytics-tab-search center'><i className = 'fa-solid fa-chevron-down'></i></span>
-                                        <div className = 'analytics-chrome-tab active flex'>
+                                        <div className = 'analytics-chrome-tab active flex relative'>
                                             <span className = 'analytics-favicon square'></span>
                                             <span className = 'analytics-tab-title nowrap'>Audience Overview</span>
                                             <span className = 'analytics-chrome-close'>×</span>
                                         </div>
-                                        <div className = 'analytics-chrome-tab flex'>
+                                        <div className = 'analytics-chrome-tab flex relative'>
                                             <span className = 'analytics-favicon google square round'></span>
                                             <span className = 'analytics-tab-title nowrap'>Google</span>
                                             <span className = 'analytics-chrome-close'>×</span>
@@ -334,7 +324,7 @@ function About () {
                                             <i className = 'fa-solid fa-xmark'></i>
                                         </div>
                                     </div>
-                                    <div className = 'analytics-chrome-bar flex center'>
+                                    <div className = 'analytics-chrome-bar flex center gap-md'>
                                         <i className = 'fa-solid fa-arrow-left'></i>
                                         <i className = 'fa-solid fa-arrow-right'></i>
                                         <i className = 'fa-solid fa-rotate-right'></i>
@@ -366,7 +356,7 @@ function About () {
                                         </ul>
                                         <div className = 'analytics-segments flex gap-md'>
                                             <div className = 'analytics-segment center gap-md'>
-                                                <div className = 'analytics-segment-icon round square center'>
+                                                <div className = 'analytics-segment-icon round square center in-h'>
                                                     <div className = 'round square'></div>
                                                 </div>
                                                 <div className = 'analytics-segment-text column'>
@@ -375,7 +365,7 @@ function About () {
                                                 </div>
                                             </div>
                                             <div className = 'analytics-segment add center gap-md'>
-                                                <div className = 'analytics-segment-icon round square center'>
+                                                <div className = 'analytics-segment-icon round square center in-h'>
                                                     <div className = 'round square'></div>
                                                 </div>
                                                 <div className = 'analytics-segment-text column'>
@@ -390,7 +380,7 @@ function About () {
                                 <img className = 'blender-render absolute' src = { car }/>
                                 <div className = 'blender-topbar absolute in-w flex'>
                                     <i className = 'fa-solid fa-circle-nodes blender-logo'></i>
-                                    <ul className = 'blender-menu-bar flex'>
+                                    <ul className = 'blender-menu-bar flex gap-md'>
                                         <li>File</li>
                                         <li>Edit</li>
                                         <li>Render</li>
@@ -407,13 +397,13 @@ function About () {
                                         <span className = 'nowrap'>Scene</span>
                                     </div>
                                 </div>
-                                <div className = 'blender-viewport-header absolute flex center'>
+                                <div className = 'blender-viewport-header absolute flex center gap-md'>
                                     <div className = 'blender-mode flex center'>
                                         <i className = 'fa-solid fa-cube'></i>
                                         <span className = 'nowrap'>Object Mode</span>
                                         <i className = 'fa-solid fa-caret-down'></i>
                                     </div>
-                                    <ul className = 'blender-view-menu flex'>
+                                    <ul className = 'blender-view-menu flex gap-md'>
                                         <li>View</li>
                                         <li>Select</li>
                                         <li>Add</li>
@@ -515,12 +505,12 @@ function About () {
                                 <div className = 'analytics-chrome column in-w'>
                                     <div className = 'analytics-chrome-tabs flex'>
                                         <span className = 'analytics-tab-search center'><i className = 'fa-solid fa-chevron-down'></i></span>
-                                        <div className = 'analytics-chrome-tab active flex'>
+                                        <div className = 'analytics-chrome-tab active flex relative'>
                                             <span className = 'analytics-favicon square'></span>
                                             <span className = 'analytics-tab-title nowrap'>Miro - FlexFund</span>
                                             <span className = 'analytics-chrome-close'>×</span>
                                         </div>
-                                        <div className = 'analytics-chrome-tab flex'>
+                                        <div className = 'analytics-chrome-tab flex relative'>
                                             <span className = 'analytics-favicon google square round'></span>
                                             <span className = 'analytics-tab-title nowrap'>Google</span>
                                             <span className = 'analytics-chrome-close'>×</span>
@@ -532,7 +522,7 @@ function About () {
                                             <i className = 'fa-solid fa-xmark'></i>
                                         </div>
                                     </div>
-                                    <div className = 'analytics-chrome-bar flex center'>
+                                    <div className = 'analytics-chrome-bar flex center gap-md'>
                                         <i className = 'fa-solid fa-arrow-left'></i>
                                         <i className = 'fa-solid fa-arrow-right'></i>
                                         <i className = 'fa-solid fa-rotate-right'></i>
@@ -550,11 +540,11 @@ function About () {
                                     <div className = 'miro-frame column'>
                                         <span className = 'miro-frame-label nowrap'>01 · Cart</span>
                                         <div className = 'miro-card column'>
-                                            <div className = 'miro-card-top'>
+                                            <div className = 'miro-card-top in-w'>
                                                 <span className = 'miro-brand emphasis'>FlexFund</span>
                                             </div>
-                                            <span className = 'miro-heading emphasis'>Review your cart</span>
-                                        <div className = 'miro-row flex center'>
+                                            <span className = 'miro-heading emphasis in-w'>Review your cart</span>
+                                        <div className = 'miro-row flex center in-w'>
                                             <div className = 'miro-row-thumb square'></div>
                                             <div className = 'miro-row-text column'>
                                                 <span className = 'miro-row-name nowrap emphasis'>FlexFund Investment Portfolio</span>
@@ -562,7 +552,7 @@ function About () {
                                             </div>
                                             <span className = 'miro-row-price nowrap emphasis'>$500</span>
                                         </div>
-                                        <div className = 'miro-row flex center'>
+                                        <div className = 'miro-row flex center in-w'>
                                             <div className = 'miro-row-thumb square'></div>
                                             <div className = 'miro-row-text column'>
                                                 <span className = 'miro-row-name nowrap emphasis'>FlexFund Guidebook</span>
@@ -583,11 +573,11 @@ function About () {
                                     <div className = 'miro-frame column'>
                                         <span className = 'miro-frame-label nowrap'>02 · Payment</span>
                                         <div className = 'miro-card column'>
-                                            <div className = 'miro-card-top'>
+                                            <div className = 'miro-card-top in-w'>
                                                 <span className = 'miro-brand emphasis'>FlexFund</span>
                                             </div>
-                                            <span className = 'miro-heading emphasis'>Choose a payment method</span>
-                                        <div className = 'miro-row flex center'>
+                                            <span className = 'miro-heading emphasis in-w'>Choose a payment method</span>
+                                        <div className = 'miro-row flex center in-w'>
                                             <div className = 'miro-row-thumb square'></div>
                                             <div className = 'miro-row-text column'>
                                                 <span className = 'miro-row-name nowrap emphasis'>Visa ****4582</span>
@@ -595,7 +585,7 @@ function About () {
                                             </div>
                                             <span className = 'miro-row-price nowrap emphasis'>✓</span>
                                         </div>
-                                        <div className = 'miro-row flex center'>
+                                        <div className = 'miro-row flex center in-w'>
                                             <div className = 'miro-row-thumb square'></div>
                                             <div className = 'miro-row-text column'>
                                                 <span className = 'miro-row-name nowrap emphasis'>FlexFund Wallet</span>
@@ -616,11 +606,11 @@ function About () {
                                     <div className = 'miro-frame column'>
                                         <span className = 'miro-frame-label nowrap'>03 · Success</span>
                                         <div className = 'miro-card column'>
-                                            <div className = 'miro-card-top'>
+                                            <div className = 'miro-card-top in-w'>
                                                 <span className = 'miro-brand emphasis'>FlexFund</span>
                                             </div>
-                                            <span className = 'miro-heading emphasis'>Your purchase is successful</span>
-                                        <div className = 'miro-row flex center'>
+                                            <span className = 'miro-heading emphasis in-w'>Your purchase is successful</span>
+                                        <div className = 'miro-row flex center in-w'>
                                             <div className = 'miro-row-thumb square'></div>
                                             <div className = 'miro-row-text column'>
                                                 <span className = 'miro-row-name nowrap emphasis'>Amount</span>
@@ -628,7 +618,7 @@ function About () {
                                             </div>
                                             <span className = 'miro-row-price nowrap emphasis'>$249.99</span>
                                         </div>
-                                        <div className = 'miro-row flex center'>
+                                        <div className = 'miro-row flex center in-w'>
                                             <div className = 'miro-row-thumb square'></div>
                                             <div className = 'miro-row-text column'>
                                                 <span className = 'miro-row-name nowrap emphasis'>FlexFund Welcome Kit</span>
@@ -662,9 +652,9 @@ function About () {
                                 <div className = 'miro-guide absolute in-h'></div>
                             </div>
                             <div className = { `service-panel vsc in-h column relative ${ currentIndex == 0 ? 'active' : '' }` }>
-                                <div className = 'vsc-titlebar flex center'>
+                                <div className = 'vsc-titlebar flex center gap-md'>
                                     <i className = 'fa-solid fa-code vsc-logo'></i>
-                                    <ul className = 'vsc-menu flex'>
+                                    <ul className = 'vsc-menu flex gap-md'>
                                         <li>File</li>
                                         <li>Edit</li>
                                         <li>Selection</li>
@@ -797,15 +787,15 @@ function About () {
                             <div className = 'iphone-status-bar absolute flex in-w center'>
                                 <span className = 'iphone-time'>12:12</span>
                                 <div className = 'dynamic-island flex center absolute ctr-abs-x'>
-                                    <span className = 'island-sensor'></span>
-                                    <span className = 'island-camera'></span>
+                                    <span className = 'island-sensor round'></span>
+                                    <span className = 'island-camera round'></span>
                                 </div>
-                                <div className = 'iphone-status-icons flex'>
+                                <div className = 'iphone-status-icons flex gap-md'>
                                     <i className = 'fa-solid fa-signal'></i>
                                     <i className = 'fa-solid fa-battery'></i>
                                 </div>
                             </div>
-                            <div className = { `service-panel hotjar in-w column relative ${ currentIndex == 3 ? 'active' : '' }` }>
+                            <div className = { `service-panel hotjar in-w column relative nowrap ${ currentIndex == 3 ? 'active' : '' }` }>
                                 <div className = 'hotjar-header center emphasis relative'>
                                     <i>Subjects</i>
                                     <i className = 'fa-solid fa-bars'></i>
@@ -930,7 +920,7 @@ function About () {
                                         <span className = 'figma-hint'>Line it up with the frame</span>
                                         <div className = 'figma-card in-w relative'>
                                             <div className = 'figma-card-wall absolute'></div>
-                                            <div className = 'figma-card-desk absolute'></div>
+                                            <div className = 'figma-card-desk absolute in-w'></div>
                                             <div className = 'figma-card-face absolute'>Lorem ipsum dolor sit amet consectetuer adipiscing</div>
                                         </div>
                                     </div>
@@ -944,7 +934,7 @@ function About () {
                                         <span className = 'figma-hint'>Line it up with the frame</span>
                                         <div className = 'figma-card in-w relative'>
                                             <div className = 'figma-card-wall absolute'></div>
-                                            <div className = 'figma-card-desk absolute'></div>
+                                            <div className = 'figma-card-desk absolute in-w'></div>
                                             <div className = 'figma-card-face absolute'>Lorem ipsum dolor sit amet consectetuer adipiscing</div>
                                         </div>
                                     </div>
@@ -1018,10 +1008,10 @@ function About () {
                                     </div>
                                 </div>
                                 <div className = 'illustrator-menu absolute column'>
-                                    <span>✓ Place and link</span>
-                                    <span>Place and embed</span>
-                                    <span className = 'disabled'>Replace</span>
-                                    <span>Open in Illustrator</span>
+                                    <span className = 'nowrap'>✓ Place and link</span>
+                                    <span className = 'nowrap'>Place and embed</span>
+                                    <span className = 'disabled nowrap'>Replace</span>
+                                    <span className = 'nowrap'>Open in Illustrator</span>
                                 </div>
                             </div>
                         </div>
@@ -1031,7 +1021,7 @@ function About () {
                 </section>
                 <div className = 'column center gap-xlg'>
                     <button
-                        className = { `nav-arrow center ${ isTransitioning ? 'disabled' : '' }` }
+                        className = { `nav-arrow center square pointer ${ isTransitioning ? 'disabled' : '' }` }
                         onClick = { advanceService }
                         tabIndex = { (isTransitioning || !inView) ? -1 : 0 }
                         data-keep-tabbable
@@ -1039,7 +1029,7 @@ function About () {
                         <CaretIcon/>
                     </button>
                     <button
-                        className = { `nav-arrow center ${ isTransitioning ? 'disabled' : '' }` }
+                        className = { `nav-arrow center square pointer ${ isTransitioning ? 'disabled' : '' }` }
                         onClick = { regressService }
                         tabIndex = { (isTransitioning || !inView) ? -1 : 0 }
                         data-keep-tabbable
@@ -1062,7 +1052,7 @@ function About () {
                     <section class = 'gap column workflow-content'>
                         <span className = 'flex'>{ workflow[workflowIndex].title }</span>
                         {
-                            !explain ? <p className = 'block'>{ workflow[workflowIndex].text }</p> :
+                            !explain ? <p className = 'block in-h'>{ workflow[workflowIndex].text }</p> :
                             <p className = 'block'>{ workflow[workflowIndex].eli5 }</p>
                         }
                         <Glass
@@ -1074,14 +1064,14 @@ function About () {
                             data-keep-tabbable
                         >
                             <Trail/>
-                            <span>{ !explain ? 'Simplify' : 'Detail' }</span>
+                            <span className = 'nowrap'>{ !explain ? 'Simplify' : 'Detail' }</span>
                         </Glass>
                     </section>
                     <CompletionRing key = { workflowIndex } duration = { cycle } onIteration = { autoAdvanceWorkflow }/>
                 </section>
                 <div className = 'column center gap-xlg'>
                     <button
-                        className = 'nav-arrow center'
+                        className = 'nav-arrow center square pointer'
                         onClick = { advanceWorkflow }
                         tabIndex = { inView ? 0 : -1 }
                         data-keep-tabbable
@@ -1089,7 +1079,7 @@ function About () {
                         <CaretIcon/>
                     </button>
                     <button
-                        className = 'nav-arrow center'
+                        className = 'nav-arrow center square pointer'
                         onClick = { regressWorkflow }
                         tabIndex = { inView ? 0 : -1 }
                         data-keep-tabbable
@@ -1117,7 +1107,7 @@ function About () {
                         to = '/beyond'
                         onClick = { () => sessionStorage.setItem('beyondCategory', String(beyondPreviewIndex)) }
                     >
-                        <Idea text = { beyondPreviews[beyondPreviewIndex].label } cltxt = 'fa-solid fa-arrow-up-long rotate'/>
+                        <Idea className = 'gap' text = { beyondPreviews[beyondPreviewIndex].label } cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                     </Link>
                 </section>
                 <section className = 'column gap'>
@@ -1130,7 +1120,7 @@ function About () {
                         data-keep-tabbable
                     >
                         <Trail once = { false }/>
-                        <Idea text = 'Motion' cltxt = 'fa-solid fa-arrow-up-long rotate'/>
+                        <Idea className = 'in-w' text = 'Motion' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                     </Glass>
                     <Glass
                         as = 'a'
@@ -1141,7 +1131,7 @@ function About () {
                         data-keep-tabbable
                     >
                         <Trail once = { false }/>
-                        <Idea text = 'Pencilling' cltxt = 'fa-solid fa-arrow-up-long rotate'/>
+                        <Idea className = 'in-w' text = 'Pencilling' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                     </Glass>
                     <Glass
                         as = { Link }
@@ -1152,7 +1142,7 @@ function About () {
                         data-keep-tabbable
                     >
                         <Trail once = { false }/>
-                        <Idea text = 'Pixel Art' cltxt = 'fa-solid fa-arrow-up-long rotate'/>
+                        <Idea className = 'in-w' text = 'Pixel Art' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                     </Glass>
                 </section>
             </section>

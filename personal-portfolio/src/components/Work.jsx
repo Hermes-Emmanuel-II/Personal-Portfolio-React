@@ -18,11 +18,12 @@ import three from '../assets/external-icons/three.png'
 import typescript from '../assets/external-icons/typescript.png'
 import vsc from '../assets/external-icons/vsc.png'
 
+import face from '../assets/face.png'
 import gears from '../assets/gears.png'
 
 export function SectionHeader (props) {
     const temp = props.title
-    return <div className = 'section-header'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
+    return <div className = 'section-header in-w'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
 }
 
 function withDesktopPreview (src) {
@@ -76,9 +77,9 @@ function Work ({ onOpenRecents }) {
 
     const testimonials = [
         {
-            img: react,
-            quote: 'Hermes is a total game-changer! Passionate about his work, and he actualised our vision faster than I thought possible.',
-            name: 'John Smith'
+            img: face,
+            quote: "I did great — If I do say so myself. Seriously though, I'm working on getting more testimonials.",
+            name: 'Me'
         }
     ]
 
@@ -215,19 +216,19 @@ function Work ({ onOpenRecents }) {
 
     const canLoadPreview = useTabletUp()
 
-    return <section id = 'work' ref = { workRef } className = 'column center'>
+    return <section id = 'work' ref = { workRef } className = 'column center relative'>
         <SectionHeader symbol = '\\' title = 'work' />
         <article className = 'content center column gap-lg relative'>
             <span className = 'center block'>Turning complex ideas into sharp, functional interfaces — one dedicated build at a time.</span>
             <div
-                className = 'stack-wrapper gap-lg relative'
+                className = 'stack-wrapper gap-lg relative column in-w'
                 onMouseEnter = { () => setVisible(true) }
                 onMouseLeave = { () => setVisible(false) }
                 onFocus = { () => setVisible(true) }
                 onBlur = { (e) => { if (!e.currentTarget.contains(e.relatedTarget)) setVisible(false) } }
                 tabIndex = { inView ? 0 : -1 } data-keep-tabbable
             >
-                <ul className = 'stack-first flex gap-lg'>
+                <ul className = 'stack-first flex gap-lg in-w'>
                     { rest.map(item => {
                         return <li className = 'center square relative' key = { item.text }>
                             <img
@@ -241,9 +242,9 @@ function Work ({ onOpenRecents }) {
                         </li>
                     }) }
                 </ul>
-                <div className = { `stack-ellipsis ${ visible ? 'hidden' : '' }` }></div>
-                <div className = { `stack-rest-shell ${ visible ? 'visible' : '' }` }>
-                    <ul className = { `stack-rest flex gap-lg ${ visible ? 'visible' : '' }` }>
+                <div className = { `stack-ellipsis absolute round ${ visible ? 'hidden' : '' }` }></div>
+                <div className = { `stack-rest-shell in-w ${ visible ? 'visible' : '' }` }>
+                    <ul className = { `stack-rest flex gap-lg in-w ${ visible ? 'visible' : '' }` }>
                         { firstSix.map(item => {
                             return <li className = 'center square relative' key = { item.text }>
                                 <img
@@ -265,7 +266,7 @@ function Work ({ onOpenRecents }) {
                         <Fragment key = { item.key }>
                             <button
                                 type = 'button'
-                                className = {`pointer ${ filter === item.key ? 'active' : '' }`}
+                                className = {`pointer nowrap ${ filter === item.key ? 'active' : '' }`}
                                 onClick = { () => handleFiltering(item.key) }
                                 tabIndex = { inView ? 0 : -1 }
                                 data-keep-tabbable
@@ -280,7 +281,7 @@ function Work ({ onOpenRecents }) {
                     )) }
                 </div>
                 <Clarity tabIndex = { inView ? 0 : -1 }>
-                    <table className = 'tooltip-table relative'>
+                    <table className = 'tooltip-table relative in-w'>
                         <thead>
                             <tr>
                                 <th>Category</th>
@@ -290,17 +291,17 @@ function Work ({ onOpenRecents }) {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Brand Design</td>
+                                <td className = 'emphasis'>Brand Design</td>
                                 <td>Stra&shy;te&shy;gic and vi&shy;sual iden&shy;tity crea&shy;tion for bu&shy;si&shy;ness&shy;es, in&shy;clu&shy;ding lo&shy;gos, co&shy;lor pa&shy;le&shy;ttes, and guide&shy;lines.</td>
                                 <td>Iden&shy;tity, Guide&shy;lines, Logos</td>
                             </tr>
                             <tr>
-                                <td>Mobile App Design</td>
+                                <td className = 'emphasis'>Mobile App Design</td>
                                 <td>De&shy;si&shy;gning in&shy;tui&shy;tive and en&shy;ga&shy;ging user ex&shy;pe&shy;rien&shy;ces spe&shy;ci&shy;fi&shy;ca&shy;lly for na&shy;tive mo&shy;bile app&shy;li&shy;ca&shy;tions (iOS/An&shy;droid).</td>
                                 <td>UX/UI, In&shy;te&shy;rac&shy;tion, Mobile</td>
                             </tr>
                             <tr>
-                                <td>Website Design</td>
+                                <td className = 'emphasis'>Website Design</td>
                                 <td>Struc&shy;tu&shy;ring, sty&shy;ling, and la&shy;ying out res&shy;pon&shy;sive web pages for op&shy;timal user ex&shy;pe&shy;ri&shy;ence across va&shy;rious de&shy;vi&shy;ces.</td>
                                 <td>Respon&shy;sive&shy;ness, Layout, Web</td>
                             </tr>
@@ -308,13 +309,16 @@ function Work ({ onOpenRecents }) {
                     </table>
                 </Clarity>
             </section>
-            <section className = 'current-project relative flex' tabIndex = { inView ? 0 : -1 } data-keep-tabbable >
+            <section className = 'current-project relative flex in-w' tabIndex = { inView ? 0 : -1 } data-keep-tabbable >
                 { result.length > 0 ? (
                     <>
                         { result.length > 2 && (
                             <span
                                 className = 'absolute square ctr-abs-y'
                                 onClick = { () => setCurrent((current - 1 + result.length) % result.length) }
+                                onKeyDown = { (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCurrent((current - 1 + result.length) % result.length) } } }
+                                role = 'button'
+                                aria-label = 'Previous project'
                                 tabIndex = { inView ? 0 : -1 } data-keep-tabbable
                             >
                                 <i className = 'fa-solid fa-caret-right'></i>
@@ -324,6 +328,9 @@ function Work ({ onOpenRecents }) {
                             <span
                                 className = 'absolute square ctr-abs-y'
                                 onClick = { () => setCurrent((current + 1) % result.length) }
+                                onKeyDown = { (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCurrent((current + 1) % result.length) } } }
+                                role = 'button'
+                                aria-label = 'Next project'
                                 tabIndex = { inView ? 0 : -1 } data-keep-tabbable
                             >
                                 <i className = 'fa-solid fa-caret-right'></i>
@@ -362,7 +369,8 @@ function Work ({ onOpenRecents }) {
                                         loading = 'lazy'
                                         frameBorder = '0'
                                         scrolling = 'no'
-                                        className = 'in-h in-w'
+                                        tabIndex = { -1 }
+                                        className = 'in-h in-w block'
                                         style = {{ display: isCurrent ? 'block' : 'none' }}
                                     />
                                 }) }
@@ -382,7 +390,7 @@ function Work ({ onOpenRecents }) {
                         </section>
                         <section className = 'relative block in-h column gap-lg description'>
                             <div className = 'emphasis'>{ result[current].title }</div>
-                            <div dangerouslySetInnerHTML = {{ __html: result[current].text }} />
+                            <div className = 'in-h' dangerouslySetInnerHTML = {{ __html: result[current].text }} />
                             <img className = "absolute" src = { gears } alt = 'Brand Logo — Two Gears'></img>
                             <Glass
                                 as = 'button'
@@ -392,7 +400,7 @@ function Work ({ onOpenRecents }) {
                                 onClick = { () => setInspectOpen(true) }
                             >
                                 <Trail once = { true } />
-                                <Idea text = 'Inspect' cltxt = 'fa-solid fa-up-right-and-down-left-from-center' />
+                                <Idea text = 'Inspect' cltxt = 'fa-solid fa-up-right-and-down-left-from-center' tabIndex = { -1 }/>
                             </Glass>
                             <Inspect
                                 isOpen = { inspectOpen }
@@ -436,7 +444,7 @@ function Work ({ onOpenRecents }) {
                     tabIndex = { inView ? 0 : -1 } data-keep-tabbable
                 >
                     <Trail once = { false } />
-                    <Idea text = { projects.length } cltxt = 'fa-solid fa-arrow-up-long rotate' />
+                    <Idea text = { projects.length } cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                 </Glass>
                 <Glass
                     as = 'button'
@@ -446,10 +454,10 @@ function Work ({ onOpenRecents }) {
                     tabIndex = { inView ? 0 : -1 } data-keep-tabbable
                 >
                     <Trail once = { false } />
-                    <Idea text = { recentCount } cltxt = 'fa-solid fa-arrow-up-long rotate' />
+                    <Idea text = { recentCount } cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                 </Glass>
             </section>
-            <section className = 'quotes flex relative in-w none'>
+            <section className = 'quotes flex relative in-w'>
                 <div className = 'quotes-inner in-h absolute flex'
                     style = {{
                         width: `${ width } * ${ loopedTestimonials.length }`,

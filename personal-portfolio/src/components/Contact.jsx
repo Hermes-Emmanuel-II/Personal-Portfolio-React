@@ -28,7 +28,7 @@ function Contact () {
         setForm(prev => ({ ...prev, [name]: value }))
     }
 
-    return <section id = 'contact' ref = { contactRef } className = 'column center'>
+    return <section id = 'contact' ref = { contactRef } className = 'column center relative'>
         <div className = 'contact-aura absolute ctr-abs-xy'></div>
         <SectionHeader symbol = '#' title = 'hello'/>
         <article className = 'content relative column gap-lg'>
@@ -82,10 +82,10 @@ function Contact () {
                 <div className = 'footer-logo square' style = {{ backgroundImage: `url(${ gears })` }}></div>
                 <div className = 'footer-text'>© <span className = 'current-year'>{ new Date().getFullYear() }</span> Hermes E.</div>
                 <div className = 'footer-socials flex'>
-                    <a href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-facebook'></i></a>
-                    <a href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-github'></i></a>
-                    <a href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-linkedin'></i></a>
-                    <a href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-x-twitter'></i></a>
+                    <a className = 'block' href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-facebook in-w'></i></a>
+                    <a className = 'block' href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-github in-w'></i></a>
+                    <a className = 'block' href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-linkedin in-w'></i></a>
+                    <a className = 'block' href = '' target = '_blank' rel = 'noreferrer' tabIndex = { inView ? 0 : -1 } data-keep-tabbable><i className = 'fa-brands fa-x-twitter in-w'></i></a>
                 </div>
             </footer>
         </article>

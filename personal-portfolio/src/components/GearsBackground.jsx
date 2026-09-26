@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -225,7 +225,7 @@ function MirrorCanvas ({ sourceEl }) {
     return <canvas ref = { canvasRef } className = 'block in-w in-h'/>
 }
 
-function GearsBackground () {
+export default function GearsBackground () {
     const [sourceEl, setSourceEl] = useState(null)
 
     return (
@@ -241,5 +241,3 @@ function GearsBackground () {
         </div>
     )
 }
-
-export default memo(GearsBackground)

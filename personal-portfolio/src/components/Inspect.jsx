@@ -116,6 +116,7 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
             <i className = 'absolute down direction-indicator fa-solid fa-arrow-right'/>
             <i className = 'absolute right direction-indicator fa-solid fa-arrow-down'/>
             <img
+              className = 'block'
               src = { project.figma }
               alt = { project.title }
               draggable = { false }
@@ -143,7 +144,7 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
               data-keep-tabbable
             >
               <Trail once = { true } />
-              <Idea text = 'Github' cltxt = 'fa-solid fa-arrow-up-long rotate' />
+              <Idea text = 'Github' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
             </Glass>
           )}
         </section>

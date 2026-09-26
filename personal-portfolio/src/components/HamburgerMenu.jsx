@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 
 import { smoothScrollTo } from '../App'
 import resume from '../assets/resume.pdf'
 
-function HamburgerOption ({ action, destination, href, prompt, onSelect, tabIndex }) {
+function HamburgerOption ({ action, destination, href, prompt, tabIndex, onSelect }) {
     function handleClick (e) {
         if (action) {
             e.preventDefault()
@@ -34,6 +34,11 @@ function HamburgerOption ({ action, destination, href, prompt, onSelect, tabInde
 
 export default function HamburgerMenu ({ isOpen, onClose, onOpenRecents }) {
     const navigate = useNavigate()
+    const [slot, setSlot] = useState(null)
+
+    useLayoutEffect(() => {
+        setSlot(document.querySelector('.hamburger-slot'))
+    }, [])
 
     function handleDownload () {
         const link = document.createElement('a')
@@ -44,12 +49,10 @@ export default function HamburgerMenu ({ isOpen, onClose, onOpenRecents }) {
         document.body.removeChild(link)
     }
 
+    if (!slot) return null
+
     return createPortal(
-        <div
-            className = { `hamburger-overlay none column ${ isOpen ? 'active' : '' }` }
-            aria-hidden = { !isOpen }
-        >
-            <ul className = 'column gap-lg in-w'>
+        <ul className = 'column gap-lg'>
                 <ul>
                     <span>Sections</span>
                     <HamburgerOption destination = 'work' prompt = 'Work' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
@@ -68,8 +71,7 @@ export default function HamburgerMenu ({ isOpen, onClose, onOpenRecents }) {
                     <HamburgerOption href = 'https://github.com/' prompt = 'Frontend Builds' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
                     <HamburgerOption href = 'https://www.linkedin.com/in/ifechukwu-emmanuel-ibeneme/details/certifications/' prompt = 'Certifications' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
                 </ul>
-            </ul>
-        </div>,
-        document.body
+        </ul>,
+        slot
     )
 }

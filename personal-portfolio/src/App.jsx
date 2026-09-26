@@ -37,21 +37,26 @@ export function stableViewportHeight () {
 }
 
 export function smoothScrollTo (target, opts = {}) {
-    const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize)
+    const el = typeof target === 'string' ? document.querySelector(target) : target instanceof Element ? target : null
+    const offsetY = el ? parseFloat(getComputedStyle(el).scrollMarginTop) || 0 : 0
     gsap.to(window, {
         duration: .375,
         ease: 'power2.inOut',
-        scrollTo: { y: target, offsetY: remPx * 3 },
+        scrollTo: { y: target, offsetY },
         ...opts
     })
 }
 
 export const Inter = memo(function Inter ({ text }) {
+    const trackRef = useRef(null)
     const containerRef = useRef(null)
     const spanRef = useRef(null)
     const timeoutRef = useRef(null)
+    const sticky = isTouchOnly
 
     useGSAP(() => {
+        const anchor = sticky ? trackRef.current : containerRef.current
+
         gsap.set(containerRef.current, { opacity: 0 })
 
         gsap.set(spanRef.current, { xPercent: -50 })
@@ -69,7 +74,7 @@ export const Inter = memo(function Inter ({ text }) {
         }
 
         ScrollTrigger.create({
-            trigger: containerRef.current,
+            trigger: anchor,
             start: 'top bottom',
             end: () => `+=${ stableViewportHeight() * 2.5 }`,
             onEnter: startBouncerTimer,
@@ -86,13 +91,15 @@ export const Inter = memo(function Inter ({ text }) {
 
         const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: containerRef.current,
+                trigger: anchor,
                 start: 'top top',
                 end: () => `+=${ stableViewportHeight() * 0.75 }`,
                 scrub: 1,
-                pin: true,
-                pinSpacing: true,
-                anticipatePin: 1,
+                ...(sticky ? {} : {
+                    pin: true,
+                    pinSpacing: true,
+                    anticipatePin: 1
+                }),
                 invalidateOnRefresh: true,
                 preventOverlaps: 'inter-fade',
                 onEnter: softenLanding,
@@ -112,29 +119,30 @@ export const Inter = memo(function Inter ({ text }) {
                 ease: 'none',
                 duration: 0.25
             }, 0.125)
-    }, { scope: containerRef })
+    }, { scope: sticky ? trackRef : containerRef })
 
     useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
-    return <div ref = { containerRef } className = 'inter relative in-w'>
+    const inter = <div ref = { containerRef } className = 'inter relative in-w'>
         <span ref = { spanRef } data-text = { text } className = 'absolute emphasis'>{ text }</span>
     </div>
+
+    return sticky ? <div ref = { trackRef } className = 'inter-track in-w'>{ inter }</div> : inter
 })
 
 function Home ({ menuOpen, closeMenu }) {
     const [recentsOpen, setRecentsOpen] = useState(false)
     const openRecents = useCallback(() => setRecentsOpen(true), [])
     const closeRecents = useCallback(() => setRecentsOpen(false), [])
-    const showInter = useWidthCheck()
 
     return <>
         <HamburgerMenu isOpen = { menuOpen } onClose = { closeMenu } onOpenRecents = { openRecents }/>
         <Hero onOpenRecents = { openRecents } recentsOpen = { recentsOpen }/>
-        { showInter && <Inter text = 'WORK'/> }
+        <Inter text = 'WORK'/>
         <Work onOpenRecents = { openRecents }/>
-        { showInter && <Inter text = 'ABOUT'/> }
+        <Inter text = 'ABOUT'/>
         <About/>
-        { showInter && <Inter text = 'HELLO'/> }
+        <Inter text = 'HELLO'/>
         <Contact/>
         <Recents isOpen = { recentsOpen } onClose = { closeRecents }/>
     </>
@@ -161,7 +169,7 @@ export default function App () {
         const sections = ['hero', 'work', 'about', 'contact'].map(id => document.getElementById(id)).filter(Boolean)
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => entry.target.classList.toggle('offscreen', !entry.isIntersecting))
-        }, { rootMargin: '100% 0px' })
+        }, { rootMargin: '25% 0px' })
         sections.forEach(section => observer.observe(section))
         return () => {
             observer.disconnect()
@@ -228,7 +236,6 @@ export default function App () {
     }, [])
 
     useEffect(() => {
-        if (isTouchOnly) return
         let scrollTimer
         function handleScroll () {
             document.body.classList.add('is-scrolling')

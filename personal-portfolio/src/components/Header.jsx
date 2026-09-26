@@ -20,8 +20,8 @@ export const Glass = forwardRef(function Glass ({ as: Tag = 'div', distort = tru
 export function Trail ({ once = false , children}) {
     const trail = once ? 'trail-once' : 'trail'
     const wrapper = once ? 'trail-wrapper-once' : 'trail-wrapper'
-    return <div className = { wrapper }>
-        <div className = { trail }></div>
+    return <div className = { `${ wrapper } absolute` }>
+        <div className = { `${ trail } absolute` }></div>
         { children }
     </div>
 }
@@ -47,7 +47,7 @@ export function Clarity ({ text, children, icon, className = '', tabIndex, onCli
             <div className = 'lin-grad-tran-hack round absolute'></div>
         </Glass>
         { (text || children) && <Glass className = 'explanation-tooltip absolute'>
-            { children ? children : <span className = 'relative center'>{ text }</span> }
+            { children ? children : <span className = 'relative center nowrap'>{ text }</span> }
         </Glass> }
     </div>
 }
@@ -76,6 +76,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
     const navRef = useRef(null)
     const navPushTimer = useRef(null)
     const hamburgerRef = useRef(null)
+    const drawerRef = useRef(null)
     const location = useLocation()
     const isDesktop = useWidthCheck()
     const options = { threshold: Array.from({ length: 6 }, (_, i) => i * 0.2) }
@@ -193,9 +194,15 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
         const el = headerRef.current
         if (!el) return
         const root = document.documentElement
+        let last = null
         function publish () {
-            const h = el.getBoundingClientRect().height
-            if (h) root.style.setProperty('--header-h', `${ h }px`)
+            const drawer = drawerRef.current
+            const rect = el.getBoundingClientRect()
+            const fixed = getComputedStyle(el).position === 'fixed'
+            const h = (fixed ? rect.bottom : rect.height) - (drawer ? drawer.getBoundingClientRect().height : 0)
+            if (!h || h === last) return
+            last = h
+            root.style.setProperty('--header-h', `${ h }px`)
         }
         publish()
         const ro = new ResizeObserver(publish)
@@ -208,14 +215,15 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
     }, [])
 
     return <header ref = { headerRef } className = "flex">
+        <div className = 'header-glass absolute none' aria-hidden = 'true'></div>
         <section className = "flex gap-xlg">
             { location.pathname !== '/' && <Link
                 to = '/'
                 className = 'back-button'
-                tabIndex = { isDesktop ? 0 : -1 }
+                tabIndex = { 0 }
                 data-keep-tabbable
             >
-                <Clarity text = 'Back' icon = { <i className = "fa-solid fa-arrow-left"></i> }/>
+                <Clarity icon = { <i className = "fa-solid fa-arrow-left"></i> }/>
             </Link> }
             <div className = 'column gap-md'>
                 <span className = "nowrap">Hermes E.</span>
@@ -227,7 +235,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                     <li className = 'center block in-w in-h'>
                         <a
                             href = '#work'
-                            className = { `pointer ${ !isHome && activeIndex === 0 ? 'active' : '' }` }
+                            className = { `pointer center relative in-w in-h ${ !isHome && activeIndex === 0 ? 'active' : '' }` }
                             tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'work') }
@@ -236,7 +244,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                     <li className = 'center block in-w in-h'>
                         <a
                             href = '#about'
-                            className = { `pointer ${ !isHome && activeIndex === 1 ? 'active' : '' }` }
+                            className = { `pointer center relative in-w in-h ${ !isHome && activeIndex === 1 ? 'active' : '' }` }
                             tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'about') }
@@ -245,7 +253,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                     <li className = 'center block in-w in-h'>
                         <a
                             href = '#contact'
-                            className = { `pointer ${ !isHome && activeIndex === 2 ? 'active' : '' }` }
+                            className = { `pointer center relative in-w in-h ${ !isHome && activeIndex === 2 ? 'active' : '' }` }
                             tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'contact') }
@@ -266,35 +274,38 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                     data-keep-tabbable
                 >
                     <ul className = 'column'>
-                        <li>
+                        <li className = 'relative'>
                             <a
+                                className = 'block pointer nowrap'
                                 href = 'https://www.figma.com/'
                                 target = '_blank'
                                 rel = 'noopener noreferrer'
                                 tabIndex = { isDesktop ? 0 : -1 }
                                 data-keep-tabbable
                             >Skip to Design Blueprints</a>
-                            <i className = 'fa-brands fa-figma'></i>
+                            <i className = 'fa-brands fa-figma absolute'></i>
                         </li>
-                        <li>
+                        <li className = 'relative'>
                             <a
+                                className = 'block pointer nowrap'
                                 href = 'https://github.com/'
                                 target = '_blank'
                                 rel = 'noopener noreferrer'
                                 tabIndex = { isDesktop ? 0 : -1 }
                                 data-keep-tabbable
                             >Skip to Frontend Builds</a>
-                            <i className = 'fa-brands fa-github'></i>
+                            <i className = 'fa-brands fa-github absolute'></i>
                         </li>
-                        <li>
+                        <li className = 'relative'>
                             <a
+                                className = 'block pointer nowrap'
                                 href = 'https://www.linkedin.com/in/ifechukwu-emmanuel-ibeneme/details/certifications/'
                                 target = '_blank'
                                 rel = 'noopener noreferrer'
                                 tabIndex = { isDesktop ? 0 : -1 }
                                 data-keep-tabbable
                             >Skip to Certifications</a>
-                            <i className = 'fa-brands fa-linkedin-in'></i>
+                            <i className = 'fa-brands fa-linkedin-in absolute'></i>
                         </li>
                     </ul>
                 </Glass>
@@ -302,7 +313,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
         <a
             href = '#'
             className = { `home ${ isHome ? 'none' : '' }` }
-            tabIndex = { (isDesktop && !isHome) ? 0 : -1 }
+            tabIndex = { !isHome ? 0 : -1 }
             data-keep-tabbable
             onClick = { (e) => { e.preventDefault(); smoothScrollTo(0) } }
         >
@@ -314,12 +325,15 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                 <div className = "in-w in-h round relative"></div>
             </div>
             <span className = 'block'>Available</span>
-            <Clarity text = 'Availability Status' tabIndex = { isDesktop && isHome ? 0 : -1 }/>
+            <Clarity text = 'Availability Status' tabIndex = { (!isDesktop || isHome) ? 0 : -1 }/>
         </section>
         { location.pathname === '/' && (
             <button
                 ref = { hamburgerRef }
+                type = 'button'
                 className = { `hamburger-menu none ${ menuOpen ? 'active' : '' }` }
+                aria-label = { menuOpen ? 'Close menu' : 'Open menu' }
+                aria-expanded = { menuOpen }
                 tabIndex = { 0 }
                 data-keep-tabbable
                 onClick = { () => onToggleMenu && onToggleMenu(!menuOpen) }
@@ -329,6 +343,15 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                     <div className = "bar"></div>
                 </div>
             </button>
+        ) }
+        { location.pathname === '/' && (
+            <div
+                ref = { drawerRef }
+                className = { `hamburger-drawer none ${ menuOpen ? 'active' : '' }` }
+                aria-hidden = { !menuOpen }
+            >
+                <div className = 'hamburger-slot'></div>
+            </div>
         ) }
     </header>
 }

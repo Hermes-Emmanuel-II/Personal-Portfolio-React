@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { CompletionRing } from './About'
-import { useWidthCheck } from './Header'
 import { Bar } from './Hero'
 import color from '../color.js'
 
@@ -83,8 +82,7 @@ export default function Beyond () {
         }
     ]
 
-    const isDesktop = useWidthCheck()
-    const tabIndex = isDesktop ? 0 : -1
+    const tabIndex = 0
 
     const [currentIndex, setCurrentIndex] = useState(0)
     const [entryIndex, setEntryIndex] = useState(0)
@@ -220,12 +218,12 @@ export default function Beyond () {
                         </div>
                     )) }
                 </div>
-                <div className = 'column in-h'>
+                <div className = 'column in-h gap-xlg'>
                     <div className = 'in-w column in-h gap-md'>
                         <span className = 'block'>{ `${ cards[currentIndex].title }` }</span>
                         <span>{ `${ entries.length } Entries` }</span>
                         <Bar vert = { false }></Bar>
-                        <div className = 'in-h flex'>
+                        <div className = 'in-h flex in-w'>
                             { entries.length > 0 ? (
                                 entries.map((entry, index) => (
                                     <button
@@ -250,7 +248,7 @@ export default function Beyond () {
                             cards[currentIndex].tech == false ? <span>Non-technical craft</span> :
                             [cards[currentIndex].one, cards[currentIndex].two, cards[currentIndex].three]
                                 .filter(Boolean)
-                                .map(src => <img key = { src } src = { src } alt = ''/>)
+                                .map(src => <img className = 'square' key = { src } src = { src } alt = ''/>)
                         }
                     </div>
                     <span className = 'block in-w'>{ cards[currentIndex].exp }</span>

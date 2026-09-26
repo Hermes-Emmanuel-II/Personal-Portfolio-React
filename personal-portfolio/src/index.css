@@ -145,29 +145,17 @@
     }
 }
 
-@keyframes ring-cover {
-    0% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-}
-
-@keyframes ring-fill {
-    0% { opacity: 0; }
-    50%, 100% { opacity: 1; }
-}
-
-@keyframes ring-spin { to { rotate: 360deg; } }
-
 @keyframes simulation {
-    0% { translate: 12% 10%; }
-    15% { translate: 65% 14%; }
-    20% { translate: 62% 18%; }
-    35% { translate: 62% 18%; }
-    55% { translate: calc(2.5rem + 6%) 68%; }
-    60% { translate: calc(2.5rem + 10%) 72%; }
-    70% { translate: calc(2.5rem + 10%) 72%; }
-    85% { translate: calc(2.5rem + 36%) 78%; }
-    90% { translate: calc(2.5rem + 32%) 74%; }
-    100% { translate: 12% 10%; }
+    0% { left: 12%; top: 10%; }
+    15% { left: 65%; top: 14%; }
+    20% { left: 62%; top: 18%; }
+    35% { left: 62%; top: 18%; }
+    55% { left: calc(2.5rem + 6%); top: 68%; }
+    60% { left: calc(2.5rem + 10%); top: 72%; }
+    70% { left: calc(2.5rem + 10%); top: 72%; }
+    85% { left: calc(2.5rem + 36%); top: 78%; }
+    90% { left: calc(2.5rem + 32%); top: 74%; }
+    100% { left: 12%; top: 10%; }
 }
 
 @keyframes slide {
@@ -201,13 +189,6 @@
 }
 
 @keyframes sweep { to { --angle: 360deg; } }
-
-@keyframes trail-lap {
-    0%, 100% { transform: translate(0, 0); }
-    35% { transform: translate(100cqw, 0); }
-    50% { transform: translate(100cqw, 100cqh); }
-    85% { transform: translate(0, 100cqh); }
-}
 
 @keyframes trail-move-fade {
     0% { offset-distance: 0%; opacity: 0; }
@@ -384,7 +365,7 @@
                         transition-delay: .25s;
                     }
 
-                        a { color: var(--lum-2); }
+                            a { color: var(--lum-2); }
 
             body {
                 --page-max: 100rem;
@@ -445,7 +426,6 @@
 
                                 .trail-wrapper,
                                 .trail-wrapper-once {
-                                    position: absolute;
                                     inset: 0;
                                     border-radius: inherit;
                                     border: 2px solid transparent;
@@ -459,7 +439,6 @@
 
                                     .trail,
                                     .trail-wrapper-once .trail-once {
-                                        position: absolute;
                                         width: 2.5rem;
                                         height: 2.5rem;
                                         background: radial-gradient(circle, #80FF00 10%, #00FFFF 60%, transparent 100%);
@@ -474,65 +453,65 @@
                                     transition: opacity 0s;
                                 }
 
-                            .clarity { pointer-events: none; }
+                                .clarity { pointer-events: none; }
 
-                                .clarity > .glass.round {
-                                    height: 2.5rem;
-                                    font-size: var(--fs-1-2);
-                                }
-
-                                .clarity > .glass.round::after {
-                                    pointer-events: auto;
-                                    clip-path: circle(50%);
-                                }
-
-                                .clarity > .glass.round,
-                                .clarity > .glass.round * { cursor: pointer; }
-
-                                .clarity > .glass.round::before {
-                                    z-index: 2;
-                                    transition: background .5s ease;
-                                }
-
-                                .clarity > .glass.round:hover::before,
-                                .clarity > .glass.round:focus-visible::before { background: var(--accent-2); }
-
-                                .clarity > .glass.round::after { z-index: 2; }
-
-                                    .clarity > .glass.round .lin-grad-tran-hack {
-                                        inset: 0;
-                                        background:
-                                            linear-gradient(rgba(0, 128, 128, .25), rgba(0, 128, 128, .25)),
-                                            linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
+                                    .clarity > .glass.round {
+                                        height: 2.5rem;
+                                        font-size: var(--fs-1-2);
                                     }
 
-                                    .glass.round .lin-grad-tran-hack::after {
-                                        content: '';
-                                        position: absolute;
-                                        inset: 0;
-                                        border-radius: inherit;
-                                        background:
-                                            linear-gradient(rgba(124, 252, 0, .25), rgba(124, 252, 0, .25)),
-                                            linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
+                                    .clarity > .glass.round::after {
+                                        pointer-events: auto;
+                                        clip-path: circle(50%);
+                                    }
+
+                                    .clarity > .glass.round,
+                                    .clarity > .glass.round * { cursor: pointer; }
+
+                                    .clarity > .glass.round::before {
+                                        z-index: 2;
+                                        transition: background .5s ease;
+                                    }
+
+                                    .clarity > .glass.round:hover::before,
+                                    .clarity > .glass.round:focus-visible::before { background: var(--accent-2); }
+
+                                    .clarity > .glass.round::after { z-index: 2; }
+
+                                        .clarity > .glass.round .lin-grad-tran-hack {
+                                            inset: 0;
+                                            background:
+                                                linear-gradient(rgba(0, 128, 128, .25), rgba(0, 128, 128, .25)),
+                                                linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
+                                        }
+
+                                        .glass.round .lin-grad-tran-hack::after {
+                                            content: '';
+                                            position: absolute;
+                                            inset: 0;
+                                            border-radius: inherit;
+                                            background:
+                                                linear-gradient(rgba(124, 252, 0, .25), rgba(124, 252, 0, .25)),
+                                                linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
+                                            opacity: 0;
+                                            transition: opacity .5s ease;
+                                        }
+
+                                        .glass.round:hover .lin-grad-tran-hack::after,
+                                        .glass.round:focus-visible .lin-grad-tran-hack::after { opacity: .5; }
+
+                                    .explanation-tooltip {
+                                        top: calc(100% + 1.5rem);
+                                        padding: .5rem 1rem;
+                                        border-radius: calc(2rem / 3);
+                                        min-height: 2rem;
+                                        height: auto;
                                         opacity: 0;
-                                        transition: opacity .5s ease;
+                                        pointer-events: none;
+                                        right: 0;
+                                        width: fit-content;
+                                        z-index: 3;
                                     }
-
-                                    .glass.round:hover .lin-grad-tran-hack::after,
-                                    .glass.round:focus-visible .lin-grad-tran-hack::after { opacity: .5; }
-
-                                .explanation-tooltip {
-                                    top: calc(100% + 1.5rem);
-                                    padding: .5rem 1rem;
-                                    border-radius: calc(2rem / 3);
-                                    min-height: 2rem;
-                                    height: auto;
-                                    opacity: 0;
-                                    pointer-events: none;
-                                    right: 0;
-                                    width: fit-content;
-                                    z-index: 3;
-                                }
 
                                         .quick > .clarity:hover .explanation-tooltip,
                                         .quick > .clarity:has(:focus-visible) .explanation-tooltip {
@@ -540,40 +519,39 @@
                                             transition-delay: .5s;
                                         }
 
-                                    .clarity .explanation-tooltip span {
-                                        font-size: var(--fs-1-3);
-                                        z-index: 2;
-                                        text-wrap: nowrap;
-                                        height: 1rem;
-                                        color: var(--lum-1);
-                                    }
+                                        .clarity .explanation-tooltip span {
+                                            font-size: var(--fs-1-3);
+                                            z-index: 2;
+                                            height: 1rem;
+                                            color: var(--lum-1);
+                                        }
 
-                                    .clarity > .glass.round svg:not(.duplicate),
-                                    .clarity > .glass.round i:not(.duplicate) {
-                                        font-size: var(--fs-1-1);
-                                        color: var(--lum-1);
-                                        z-index: 3;
-                                        stroke: var(--accent-1);
-                                        stroke-width: 1.5rem;
-                                        transition: color .5s ease, stroke .5s ease;
-                                        transform: none !important;
-                                        rotate: none !important;
-                                    }
+                                        .clarity > .glass.round svg:not(.duplicate),
+                                        .clarity > .glass.round i:not(.duplicate) {
+                                            font-size: var(--fs-1-1);
+                                            color: var(--lum-1);
+                                            z-index: 3;
+                                            stroke: var(--accent-1);
+                                            stroke-width: 1.5rem;
+                                            transition: color .5s ease, stroke .5s ease;
+                                            transform: none !important;
+                                            rotate: none !important;
+                                        }
 
-                                    .clarity > .glass.round svg.fa-question:not(.duplicate),
-                                    .clarity > .glass.round i.fa-question:not(.duplicate) { margin-left: .125rem; }
+                                        .clarity > .glass.round svg.fa-question:not(.duplicate),
+                                        .clarity > .glass.round i.fa-question:not(.duplicate) { margin-left: .125rem; }
 
-                                    .clarity > .glass.round:hover svg,
-                                    .clarity > .glass.round:hover i,
-                                    .clarity > .glass.round:focus-visible svg,
-                                    .clarity > .glass.round:focus-visible i { color: var(--accent-2) !important; }
+                                        .clarity > .glass.round:hover svg,
+                                        .clarity > .glass.round:hover i,
+                                        .clarity > .glass.round:focus-visible svg,
+                                        .clarity > .glass.round:focus-visible i { color: var(--accent-2) !important; }
 
-                                    .clarity > .glass.round svg.duplicate,
-                                    .clarity > .glass.round i.duplicate {
-                                        color: var(--accent-2);
-                                        z-index: 1;
-                                        transform: scaleY(-1);
-                                    }
+                                        .clarity > .glass.round svg.duplicate,
+                                        .clarity > .glass.round i.duplicate {
+                                            color: var(--accent-2);
+                                            z-index: 1;
+                                            transform: scaleY(-1);
+                                        }
 
                             .gears {
                                 height: 17.5rem;
@@ -597,11 +575,11 @@
                                 animation: gears-aura-pulse 10s ease-in-out infinite;
                             }
 
-                                .explanation-tooltip::after {
-                                    background:
-                                        linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
-                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
-                                }
+                                    .explanation-tooltip::after {
+                                        background:
+                                            linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
+                                            linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                    }
 
                 .popup-base::after {
                     background:
@@ -615,7 +593,6 @@
                                     .idea span,
                                     .idea svg {
                                         z-index: 2;
-                                        text-wrap: nowrap;
                                     }
 
                             #hero > .quick {
@@ -628,7 +605,6 @@
                                     padding-inline: 2rem;
                                     padding-block: auto;
                                     height: 2rem;
-                                    text-wrap: nowrap;
                                 }
 
                                 .quick button:hover,
@@ -646,8 +622,8 @@
                                     .idea-link:focus-visible .idea svg,
                                     .quick .idea.active span,
                                     .quick .idea.active svg {
-                                        color: var(--lum-1);
-                                        fill: var(--lum-1);
+                                        color: var(--accent-2);
+                                        fill: var(--accent-2);
                                     }
 
                                     .quick .idea svg { height: 2rem; }
@@ -683,7 +659,6 @@
                                 height: 2rem;
                                 font-family: var(--font-2);
                                 line-height: 85%;
-                                width: 100%;
                             }
 
                                 .section-header span { color: var(--accent-1); }
@@ -716,40 +691,14 @@
                                         margin: calc(var(--ring-halo) * -1);
                                         right: calc(2.5rem + 4px);
                                         bottom: calc(2.5rem + 4px);
-                                        background-color: var(--BGC);
+                                        background:
+                                            radial-gradient(circle closest-side,
+                                                var(--BGC) calc(100% - var(--ring-halo) - var(--ring-stroke) - (var(--ring-aa) / 2)),
+                                                transparent calc(100% - var(--ring-halo) - var(--ring-stroke) + (var(--ring-aa) / 2)),
+                                                transparent calc(100% - var(--ring-halo) - (var(--ring-aa) / 2)),
+                                                var(--BGC) calc(100% - var(--ring-halo) + (var(--ring-aa) / 2))),
+                                            conic-gradient(from 0deg, var(--accent-2) var(--angle), var(--accent-1) 0deg);
                                     }
-
-                                        .ring-band {
-                                            inset: var(--ring-halo);
-                                            overflow: hidden;
-                                            background-color: var(--accent-1);
-                                            -webkit-mask: radial-gradient(circle closest-side,
-                                                transparent calc(100% - var(--ring-stroke) - (var(--ring-aa) / 2)),
-                                                #000 calc(100% - var(--ring-stroke) + (var(--ring-aa) / 2)));
-                                            mask: radial-gradient(circle closest-side,
-                                                transparent calc(100% - var(--ring-stroke) - (var(--ring-aa) / 2)),
-                                                #000 calc(100% - var(--ring-stroke) + (var(--ring-aa) / 2)));
-                                        }
-
-                                            .ring-band > span {
-                                                inset: 0 50% 0 0;
-                                                background-color: var(--accent-2);
-                                            }
-
-                                            .ring-band > .ring-spin {
-                                                transform-origin: 100% 50%;
-                                                animation: ring-spin var(--ring-dur) linear infinite;
-                                            }
-
-                                            .ring-band > .ring-cover {
-                                                background-color: var(--accent-1);
-                                                animation: ring-cover var(--ring-dur) step-end infinite;
-                                            }
-
-                                            .ring-band > .ring-fill {
-                                                inset: 0 0 0 50%;
-                                                animation: ring-fill var(--ring-dur) step-end infinite;
-                                            }
 
             /* TARGETED STYLING */
                 /* GEARS BACKGROUND */
@@ -762,10 +711,11 @@
                         }
 
                             .gears-bg-layer {
-                                position: absolute;
-                                aspect-ratio: 1 / 1;
+                                --gear-w: 420px;
+                                --gear-x: 120px;
+                                --gear-y: -120px;
                                 position: fixed;
-                                width: 35vw;
+                                width: var(--gear-w);
                                 z-index: 0;
                                 opacity: calc(1/3);
                                 scale: 1.5;
@@ -773,14 +723,14 @@
                             }
 
                             .webgl-background-bottom {
-                                top: -6.375rem;
-                                left: 13.25rem;
+                                top: var(--gear-y);
+                                left: calc(50% - var(--gear-x) - (var(--gear-w) / 2));
                                 transform: scaleY(-1);
                             }
 
                             .webgl-background-top {
-                                bottom: -6.375rem;
-                                right: 13.25rem;
+                                bottom: var(--gear-y);
+                                left: calc(50% + var(--gear-x) - (var(--gear-w) / 2));
                                 transform: scaleX(-1);
                             }
 
@@ -890,13 +840,7 @@
                                     nav ul li { z-index: 2; }
 
                                         nav > ul li a {
-                                            width: 100%;
-                                            height: 100%;
-                                            display: flex;
-                                            align-items: center;
-                                            justify-content: center;
                                             text-align: center;
-                                            position: relative;
                                             transition: color var(--tran-2);
                                             transition-delay: .25s;
                                         }
@@ -968,22 +912,17 @@
                                         .skip ul li {
                                             list-style: none;
                                             overflow: hidden;
-                                            position: relative;
                                         }
 
                                             .skip ul li a {
-                                                display: block;
                                                 text-decoration: none;
                                                 font-size: var(--fs-1-3);
-                                                text-wrap: nowrap;
                                                 padding: .5rem 2rem;
                                                 transition: background var(--tran-1);
                                                 color: var(--lum-2);
-                                                cursor: pointer;
                                             }
 
                                             .skip ul li svg {
-                                                position: absolute;
                                                 top: -25%;
                                                 height: 4rem;
                                                 width: 4rem;
@@ -1057,8 +996,6 @@
                                         transition-delay: 2s;
                                     }
 
-                                    .back-button:hover .explanation-tooltip,
-                                    .back-button:focus-visible .explanation-tooltip,
                                     .home:hover .explanation-tooltip,
                                     .home:focus-visible .explanation-tooltip {
                                         opacity: 1;
@@ -1076,8 +1013,6 @@
 
                             .home,
                             .home * { cursor: pointer; }
-
-                                        .back-button .explanation-tooltip { left: 0; }
 
                 /* HERO */
                                             .cta button .trail-wrapper-once .trail-once {
@@ -1160,7 +1095,6 @@
                                     font-family: var(--font-2);
                                     font-size: 3rem;
                                     color: var(--lum-1);
-                                    position: relative;
                                 }
 
                                 .main-heading::after {
@@ -1271,6 +1205,17 @@
                             height: calc(25vh + 4.25rem) !important;
                             height: calc(25lvh + 4.25rem) !important;
                         }
+
+                        .inter-track {
+                            height: 75vh;
+                            height: 75lvh;
+                            pointer-events: none;
+                        }
+
+                            .inter-track > .inter {
+                                position: sticky;
+                                top: 0;
+                            }
 
                             .inter {
                                 font-size: var(--fs-2-1);
@@ -1402,18 +1347,14 @@
 
                         #work {
                             gap: 3.75rem;
-                            scroll-margin-top: 3rem;
+                            scroll-margin-top: 3.75rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
-                            position: relative;
                         }
 
                                 .stack-wrapper {
-                                    display: flex;
-                                    flex-direction: column;
                                     align-items: center;
-                                    width: 100%;
                                     max-width: 37.5rem;
                                     --stack-delay: .125s;
                                     --stack-dur-dot: .25s;
@@ -1423,14 +1364,11 @@
                                     .stack-first {
                                         flex-wrap: wrap;
                                         justify-content: center;
-                                        width: 100%;
                                     }
 
                                     .stack-ellipsis {
-                                        position: absolute;
                                         width: .5rem;
                                         height: .5rem;
-                                        border-radius: 50%;
                                         background-color: var(--accent-1);
                                         cursor: none;
                                         opacity: 1;
@@ -1463,7 +1401,6 @@
                                     .stack-rest-shell {
                                         display: grid;
                                         grid-template-rows: 0fr;
-                                        width: 100%;
                                         overflow: hidden;
                                         margin-top: .5rem;
                                         transition:
@@ -1483,7 +1420,6 @@
                                         .stack-rest {
                                             flex-wrap: wrap;
                                             justify-content: center;
-                                            width: 100%;
                                             min-height: 0;
                                             opacity: 0;
                                             transition: opacity var(--stack-dur-dot) ease var(--stack-delay);
@@ -1542,7 +1478,6 @@
                                             .tooltip-table {
                                                 border-collapse: collapse;
                                                 table-layout: fixed;
-                                                width: 100%;
                                                 text-align: center;
                                                 z-index: 2;
                                             }
@@ -1576,14 +1511,12 @@
 
                                                         .tooltip-table td:first-child {
                                                             color: var(--accent-2);
-                                                            font-weight: 1000;
                                                         }
 
                                 .current-project {
                                     height: 16rem;
                                     border-radius: 2.5rem;
                                     border: var(--border);
-                                    width: 100%;
                                     overflow: hidden;
                                     z-index: 2;
                                     transition: opacity var(--tran-2) 1s;
@@ -1627,9 +1560,6 @@
                                             scale: 1.25;
                                         }
 
-                                        .current-project > span > svg,
-                                        .description > div:nth-child(2) { height: 100%; }
-
                                     .current-project > span:first-of-type:not(.project-empty) {
                                         left: 2rem;
                                         transform: translateY(-50%) scaleX(-1);
@@ -1672,7 +1602,6 @@
 
                                             .iframe-clip iframe {
                                                 border-radius: inherit;
-                                                display: block;
                                                 zoom: .2;
                                             }
 
@@ -2016,7 +1945,6 @@
                                 .right { --dir-delay: 2s; }
 
                                 .inspect-scroll img {
-                                    display: block;
                                     -webkit-user-drag: none;
                                     padding: 0rem;
                                     margin: 5rem;
@@ -2123,20 +2051,15 @@
 
                                                 .workflow-content .glass span {
                                                     z-index: 2;
-                                                    text-wrap: nowrap;
                                                 }
 
                         #about {
                             gap: 3.75rem;
-                            scroll-margin-top: 3rem;
+                            scroll-margin-top: 3.75rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
-                            position: relative;
                         }
-
-                                            .services section:first-of-type p,
-                                            .workflow-content p { height: 100%; }
 
                                             .workflow-content .glass { width: fit-content; }
 
@@ -2218,9 +2141,7 @@
 
                                         .nav-arrow {
                                             z-index: 1;
-                                            cursor: pointer;
                                             width: 2.5rem;
-                                            aspect-ratio: 1 / 1;
                                         }
 
                                         .services-wrapper .nav-arrow { transform: scaleX(1); }
@@ -2275,7 +2196,6 @@
                                                     --icon-slide-dur: 1.2s;
                                                     --icon-exit-dur: 1.2s;
                                                     width: 2.5rem;
-                                                    aspect-ratio: 1 / 1;
                                                     animation:
                                                         services-icon-in var(--icon-slide-dur) ease-out both,
                                                         services-icon-in var(--icon-exit-dur) ease-out calc(var(--cycle) - var(--icon-exit-dur)) reverse forwards;
@@ -2301,7 +2221,6 @@
                                         }
 
                                             .services section:last-of-type > div:first-child {
-                                                position: relative;
                                                 height: calc(100% * (2/3));
                                                 width: 80%;
                                                 border: var(--border);
@@ -2332,7 +2251,6 @@
                                                 .service-panel.analytics {
                                                     background: #F5F5F5;
                                                     color: var(--BGC);
-                                                    text-wrap: nowrap;
                                                 }
 
                                                     .analytics-chrome {
@@ -2360,7 +2278,6 @@
                                                             }
 
                                                             .analytics-chrome-tab {
-                                                                position: relative;
                                                                 flex: 0 1 6.5rem;
                                                                 min-width: 0;
                                                                 align-items: center;
@@ -2442,7 +2359,6 @@
 
                                                         .analytics-chrome-bar {
                                                             height: fit-content;
-                                                            gap: .5rem;
                                                             padding: .25rem .5rem;
                                                             background: #35363A;
                                                             color: #C4C7C5;
@@ -2550,7 +2466,6 @@
                                                                 }
 
                                                                     .analytics-segment-icon {
-                                                                        height: 100%;
                                                                         background: #0066A4;
                                                                     }
 
@@ -2618,7 +2533,6 @@
                                                         }
 
                                                         .blender-menu-bar {
-                                                            gap: .5rem;
                                                             align-items: center;
                                                             list-style: none;
                                                             color: #C4C4C4;
@@ -2654,7 +2568,6 @@
                                                         left: 0;
                                                         right: 4.75rem;
                                                         z-index: 2;
-                                                        gap: .5rem;
                                                         padding: .5rem;
                                                         justify-content: flex-start;
                                                         overflow: hidden;
@@ -2670,7 +2583,6 @@
                                                         }
 
                                                         .blender-view-menu {
-                                                            gap: .5rem;
                                                             align-items: center;
                                                             list-style: none;
                                                         }
@@ -2835,7 +2747,6 @@
                                                             }
 
                                                                 .miro-card-top {
-                                                                    width: 100%;
                                                                     border-bottom: .5px solid #EDEDED;
                                                                 }
 
@@ -2847,7 +2758,6 @@
                                                                     }
 
                                                                 .miro-heading {
-                                                                    width: 100%;
                                                                     font-size: .3125rem;
                                                                     line-height: 1.2;
                                                                     letter-spacing: 0;
@@ -2855,7 +2765,6 @@
                                                                 }
 
                                                                 .miro-row {
-                                                                    width: 100%;
                                                                     gap: .25rem;
                                                                 }
 
@@ -2984,7 +2893,6 @@
                                                 }
 
                                                     .vsc-titlebar {
-                                                        gap: .5rem;
                                                         padding: .25rem .5rem;
                                                         justify-content: flex-start;
                                                         background: #16161E;
@@ -2998,7 +2906,6 @@
                                                         }
 
                                                         .vsc-menu {
-                                                            gap: .5rem;
                                                             align-items: center;
                                                             list-style: none;
                                                         }
@@ -3199,7 +3106,6 @@
                                                         .island-camera {
                                                             width: .4375rem;
                                                             height: .4375rem;
-                                                            border-radius: 50%;
                                                             background: radial-gradient(circle at 35% 35%, #4A4F6E 0 10%, #1A1C2E 32%, #08080C 72%);
                                                             box-shadow: inset 0 0 0 1px #121218;
                                                         }
@@ -3208,11 +3114,9 @@
                                                             width: .25rem;
                                                             height: .25rem;
                                                             background-color: #30D158;
-                                                            border-radius: 50%;
                                                         }
 
                                                     .iphone-status-icons {
-                                                        gap: .5rem;
                                                         align-items: center;
                                                         font-size: .375rem;
                                                     }
@@ -3228,7 +3132,6 @@
                                                 .service-panel.hotjar {
                                                     background: var(--lum-2);
                                                     font-size: var(--fs-1-4);
-                                                    text-wrap: nowrap;
                                                 }
 
                                                     .hotjar-header {
@@ -3241,11 +3144,15 @@
                                                     }
 
                                                         .hotjar-header i::before {
-                                                            content: '🕮';
-                                                            color: var(--accent-1);
-                                                            margin-right: .25rem;
+                                                            content: '';
+                                                            display: inline-block;
                                                             width: 1rem;
-                                                            transform: translateY(-.125rem);
+                                                            height: 1rem;
+                                                            margin-right: .25rem;
+                                                            vertical-align: -.25rem;
+                                                            background-color: var(--accent-1);
+                                                            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7C9.4 5.9 7.3 5.5 5 5.5c-.9 0-1.8.1-2.5.3v12.4c.7-.2 1.6-.3 2.5-.3 2.3 0 4.4.5 6 1.5zM13 7c1.6-1.1 3.7-1.5 6-1.5.9 0 1.8.1 2.5.3v12.4c-.7-.2-1.6-.3-2.5-.3-2.3 0-4.4.5-6 1.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+                                                            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7C9.4 5.9 7.3 5.5 5 5.5c-.9 0-1.8.1-2.5.3v12.4c.7-.2 1.6-.3 2.5-.3 2.3 0 4.4.5 6 1.5zM13 7c1.6-1.1 3.7-1.5 6-1.5.9 0 1.8.1 2.5.3v12.4c-.7-.2-1.6-.3-2.5-.3-2.3 0-4.4.5-6 1.5z'/%3E%3C/svg%3E") center / contain no-repeat;
                                                         }
 
                                                         .hotjar-header svg { height: .75rem; }
@@ -3564,7 +3471,6 @@
                                                                 }
 
                                                                 .figma-card-desk {
-                                                                    width: 100%;
                                                                     height: 75%;
                                                                     rotate: 15deg;
                                                                     transform: translate(-.5rem, 1.25rem);
@@ -3878,7 +3784,6 @@
                                                         .illustrator-menu span {
                                                             padding: .125rem .25rem;
                                                             font-size: .5rem;
-                                                            text-wrap: nowrap;
                                                             line-height: 1;
                                                         }
 
@@ -3903,17 +3808,9 @@
                                             .services section:last-of-type > div:nth-child(2).panel-slide-in-y { animation: panel-slide-in-y 1.2s ease forwards; }
 
                                             .cursor {
-                                                inset: 0;
-                                                aspect-ratio: auto;
-                                                pointer-events: none;
+                                                width: 2rem;
                                                 animation: simulation 20s ease-in-out infinite;
                                             }
-
-                                                .cursor > * {
-                                                    display: block;
-                                                    width: 2rem;
-                                                    height: 2rem;
-                                                }
 
                                                 .cursor svg {
                                                     stroke-width: 2.5rem;
@@ -4010,7 +3907,6 @@
                                             .beyond section:nth-child(2) .idea {
                                                 font-size: var(--fs-1-2);
                                                 color: var(--lum-2);
-                                                gap: 1rem;
                                             }
 
                                                 .beyond section:nth-child(2) .idea span {
@@ -4025,7 +3921,6 @@
                                     }
 
                                             .beyond section:last-child .glass .idea {
-                                                width: 100%;
                                                 justify-content: space-between;
                                             }
 
@@ -4055,11 +3950,10 @@
 
                         #contact {
                             gap: 3.75rem;
-                            scroll-margin-top: 3rem;
+                            scroll-margin-top: 3.75rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
-                            position: relative;
                         }
 
                         #contact::before {
@@ -4133,7 +4027,6 @@
 
                                         .contact-form div textarea {
                                             height: 10rem;
-                                            width: 100%;
                                             resize: none;
                                         }
 
@@ -4182,7 +4075,6 @@
                                         .footer-socials a {
                                             width: 3.5rem;
                                             height: 2.5rem;
-                                            display: block;
                                             padding-inline: .5rem;
                                             transition: color var(--tran-1) .25s, scale var(--tran-1) .25s;
                                         }
@@ -4191,7 +4083,6 @@
                                         .footer-socials a * { cursor: pointer; }
 
                                             .footer-socials svg {
-                                                width: 100%;
                                                 height: 100%;
                                                 transition: fill .25s ease .25s;
                                             }
@@ -4370,7 +4261,6 @@
 
                                 #beyond article:first-child > div:last-child {
                                     padding: 2.5rem 1rem;
-                                    gap: 2rem;
                                 }
 
                                         #beyond article:first-child > div:last-child div:first-child > span:first-child {
@@ -4395,7 +4285,6 @@
                                             flex-direction: column;
                                             flex-wrap: wrap;
                                             align-content: flex-start;
-                                            width: 100%;
                                             min-height: 0;
                                         }
 
@@ -4422,7 +4311,6 @@
 
                                         #beyond article:first-child > div:last-child div img {
                                             width: 2rem;
-                                            aspect-ratio: 1 / 1;
                                         }
 
                             #beyond article:nth-child(2) {

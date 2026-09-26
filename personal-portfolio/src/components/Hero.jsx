@@ -15,7 +15,7 @@ export function Idea ({ as: Tag = 'button', text, cltxt, onClick, tabIndex, clas
         { ...rest }
     >
         <span className = 'nowrap'>{ text }</span>
-        <i className = { `${ cltxt } square` }></i>
+        <i className = { `nowrap ${ cltxt } square` }></i>
     </Tag>
 }
 
@@ -32,9 +32,8 @@ function Hero ({ onOpenRecents, recentsOpen }) {
     const quickRef = useRef(null)
     const quickWidthRef = useRef(null)
     const [inView, setInView] = useState(true)
-    const isDesktop = useWidthCheck()
     const showGear = useWidthCheck('(min-width: 600.1px)')
-    const tabbable = isDesktop && inView
+    const tabbable = inView
 
     useEffect(() => {
         const el = heroRef.current
@@ -115,7 +114,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
         <div className = 'aura absolute'></div>
         { showGear && <ThreeDViewer/> }
         <article className = 'hero-text column gap-lg' ref = { heroTextRef }>
-            <div className = 'main-heading emphasis column'>
+            <div className = 'main-heading emphasis column relative'>
                 <p className = 'gradient-text'>Frontend Developer</p>
                 <p className = 'gradient-text absolute'>Frontend Developer</p>
                 <p><span>×</span> UI/UX Designer</p>
@@ -135,7 +134,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
                     onClick = { (e) => { e.preventDefault(); smoothScrollTo('#contact') } }
                 >
                     <Trail once = { false }/>
-                    <Idea text = 'Get in Touch' cltxt = 'fa-solid fa-arrow-up-long rotate'/>
+                    <Idea text = 'Get in Touch' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                 </Glass>
                 <Glass
                     as = 'button'
@@ -152,6 +151,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
         </article>
         <div ref = { quickRef } className = 'center quick absolute'>
             <Idea
+                className = 'nowrap'
                 text = 'Résumé'
                 cltxt = 'fa-solid fa-info'
                 onClick = { handleDownload }
@@ -165,7 +165,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
                 onClick = { onOpenRecents }
                 tabIndex = { tabbable ? 0 : -1 }
                 data-keep-tabbable
-                className = { recentsOpen ? 'active' : '' }
+                className = { `${ recentsOpen ? 'active' : '' } nowrap` }
             />
             <Bar/>
             <Link
@@ -174,7 +174,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
                 tabIndex = { tabbable ? 0 : -1 }
                 data-keep-tabbable
             >
-                <Idea text = 'Sidequests' cltxt = 'fa-solid fa-arrow-up-long rotate'/>
+                <Idea className = 'nowrap' text = 'Sidequests' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
             </Link>
         </div>
     </section>
