@@ -1,8 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { Glass, Trail } from './Header'
-import { Idea } from './Hero'
 import { SectionHeader } from './Work'
 
 import analytics from '../assets/external-icons/analytics.png'
@@ -102,21 +100,12 @@ const workflow = [
     }
 ]
 
-const beyondPreviews = [
-    { img: '', label: 'Hermes on X' },
-    { img: '', label: 'Activity on LinkedIn' },
-    { img: '', label: 'Behance Perhaps?' }
-]
-
-const BEYOND_PREVIEW_CYCLE_MS = 10000
-
 function About () {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [panelPhase, setPanelPhase] = useState('')
     const [primed, setPrimed] = useState(false)
     const [resetSeq, setResetSeq] = useState(0)
-    const [beyondPreviewIndex, setBeyondPreviewIndex] = useState(0)
 
     const justSettledIndexRef = useRef(null)
     const transitionSeqRef = useRef(0)
@@ -126,13 +115,6 @@ function About () {
     const CYCLE_REST_FRACTION = 0.16
     const ICON_TRANSITION_MS = 800
     const ICON_STAGGER_MS = 200
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setBeyondPreviewIndex(prev => (prev + 1) % beyondPreviews.length)
-        }, BEYOND_PREVIEW_CYCLE_MS)
-        return () => clearInterval(interval)
-    }, [])
 
     useEffect(() => {
         function handleVisibility () {
@@ -1088,64 +1070,6 @@ function About () {
                     </button>
                 </div>
             </div>
-            <section className = 'beyond flex gap-lg none'>
-                <section className = 'column gap'>
-                    <span>BEYOND</span>
-                    <div className = 'bar-x'></div>
-                    <p>Other things I do outside of conventional frontend work.</p>
-                </section>
-                <section className = 'relative center square'>
-                    <img
-                        key = { beyondPreviewIndex }
-                        src = { beyondPreviews[beyondPreviewIndex].img }
-                        alt = { beyondPreviews[beyondPreviewIndex].alt }
-                        className = 'block in-w square'
-                    />
-                    <div className = 'absolute square ctr-abs-xy'></div>
-                    <Link
-                        className = 'absolute ctr-abs-x'
-                        to = '/beyond'
-                        onClick = { () => sessionStorage.setItem('beyondCategory', String(beyondPreviewIndex)) }
-                    >
-                        <Idea className = 'gap' text = { beyondPreviews[beyondPreviewIndex].label } cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
-                    </Link>
-                </section>
-                <section className = 'column gap'>
-                    <Glass
-                        as = 'a'
-                        className = 'center pointer gap-md relative'
-                        href = 'beyond'
-                        onClick = { () => sessionStorage.setItem('beyondCategory', '0') }
-                        tabIndex = { inView ? 0 : -1 }
-                        data-keep-tabbable
-                    >
-                        <Trail once = { false }/>
-                        <Idea className = 'in-w' text = 'Motion' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
-                    </Glass>
-                    <Glass
-                        as = 'a'
-                        className = 'center pointer gap-md relative'
-                        href = 'beyond'
-                        onClick = { () => sessionStorage.setItem('beyondCategory', '1') }
-                        tabIndex = { inView ? 0 : -1 }
-                        data-keep-tabbable
-                    >
-                        <Trail once = { false }/>
-                        <Idea className = 'in-w' text = 'Pencilling' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
-                    </Glass>
-                    <Glass
-                        as = { Link }
-                        className = 'center pointer gap-md relative'
-                        to = 'beyond'
-                        onClick = { () => sessionStorage.setItem('beyondCategory', '2') }
-                        tabIndex = { inView ? 0 : -1 }
-                        data-keep-tabbable
-                    >
-                        <Trail once = { false }/>
-                        <Idea className = 'in-w' text = 'Pixel Art' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
-                    </Glass>
-                </section>
-            </section>
         </article>
     </section>
 }

@@ -26,6 +26,10 @@ export function Popup ({
   function updateFlatCorners () {
     const el = popupRef.current
     if (!el) return
+    if (!draggable) {
+      setFlatCorners([])
+      return
+    }
 
     const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize)
     const threshold = remPx * 3

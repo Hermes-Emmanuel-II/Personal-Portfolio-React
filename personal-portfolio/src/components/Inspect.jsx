@@ -99,6 +99,13 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
               className = { atMinZoom ? 'none' : '' }
               tabIndex = { isOpen ? 0 : -1 }
             />
+            <div className = 'bar-y'></div>
+            <Clarity
+              icon = { <i className = 'fa-solid fa-arrow-right-from-bracket'></i> }
+              onClick = { onClose }
+              text = 'Exit'
+              tabIndex = { isOpen ? 0 : -1 }
+            />
           </Glass>
           <div
             className = { `inspect-scroll in-w in-h ${ dragging ? 'dragging' : '' }` }

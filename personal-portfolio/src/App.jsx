@@ -178,6 +178,15 @@ export default function App () {
     }, [pathname])
 
     useLayoutEffect(() => {
+        const root = document.documentElement
+        function publish () { root.style.setProperty('--page-w', `${ root.clientWidth }px`) }
+        publish()
+        const ro = new ResizeObserver(publish)
+        ro.observe(root)
+        return () => ro.disconnect()
+    }, [])
+
+    useLayoutEffect(() => {
         document.documentElement.classList.toggle('menu-open', menuOpen)
     }, [menuOpen])
     useEffect(() => {

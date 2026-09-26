@@ -174,7 +174,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
                 tabIndex = { tabbable ? 0 : -1 }
                 data-keep-tabbable
             >
-                <Idea className = 'nowrap' text = 'Sidequests' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
+                <Idea className = 'nowrap' text = 'Other Exploits' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
             </Link>
         </div>
     </section>

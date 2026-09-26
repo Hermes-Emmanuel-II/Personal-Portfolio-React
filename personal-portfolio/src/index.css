@@ -14,6 +14,7 @@
     --accent-1: teal;
     --accent-2: lawngreen;
     --BGC: #333;
+    --warn: tomato;
     --border: 2px solid var(--accent-1);
     --font-1: 'Comfortaa';
     --font-2: 'Michroma';
@@ -56,11 +57,6 @@
     50% { rotate: 180deg; scale: 1; opacity: 75%; }
     75% { rotate: 270deg; scale: 1.25; opacity: 50%; }
     100% { rotate: 360deg; scale: 1; opacity: 100%; }
-}
-
-@keyframes beyond-slide {
-    from { transform: translate(0); }
-    to { transform: translateX(2rem); }
 }
 
 @keyframes continuous-scroll {
@@ -156,6 +152,11 @@
     85% { left: calc(2.5rem + 36%); top: 78%; }
     90% { left: calc(2.5rem + 32%); top: 74%; }
     100% { left: 12%; top: 10%; }
+}
+
+@keyframes shake {
+    20%, 60% { translate: -.25rem 0; }
+    40%, 80% { translate: .25rem 0; }
 }
 
 @keyframes slide {
@@ -365,7 +366,7 @@
                         transition-delay: .25s;
                     }
 
-                            a { color: var(--lum-2); }
+                        a { color: var(--lum-2); }
 
             body {
                 --page-max: 100rem;
@@ -426,6 +427,7 @@
 
                                 .trail-wrapper,
                                 .trail-wrapper-once {
+                                    position: absolute;
                                     inset: 0;
                                     border-radius: inherit;
                                     border: 2px solid transparent;
@@ -439,6 +441,7 @@
 
                                     .trail,
                                     .trail-wrapper-once .trail-once {
+                                        position: absolute;
                                         width: 2.5rem;
                                         height: 2.5rem;
                                         background: radial-gradient(circle, #80FF00 10%, #00FFFF 60%, transparent 100%);
@@ -453,65 +456,65 @@
                                     transition: opacity 0s;
                                 }
 
-                                .clarity { pointer-events: none; }
+                            .clarity { pointer-events: none; }
 
-                                    .clarity > .glass.round {
-                                        height: 2.5rem;
-                                        font-size: var(--fs-1-2);
+                                .clarity > .glass.round {
+                                    height: 2.5rem;
+                                    font-size: var(--fs-1-2);
+                                }
+
+                                .clarity > .glass.round::after {
+                                    pointer-events: auto;
+                                    clip-path: circle(50%);
+                                }
+
+                                .clarity > .glass.round,
+                                .clarity > .glass.round * { cursor: pointer; }
+
+                                .clarity > .glass.round::before {
+                                    z-index: 2;
+                                    transition: background .5s ease;
+                                }
+
+                                .clarity > .glass.round:hover::before,
+                                .clarity > .glass.round:focus-visible::before { background: var(--accent-2); }
+
+                                .clarity > .glass.round::after { z-index: 2; }
+
+                                    .clarity > .glass.round .lin-grad-tran-hack {
+                                        inset: 0;
+                                        background:
+                                            linear-gradient(rgba(0, 128, 128, .25), rgba(0, 128, 128, .25)),
+                                            linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
                                     }
 
-                                    .clarity > .glass.round::after {
-                                        pointer-events: auto;
-                                        clip-path: circle(50%);
-                                    }
-
-                                    .clarity > .glass.round,
-                                    .clarity > .glass.round * { cursor: pointer; }
-
-                                    .clarity > .glass.round::before {
-                                        z-index: 2;
-                                        transition: background .5s ease;
-                                    }
-
-                                    .clarity > .glass.round:hover::before,
-                                    .clarity > .glass.round:focus-visible::before { background: var(--accent-2); }
-
-                                    .clarity > .glass.round::after { z-index: 2; }
-
-                                        .clarity > .glass.round .lin-grad-tran-hack {
-                                            inset: 0;
-                                            background:
-                                                linear-gradient(rgba(0, 128, 128, .25), rgba(0, 128, 128, .25)),
-                                                linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
-                                        }
-
-                                        .glass.round .lin-grad-tran-hack::after {
-                                            content: '';
-                                            position: absolute;
-                                            inset: 0;
-                                            border-radius: inherit;
-                                            background:
-                                                linear-gradient(rgba(124, 252, 0, .25), rgba(124, 252, 0, .25)),
-                                                linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
-                                            opacity: 0;
-                                            transition: opacity .5s ease;
-                                        }
-
-                                        .glass.round:hover .lin-grad-tran-hack::after,
-                                        .glass.round:focus-visible .lin-grad-tran-hack::after { opacity: .5; }
-
-                                    .explanation-tooltip {
-                                        top: calc(100% + 1.5rem);
-                                        padding: .5rem 1rem;
-                                        border-radius: calc(2rem / 3);
-                                        min-height: 2rem;
-                                        height: auto;
+                                    .glass.round .lin-grad-tran-hack::after {
+                                        content: '';
+                                        position: absolute;
+                                        inset: 0;
+                                        border-radius: inherit;
+                                        background:
+                                            linear-gradient(rgba(124, 252, 0, .25), rgba(124, 252, 0, .25)),
+                                            linear-gradient(transparent 0%, rgba(236, 236, 236, .125) 100%);
                                         opacity: 0;
-                                        pointer-events: none;
-                                        right: 0;
-                                        width: fit-content;
-                                        z-index: 3;
+                                        transition: opacity .5s ease;
                                     }
+
+                                    .glass.round:hover .lin-grad-tran-hack::after,
+                                    .glass.round:focus-visible .lin-grad-tran-hack::after { opacity: .5; }
+
+                                .explanation-tooltip {
+                                    top: calc(100% + 1.5rem);
+                                    padding: .5rem 1rem;
+                                    border-radius: calc(2rem / 3);
+                                    min-height: 2rem;
+                                    height: auto;
+                                    opacity: 0;
+                                    pointer-events: none;
+                                    right: 0;
+                                    width: fit-content;
+                                    z-index: 3;
+                                }
 
                                         .quick > .clarity:hover .explanation-tooltip,
                                         .quick > .clarity:has(:focus-visible) .explanation-tooltip {
@@ -519,39 +522,40 @@
                                             transition-delay: .5s;
                                         }
 
-                                        .clarity .explanation-tooltip span {
-                                            font-size: var(--fs-1-3);
-                                            z-index: 2;
-                                            height: 1rem;
-                                            color: var(--lum-1);
-                                        }
+                                    .clarity .explanation-tooltip span {
+                                        font-size: var(--fs-1-3);
+                                        z-index: 2;
+                                        text-wrap: nowrap;
+                                        height: 1rem;
+                                        color: var(--lum-1);
+                                    }
 
-                                        .clarity > .glass.round svg:not(.duplicate),
-                                        .clarity > .glass.round i:not(.duplicate) {
-                                            font-size: var(--fs-1-1);
-                                            color: var(--lum-1);
-                                            z-index: 3;
-                                            stroke: var(--accent-1);
-                                            stroke-width: 1.5rem;
-                                            transition: color .5s ease, stroke .5s ease;
-                                            transform: none !important;
-                                            rotate: none !important;
-                                        }
+                                    .clarity > .glass.round svg:not(.duplicate),
+                                    .clarity > .glass.round i:not(.duplicate) {
+                                        font-size: var(--fs-1-1);
+                                        color: var(--lum-1);
+                                        z-index: 3;
+                                        stroke: var(--accent-1);
+                                        stroke-width: 1.5rem;
+                                        transition: color .5s ease, stroke .5s ease;
+                                        transform: none !important;
+                                        rotate: none !important;
+                                    }
 
-                                        .clarity > .glass.round svg.fa-question:not(.duplicate),
-                                        .clarity > .glass.round i.fa-question:not(.duplicate) { margin-left: .125rem; }
+                                    .clarity > .glass.round svg.fa-question:not(.duplicate),
+                                    .clarity > .glass.round i.fa-question:not(.duplicate) { margin-left: .125rem; }
 
-                                        .clarity > .glass.round:hover svg,
-                                        .clarity > .glass.round:hover i,
-                                        .clarity > .glass.round:focus-visible svg,
-                                        .clarity > .glass.round:focus-visible i { color: var(--accent-2) !important; }
+                                    .clarity > .glass.round:hover svg,
+                                    .clarity > .glass.round:hover i,
+                                    .clarity > .glass.round:focus-visible svg,
+                                    .clarity > .glass.round:focus-visible i { color: var(--accent-2) !important; }
 
-                                        .clarity > .glass.round svg.duplicate,
-                                        .clarity > .glass.round i.duplicate {
-                                            color: var(--accent-2);
-                                            z-index: 1;
-                                            transform: scaleY(-1);
-                                        }
+                                    .clarity > .glass.round svg.duplicate,
+                                    .clarity > .glass.round i.duplicate {
+                                        color: var(--accent-2);
+                                        z-index: 1;
+                                        transform: scaleY(-1);
+                                    }
 
                             .gears {
                                 height: 17.5rem;
@@ -575,11 +579,11 @@
                                 animation: gears-aura-pulse 10s ease-in-out infinite;
                             }
 
-                                    .explanation-tooltip::after {
-                                        background:
-                                            linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
-                                            linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
-                                    }
+                                .explanation-tooltip::after {
+                                    background:
+                                        linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
+                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                }
 
                 .popup-base::after {
                     background:
@@ -593,6 +597,7 @@
                                     .idea span,
                                     .idea svg {
                                         z-index: 2;
+                                        text-wrap: nowrap;
                                     }
 
                             #hero > .quick {
@@ -605,6 +610,7 @@
                                     padding-inline: 2rem;
                                     padding-block: auto;
                                     height: 2rem;
+                                    text-wrap: nowrap;
                                 }
 
                                 .quick button:hover,
@@ -622,8 +628,8 @@
                                     .idea-link:focus-visible .idea svg,
                                     .quick .idea.active span,
                                     .quick .idea.active svg {
-                                        color: var(--accent-2);
-                                        fill: var(--accent-2);
+                                        color: var(--lum-1);
+                                        fill: var(--lum-1);
                                     }
 
                                     .quick .idea svg { height: 2rem; }
@@ -659,6 +665,7 @@
                                 height: 2rem;
                                 font-family: var(--font-2);
                                 line-height: 85%;
+                                width: 100%;
                             }
 
                                 .section-header span { color: var(--accent-1); }
@@ -678,7 +685,7 @@
                                             transition: var(--tran-2) .5s;
                                             pointer-events: none;
                                             position: absolute;
-                                            top: calc(100% - 25rem);
+                                            top: calc(100% + 1.5rem);
                                             right: 0;
                                         }
 
@@ -711,11 +718,10 @@
                         }
 
                             .gears-bg-layer {
-                                --gear-w: 420px;
-                                --gear-x: 120px;
-                                --gear-y: -120px;
+                                position: absolute;
+                                aspect-ratio: 1 / 1;
                                 position: fixed;
-                                width: var(--gear-w);
+                                width: 35vw;
                                 z-index: 0;
                                 opacity: calc(1/3);
                                 scale: 1.5;
@@ -723,14 +729,14 @@
                             }
 
                             .webgl-background-bottom {
-                                top: var(--gear-y);
-                                left: calc(50% - var(--gear-x) - (var(--gear-w) / 2));
+                                top: -6.375rem;
+                                left: 13.25rem;
                                 transform: scaleY(-1);
                             }
 
                             .webgl-background-top {
-                                bottom: var(--gear-y);
-                                left: calc(50% + var(--gear-x) - (var(--gear-w) / 2));
+                                bottom: -6.375rem;
+                                right: 13.25rem;
                                 transform: scaleX(-1);
                             }
 
@@ -840,7 +846,13 @@
                                     nav ul li { z-index: 2; }
 
                                         nav > ul li a {
+                                            width: 100%;
+                                            height: 100%;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
                                             text-align: center;
+                                            position: relative;
                                             transition: color var(--tran-2);
                                             transition-delay: .25s;
                                         }
@@ -912,17 +924,22 @@
                                         .skip ul li {
                                             list-style: none;
                                             overflow: hidden;
+                                            position: relative;
                                         }
 
                                             .skip ul li a {
+                                                display: block;
                                                 text-decoration: none;
                                                 font-size: var(--fs-1-3);
+                                                text-wrap: nowrap;
                                                 padding: .5rem 2rem;
                                                 transition: background var(--tran-1);
                                                 color: var(--lum-2);
+                                                cursor: pointer;
                                             }
 
                                             .skip ul li svg {
+                                                position: absolute;
                                                 top: -25%;
                                                 height: 4rem;
                                                 width: 4rem;
@@ -973,8 +990,8 @@
                                     .pulse div:last-child {
                                         background-color: var(--accent-2);
                                         animation: pulse 2s linear infinite;
-                                        -webkit-mask-image: radial-gradient(circle closest-side, transparent calc(100% - 4px), black calc(100% - 4px), black 100%);
-                                        mask-image: radial-gradient(circle closest-side, transparent calc(100% - 4px), black calc(100% - 4px), black 100%);
+                                        -webkit-mask-image: radial-gradient(circle closest-side, transparent calc(100% - 4px), #000 calc(100% - 4px), #000 100%);
+                                        mask-image: radial-gradient(circle closest-side, transparent calc(100% - 4px), #000 calc(100% - 4px), #000 100%);
                                     }
 
                                 .status > span.block {
@@ -996,6 +1013,8 @@
                                         transition-delay: 2s;
                                     }
 
+                                    .back-button:hover .explanation-tooltip,
+                                    .back-button:focus-visible .explanation-tooltip,
                                     .home:hover .explanation-tooltip,
                                     .home:focus-visible .explanation-tooltip {
                                         opacity: 1;
@@ -1013,6 +1032,8 @@
 
                             .home,
                             .home * { cursor: pointer; }
+
+                                        .back-button .explanation-tooltip { left: 0; }
 
                 /* HERO */
                                             .cta button .trail-wrapper-once .trail-once {
@@ -1095,6 +1116,7 @@
                                     font-family: var(--font-2);
                                     font-size: 3rem;
                                     color: var(--lum-1);
+                                    position: relative;
                                 }
 
                                 .main-heading::after {
@@ -1205,17 +1227,6 @@
                             height: calc(25vh + 4.25rem) !important;
                             height: calc(25lvh + 4.25rem) !important;
                         }
-
-                        .inter-track {
-                            height: 75vh;
-                            height: 75lvh;
-                            pointer-events: none;
-                        }
-
-                            .inter-track > .inter {
-                                position: sticky;
-                                top: 0;
-                            }
 
                             .inter {
                                 font-size: var(--fs-2-1);
@@ -1347,14 +1358,34 @@
 
                         #work {
                             gap: 3.75rem;
-                            scroll-margin-top: 3.75rem;
+                            scroll-margin-top: 3rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
+                            position: relative;
+                        }
+
+                        #work::after,
+                        #about::after,
+                        #contact::after {
+                            --band-bleed: calc(3rem - var(--header-x, 1rem) * var(--header-zoom, 1));
+                            content: '';
+                            position: absolute;
+                            top: -3rem;
+                            bottom: 0;
+                            left: calc(var(--band-bleed) * -1);
+                            right: calc(var(--band-bleed) * -1);
+                            border-radius: 2.5rem 2.5rem 0 0;
+                            background: linear-gradient(to bottom, color-mix(in srgb, #000 50%, transparent) 0%, transparent 20rem);
+                            z-index: -2;
+                            pointer-events: none;
                         }
 
                                 .stack-wrapper {
+                                    display: flex;
+                                    flex-direction: column;
                                     align-items: center;
+                                    width: 100%;
                                     max-width: 37.5rem;
                                     --stack-delay: .125s;
                                     --stack-dur-dot: .25s;
@@ -1364,11 +1395,14 @@
                                     .stack-first {
                                         flex-wrap: wrap;
                                         justify-content: center;
+                                        width: 100%;
                                     }
 
                                     .stack-ellipsis {
+                                        position: absolute;
                                         width: .5rem;
                                         height: .5rem;
+                                        border-radius: 50%;
                                         background-color: var(--accent-1);
                                         cursor: none;
                                         opacity: 1;
@@ -1401,6 +1435,7 @@
                                     .stack-rest-shell {
                                         display: grid;
                                         grid-template-rows: 0fr;
+                                        width: 100%;
                                         overflow: hidden;
                                         margin-top: .5rem;
                                         transition:
@@ -1420,6 +1455,7 @@
                                         .stack-rest {
                                             flex-wrap: wrap;
                                             justify-content: center;
+                                            width: 100%;
                                             min-height: 0;
                                             opacity: 0;
                                             transition: opacity var(--stack-dur-dot) ease var(--stack-delay);
@@ -1461,7 +1497,10 @@
 
                                                 .stack-rest .explanation-tooltip { top: calc(0% - 3.625rem); }
 
-                                #work article .quick { justify-content: space-between; }
+                                #work article .quick {
+                                    position: relative;
+                                    justify-content: space-between;
+                                }
 
                                     .quick-options { width: calc(534.06px + 2rem); }
 
@@ -1478,6 +1517,7 @@
                                             .tooltip-table {
                                                 border-collapse: collapse;
                                                 table-layout: fixed;
+                                                width: 100%;
                                                 text-align: center;
                                                 z-index: 2;
                                             }
@@ -1511,12 +1551,14 @@
 
                                                         .tooltip-table td:first-child {
                                                             color: var(--accent-2);
+                                                            font-weight: 1000;
                                                         }
 
                                 .current-project {
                                     height: 16rem;
                                     border-radius: 2.5rem;
                                     border: var(--border);
+                                    width: 100%;
                                     overflow: hidden;
                                     z-index: 2;
                                     transition: opacity var(--tran-2) 1s;
@@ -1560,6 +1602,9 @@
                                             scale: 1.25;
                                         }
 
+                                        .current-project > span > svg,
+                                        .description > div:nth-child(2) { height: 100%; }
+
                                     .current-project > span:first-of-type:not(.project-empty) {
                                         left: 2rem;
                                         transform: translateY(-50%) scaleX(-1);
@@ -1602,6 +1647,7 @@
 
                                             .iframe-clip iframe {
                                                 border-radius: inherit;
+                                                display: block;
                                                 zoom: .2;
                                             }
 
@@ -1750,8 +1796,8 @@
                                 .quotes {
                                     height: 10rem;
                                     overflow-x: hidden;
-                                    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-                                    mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+                                    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+                                    mask-image: linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
                                 }
 
                                     .quotes-inner {
@@ -1905,6 +1951,8 @@
                                 z-index: 2;
                             }
 
+                                .inspect-controls .bar-y { z-index: 2; }
+
                                     .inspect-controls .clarity .glass.explanation-tooltip {
                                         top: calc(0% - 2.75rem - 2px - .75rem);
                                         right: 50%;
@@ -1945,6 +1993,7 @@
                                 .right { --dir-delay: 2s; }
 
                                 .inspect-scroll img {
+                                    display: block;
                                     -webkit-user-drag: none;
                                     padding: 0rem;
                                     margin: 5rem;
@@ -2021,11 +2070,7 @@
                 /* ABOUT */
                                                     .workflow-content .glass .trail-wrapper .trail { offset-path: rect(0 100% 100% 0 round calc((5rem / 3) - .75rem)); }
 
-                                        .beyond section:last-child .glass,
-                                        .beyond section:last-child .glass * { cursor: pointer; }
-
-                                        .workflow-content .glass,
-                                        .beyond section:last-child .glass {
+                                        .workflow-content .glass {
                                             z-index: 2;
                                             padding: 1rem 1.5rem;
                                             gap: .75rem;
@@ -2033,39 +2078,32 @@
                                         }
 
                                                 .workflow section .glass:hover span,
-                                                .workflow section .glass:focus-visible span,
-                                                .beyond section:nth-child(2) a:hover .idea span,
-                                                .beyond section:nth-child(2) a:focus-within .idea span,
-                                                .beyond section:nth-child(2) a:hover .idea svg,
-                                                .beyond section:nth-child(2) a:focus-within .idea svg,
-                                                .beyond section:last-child .glass:hover span,
-                                                .beyond section:last-child .glass:focus-within span,
-                                                .beyond section:last-child .glass:hover svg,
-                                                .beyond section:last-child .glass:focus-within svg {
+                                                .workflow section .glass:focus-visible span {
                                                     color: var(--lum-1);
                                                     -webkit-text-fill-color: var(--lum-1);
                                                     fill: var(--lum-1);
                                                 }
 
-                                                .beyond section:last-child .glass .trail-wrapper .trail { offset-path: rect(0 100% 100% 0 round calc(5rem / 3)); }
-
                                                 .workflow-content .glass span {
                                                     z-index: 2;
+                                                    text-wrap: nowrap;
                                                 }
 
                         #about {
                             gap: 3.75rem;
-                            scroll-margin-top: 3.75rem;
+                            scroll-margin-top: 3rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
+                            position: relative;
                         }
+
+                                            .services section:first-of-type p,
+                                            .workflow-content p { height: 100%; }
 
                                             .workflow-content .glass { width: fit-content; }
 
-                                                .workflow section .glass span,
-                                                .beyond section:last-child .glass span,
-                                                .beyond section:last-child .glass svg {
+                                                .workflow section .glass span {
                                                     color: var(--lum-2);
                                                     fill: var(--lum-2);
                                                 }
@@ -2141,7 +2179,9 @@
 
                                         .nav-arrow {
                                             z-index: 1;
+                                            cursor: pointer;
                                             width: 2.5rem;
+                                            aspect-ratio: 1 / 1;
                                         }
 
                                         .services-wrapper .nav-arrow { transform: scaleX(1); }
@@ -2196,6 +2236,7 @@
                                                     --icon-slide-dur: 1.2s;
                                                     --icon-exit-dur: 1.2s;
                                                     width: 2.5rem;
+                                                    aspect-ratio: 1 / 1;
                                                     animation:
                                                         services-icon-in var(--icon-slide-dur) ease-out both,
                                                         services-icon-in var(--icon-exit-dur) ease-out calc(var(--cycle) - var(--icon-exit-dur)) reverse forwards;
@@ -2221,6 +2262,7 @@
                                         }
 
                                             .services section:last-of-type > div:first-child {
+                                                position: relative;
                                                 height: calc(100% * (2/3));
                                                 width: 80%;
                                                 border: var(--border);
@@ -2251,6 +2293,7 @@
                                                 .service-panel.analytics {
                                                     background: #F5F5F5;
                                                     color: var(--BGC);
+                                                    text-wrap: nowrap;
                                                 }
 
                                                     .analytics-chrome {
@@ -2278,6 +2321,7 @@
                                                             }
 
                                                             .analytics-chrome-tab {
+                                                                position: relative;
                                                                 flex: 0 1 6.5rem;
                                                                 min-width: 0;
                                                                 align-items: center;
@@ -2352,13 +2396,14 @@
                                                                 align-self: flex-start;
                                                                 gap: .625rem;
                                                                 margin-left: auto;
-                                                                padding: .3125rem .5rem 0 .5rem;
+                                                                padding: .3125rem 1rem 0 .5rem;
                                                                 color: #C4C7C5;
                                                                 font-size: .3125rem;
                                                             }
 
                                                         .analytics-chrome-bar {
                                                             height: fit-content;
+                                                            gap: .5rem;
                                                             padding: .25rem .5rem;
                                                             background: #35363A;
                                                             color: #C4C7C5;
@@ -2466,6 +2511,7 @@
                                                                 }
 
                                                                     .analytics-segment-icon {
+                                                                        height: 100%;
                                                                         background: #0066A4;
                                                                     }
 
@@ -2533,6 +2579,7 @@
                                                         }
 
                                                         .blender-menu-bar {
+                                                            gap: .5rem;
                                                             align-items: center;
                                                             list-style: none;
                                                             color: #C4C4C4;
@@ -2568,6 +2615,7 @@
                                                         left: 0;
                                                         right: 4.75rem;
                                                         z-index: 2;
+                                                        gap: .5rem;
                                                         padding: .5rem;
                                                         justify-content: flex-start;
                                                         overflow: hidden;
@@ -2583,6 +2631,7 @@
                                                         }
 
                                                         .blender-view-menu {
+                                                            gap: .5rem;
                                                             align-items: center;
                                                             list-style: none;
                                                         }
@@ -2747,6 +2796,7 @@
                                                             }
 
                                                                 .miro-card-top {
+                                                                    width: 100%;
                                                                     border-bottom: .5px solid #EDEDED;
                                                                 }
 
@@ -2758,6 +2808,7 @@
                                                                     }
 
                                                                 .miro-heading {
+                                                                    width: 100%;
                                                                     font-size: .3125rem;
                                                                     line-height: 1.2;
                                                                     letter-spacing: 0;
@@ -2765,6 +2816,7 @@
                                                                 }
 
                                                                 .miro-row {
+                                                                    width: 100%;
                                                                     gap: .25rem;
                                                                 }
 
@@ -2893,6 +2945,7 @@
                                                 }
 
                                                     .vsc-titlebar {
+                                                        gap: .5rem;
                                                         padding: .25rem .5rem;
                                                         justify-content: flex-start;
                                                         background: #16161E;
@@ -2906,6 +2959,7 @@
                                                         }
 
                                                         .vsc-menu {
+                                                            gap: .5rem;
                                                             align-items: center;
                                                             list-style: none;
                                                         }
@@ -3106,6 +3160,7 @@
                                                         .island-camera {
                                                             width: .4375rem;
                                                             height: .4375rem;
+                                                            border-radius: 50%;
                                                             background: radial-gradient(circle at 35% 35%, #4A4F6E 0 10%, #1A1C2E 32%, #08080C 72%);
                                                             box-shadow: inset 0 0 0 1px #121218;
                                                         }
@@ -3114,9 +3169,11 @@
                                                             width: .25rem;
                                                             height: .25rem;
                                                             background-color: #30D158;
+                                                            border-radius: 50%;
                                                         }
 
                                                     .iphone-status-icons {
+                                                        gap: .5rem;
                                                         align-items: center;
                                                         font-size: .375rem;
                                                     }
@@ -3132,6 +3189,7 @@
                                                 .service-panel.hotjar {
                                                     background: var(--lum-2);
                                                     font-size: var(--fs-1-4);
+                                                    text-wrap: nowrap;
                                                 }
 
                                                     .hotjar-header {
@@ -3144,15 +3202,11 @@
                                                     }
 
                                                         .hotjar-header i::before {
-                                                            content: '';
-                                                            display: inline-block;
-                                                            width: 1rem;
-                                                            height: 1rem;
+                                                            content: '🕮';
+                                                            color: var(--accent-1);
                                                             margin-right: .25rem;
-                                                            vertical-align: -.25rem;
-                                                            background-color: var(--accent-1);
-                                                            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7C9.4 5.9 7.3 5.5 5 5.5c-.9 0-1.8.1-2.5.3v12.4c.7-.2 1.6-.3 2.5-.3 2.3 0 4.4.5 6 1.5zM13 7c1.6-1.1 3.7-1.5 6-1.5.9 0 1.8.1 2.5.3v12.4c-.7-.2-1.6-.3-2.5-.3-2.3 0-4.4.5-6 1.5z'/%3E%3C/svg%3E") center / contain no-repeat;
-                                                            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7C9.4 5.9 7.3 5.5 5 5.5c-.9 0-1.8.1-2.5.3v12.4c.7-.2 1.6-.3 2.5-.3 2.3 0 4.4.5 6 1.5zM13 7c1.6-1.1 3.7-1.5 6-1.5.9 0 1.8.1 2.5.3v12.4c-.7-.2-1.6-.3-2.5-.3-2.3 0-4.4.5-6 1.5z'/%3E%3C/svg%3E") center / contain no-repeat;
+                                                            width: 1rem;
+                                                            transform: translateY(-.125rem);
                                                         }
 
                                                         .hotjar-header svg { height: .75rem; }
@@ -3471,6 +3525,7 @@
                                                                 }
 
                                                                 .figma-card-desk {
+                                                                    width: 100%;
                                                                     height: 75%;
                                                                     rotate: 15deg;
                                                                     transform: translate(-.5rem, 1.25rem);
@@ -3784,6 +3839,7 @@
                                                         .illustrator-menu span {
                                                             padding: .125rem .25rem;
                                                             font-size: .5rem;
+                                                            text-wrap: nowrap;
                                                             line-height: 1;
                                                         }
 
@@ -3858,72 +3914,6 @@
                                                     linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
                                             }
 
-                                    .beyond section:first-child {
-                                        width: calc((100% - 15rem - 3rem) / 2);
-                                        padding: 2rem 1.5rem 2rem 0;
-                                    }
-
-                                        .beyond section:first-child span {
-                                            font-family: var(--font-2);
-                                            font-size: var(--fs-1-1);
-                                            height: 1.5rem;
-                                            line-height: 100%;
-                                            width: fit-content;
-                                        }
-
-                                        .beyond section:first-child p {
-                                            font-size: var(--fs-1-3);
-                                            text-align: left;
-                                        }
-
-                                    .beyond section:nth-child(2) {
-                                        border-radius: 2.5rem;
-                                        border: var(--border);
-                                        overflow: hidden;
-                                        padding: .5rem;
-                                        width: 15rem;
-                                    }
-
-                                        .beyond section:nth-child(2) img {
-                                            border-radius: calc(2.5rem - .5rem - 2px);
-                                            object-fit: cover;
-                                            -webkit-mask-image: linear-gradient(to top, transparent 0%, black calc(100% * (2/3)));
-                                            mask-image: linear-gradient(to top, transparent 0%, black calc(100% * (2/3)));
-                                        }
-
-                                        .beyond section:nth-child(2) img + div {
-                                            background-color: var(--accent-1);
-                                            z-index: -1;
-                                            width: calc(100% - 1rem);
-                                            border-radius: calc(2.5rem - .5rem - 2px);
-                                        }
-
-                                        .beyond section:nth-child(2) a {
-                                            bottom: 2rem;
-                                            z-index: 1;
-                                            max-width: calc(100% - 4rem);
-                                        }
-
-                                            .beyond section:nth-child(2) .idea {
-                                                font-size: var(--fs-1-2);
-                                                color: var(--lum-2);
-                                            }
-
-                                                .beyond section:nth-child(2) .idea span {
-                                                    font-size: var(--fs-1-4);
-                                                    text-wrap: wrap;
-                                                    text-align: left;
-                                                }
-
-                                    .beyond section:last-child {
-                                        width: calc((100% - 15rem - 3rem) / 2);
-                                        padding-top: 1.5rem;
-                                    }
-
-                                            .beyond section:last-child .glass .idea {
-                                                justify-content: space-between;
-                                            }
-
                 /* CONTACT */
                                     #contact .glass,
                                     #contact .glass * { cursor: pointer; }
@@ -3937,23 +3927,20 @@
                                     #contact .glass {
                                         z-index: 2;
                                         padding: 1rem 1.5rem;
-                                        gap: .75rem;
+                                        gap: .25rem;
                                         border-radius: calc((5rem / 3) - .75rem);
                                     }
 
-                                        #contact .glass:hover :is(span, svg),
-                                        #contact .glass:focus-within :is(span, svg) {
-                                            color: var(--lum-1);
-                                            -webkit-text-fill-color: var(--lum-1);
-                                            fill: var(--lum-1);
-                                        }
+                                        #contact .glass:hover svg,
+                                        #contact .glass:focus-within svg { color: var(--accent-2); }
 
                         #contact {
                             gap: 3.75rem;
-                            scroll-margin-top: 3.75rem;
+                            scroll-margin-top: 3rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
+                            position: relative;
                         }
 
                         #contact::before {
@@ -4009,12 +3996,13 @@
                                             padding: 1rem 1.25rem;
                                             font-size: var(--fs-1-3);
                                             font-family: inherit;
-                                            background-color: var(--lum-2);
+                                            color: var(--lum-2);
+                                            background-color: var(--BGC);
                                             transition: var(--tran-1, .3s ease);
                                         }
 
                                         .contact-form div input::placeholder,
-                                        .contact-form div textarea::placeholder { color: var(--BGC); }
+                                        .contact-form div textarea::placeholder { color: var(--lum-2) }
 
                                         .contact-form div input:focus,
                                         .contact-form div textarea:focus {
@@ -4026,7 +4014,8 @@
                                         .contact-form div textarea:focus::placeholder { color: var(--lum-1); }
 
                                         .contact-form div textarea {
-                                            height: 10rem;
+                                            height: 11.75rem;
+                                            width: 100%;
                                             resize: none;
                                         }
 
@@ -4042,7 +4031,224 @@
 
                                     .message { overflow: hidden; }
 
+                                        .message .trail-wrapper {
+                                            border-radius: .75rem;
+                                            overflow: visible;
+                                        }
+
+                                            .message .trail { offset-path: rect(0 100% 100% 0 round .75rem); }
+
                                         .message img { top: -3rem; }
+
+                                        .contact-form .message textarea { padding-bottom: 3.5rem; }
+
+                                        .contact-form .attach {
+                                            left: 1.25rem;
+                                            bottom: 1rem;
+                                            z-index: 3;
+                                            align-items: center;
+                                            overflow: visible;
+                                        }
+
+                                            .attach > button {
+                                                font-size: var(--fs-1-2);
+                                                color: color-mix(in srgb, var(--lum-2) 50%, transparent);
+                                            }
+
+                                            .attach > button:not(:disabled):hover,
+                                            .attach > button:not(:disabled):focus-visible { color: var(--accent-2); }
+
+                                            .attach > button:disabled { opacity: .5; }
+
+                                            .attach > button:disabled,
+                                            .attach > button:disabled * { cursor: not-allowed; }
+
+                                    .contact-actions {
+                                        justify-content: center;
+                                        align-items: center;
+                                        contain: inline-size;
+                                    }
+
+                                    .contact-actions.has-files { justify-content: space-between; }
+
+                                    .contact-form .contact-actions,
+                                    .contact-form .contact-uploads,
+                                    .contact-form .contact-storage { overflow: visible; }
+
+                                        .contact-uploads {
+                                            align-items: center;
+                                            flex: 0 1 auto;
+                                            min-width: 0;
+                                        }
+
+                                            .contact-storage {
+                                                align-items: center;
+                                                flex-shrink: 0;
+                                                font-size: var(--fs-1-3);
+                                                color: var(--lum-2);
+                                            }
+
+                                                .contact-storage .completion-ring {
+                                                    --ring-size: 2rem;
+                                                    --ring-stroke: 3px;
+                                                    right: auto;
+                                                    bottom: auto;
+                                                    margin-inline: calc(var(--ring-halo) * -1);
+                                                    margin-block: calc(var(--ring-halo) * -1);
+                                                    flex-shrink: 0;
+                                                    transition: --angle var(--tran-2);
+                                                }
+
+                                            .contact-uploads > .bar-y {
+                                                align-self: stretch;
+                                                min-height: 2rem;
+                                                flex-shrink: 0;
+                                            }
+
+                                            .contact-files {
+                                                --fade: 3rem;
+                                                flex: 0 1 auto;
+                                                flex-wrap: nowrap;
+                                                min-width: 0;
+                                                list-style: none;
+                                                overflow-x: auto;
+                                                overscroll-behavior-x: contain;
+                                                scrollbar-width: none;
+                                                cursor: grab;
+                                                user-select: none;
+                                                -webkit-user-select: none;
+                                                -webkit-mask-image: linear-gradient(to right, #000 0%, #000 100%);
+                                                mask-image: linear-gradient(to right, #000 0%, #000 100%);
+                                            }
+
+                                            .contact-files::-webkit-scrollbar { display: none; }
+
+                                            .contact-files.dragging { cursor: grabbing; }
+
+                                            .contact-files.fade-right {
+                                                -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade)), transparent 100%);
+                                                mask-image: linear-gradient(to right, #000 calc(100% - var(--fade)), transparent 100%);
+                                            }
+
+                                            .contact-files.fade-left {
+                                                -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 var(--fade));
+                                                mask-image: linear-gradient(to right, transparent 0%, #000 var(--fade));
+                                            }
+
+                                            .contact-files.fade-left.fade-right {
+                                                -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+                                                mask-image: linear-gradient(to right, transparent 0%, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+                                            }
+
+                                            .contact-files.dragging * { cursor: grabbing; }
+
+                                                #contact .contact-file,
+                                                #contact .contact-file span { cursor: grab; }
+
+                                                #contact .contact-file {
+                                                    flex-shrink: 0;
+                                                    align-items: center;
+                                                    max-width: 14rem;
+                                                    padding: .5rem .5rem .5rem .75rem;
+                                                    border-radius: .75rem;
+                                                    font-size: var(--fs-1-3);
+                                                    align-self: auto;
+                                                }
+
+                                                    .contact-file > svg,
+                                                    .contact-file > i {
+                                                        position: relative;
+                                                        z-index: 2;
+                                                        color: var(--lum-1);
+                                                        flex-shrink: 0;
+                                                    }
+
+                                                    .contact-file span {
+                                                        position: relative;
+                                                        z-index: 2;
+                                                        min-width: 0;
+                                                        overflow: hidden;
+                                                        text-overflow: ellipsis;
+                                                        color: var(--lum-1);
+                                                    }
+
+                                                    .contact-file button {
+                                                        position: relative;
+                                                        z-index: 2;
+                                                        flex-shrink: 0;
+                                                        width: 1.5rem;
+                                                        height: 1.5rem;
+                                                        font-size: var(--fs-1-3);
+                                                    }
+
+                                                    .contact-file button::before {
+                                                        content: '';
+                                                        position: absolute;
+                                                        inset: -.5rem -.5rem -.5rem -.25rem;
+                                                    }
+
+                                                    .contact-file button:hover,
+                                                    .contact-file button:focus-visible { color: var(--accent-2); }
+
+                                        #contact .contact-warning,
+                                        #contact .contact-warning * { cursor: default; }
+
+                                        #contact .contact-warning {
+                                            flex-shrink: 0;
+                                            align-items: center;
+                                            gap: .5rem;
+                                            padding: .75rem 1rem;
+                                            border-radius: .75rem;
+                                            font-size: var(--fs-1-3);
+                                            color: var(--lum-1);
+                                            align-self: auto;
+                                            animation: shake .4s ease;
+                                        }
+
+                                        #contact .contact-warning::after {
+                                            background:
+                                                linear-gradient(rgba(255, 99, 71, .35) 0%, rgba(255, 99, 71, .35) 100%),
+                                                linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                        }
+
+                                            .contact-warning > svg,
+                                            .contact-warning > i,
+                                            .contact-warning span {
+                                                position: relative;
+                                                z-index: 2;
+                                            }
+
+                                            .contact-warning > svg,
+                                            .contact-warning > i {
+                                                flex-shrink: 0;
+                                                color: var(--warn);
+                                            }
+
+                                            .contact-warning span { white-space: nowrap; }
+
+                                        .contact-warning + .contact-uploads { margin-right: auto; }
+
+                                        .contact-send { flex-shrink: 0; }
+
+                                        #contact .contact-send:disabled,
+                                        #contact .contact-send:disabled * { cursor: progress; }
+
+                                        .contact-send:disabled { opacity: .75; }
+
+                                        #contact .contact-send::after {
+                                            background:
+                                                linear-gradient(rgba(124, 252, 0, .25) 0%, rgba(124, 252, 0, .25) 100%),
+                                                linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
+                                        }
+
+                                            #contact .contact-send :is(span, svg) { color: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1)); }
+
+                                            #contact .contact-send:hover :is(span, svg),
+                                            #contact .contact-send:focus-visible :is(span, svg) {
+                                                color: var(--lum-1);
+                                                -webkit-text-fill-color: var(--lum-1);
+                                                fill: var(--lum-1);
+                                            }
 
                                     #contact .glass {
                                         align-self: center;
@@ -4075,6 +4281,7 @@
                                         .footer-socials a {
                                             width: 3.5rem;
                                             height: 2.5rem;
+                                            display: block;
                                             padding-inline: .5rem;
                                             transition: color var(--tran-1) .25s, scale var(--tran-1) .25s;
                                         }
@@ -4083,6 +4290,7 @@
                                         .footer-socials a * { cursor: pointer; }
 
                                             .footer-socials svg {
+                                                width: 100%;
                                                 height: 100%;
                                                 transition: fill .25s ease .25s;
                                             }
@@ -4248,8 +4456,8 @@
                                             object-position: center 42.5%;
                                             transform: translateX(0);
                                             --mask-stop: 10%;
-                                            -webkit-mask-image: linear-gradient(to left, black var(--mask-stop), transparent 90%, transparent 100%);
-                                            mask-image: linear-gradient(to left, black var(--mask-stop), transparent 90%, transparent 100%);
+                                            -webkit-mask-image: linear-gradient(to left, #000 var(--mask-stop), transparent 90%, transparent 100%);
+                                            mask-image: linear-gradient(to left, #000 var(--mask-stop), transparent 90%, transparent 100%);
                                             transition: var(--tran-2), --mask-stop 0.3s ease 1s;      
                                         }
 
@@ -4261,6 +4469,7 @@
 
                                 #beyond article:first-child > div:last-child {
                                     padding: 2.5rem 1rem;
+                                    gap: 2rem;
                                 }
 
                                         #beyond article:first-child > div:last-child div:first-child > span:first-child {
@@ -4285,6 +4494,7 @@
                                             flex-direction: column;
                                             flex-wrap: wrap;
                                             align-content: flex-start;
+                                            width: 100%;
                                             min-height: 0;
                                         }
 
@@ -4311,6 +4521,7 @@
 
                                         #beyond article:first-child > div:last-child div img {
                                             width: 2rem;
+                                            aspect-ratio: 1 / 1;
                                         }
 
                             #beyond article:nth-child(2) {

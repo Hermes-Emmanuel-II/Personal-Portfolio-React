@@ -191,6 +191,33 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
     const headerRef = useRef(null)
 
     useEffect(() => {
+        if (!menuOpen) return
+
+        function trapFocus (e) {
+            if (e.key === 'Escape') {
+                onToggleMenu && onToggleMenu(false)
+                hamburgerRef.current?.focus()
+                return
+            }
+            if (e.key !== 'Tab') return
+            const button = hamburgerRef.current
+            const drawer = drawerRef.current
+            if (!button || !drawer) return
+            const items = [button, ...drawer.querySelectorAll('a[href], button:not([disabled])')]
+                .filter(item => item.tabIndex >= 0 && item.getClientRects().length)
+            const index = items.indexOf(document.activeElement)
+            const next = index === -1
+                ? (e.shiftKey ? items.length - 1 : 0)
+                : (index + (e.shiftKey ? -1 : 1) + items.length) % items.length
+            e.preventDefault()
+            items[next].focus()
+        }
+
+        document.addEventListener('keydown', trapFocus)
+        return () => document.removeEventListener('keydown', trapFocus)
+    }, [menuOpen, onToggleMenu])
+
+    useEffect(() => {
         const el = headerRef.current
         if (!el) return
         const root = document.documentElement

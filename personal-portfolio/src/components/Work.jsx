@@ -78,7 +78,7 @@ function Work ({ onOpenRecents }) {
     const testimonials = [
         {
             img: face,
-            quote: "I did great — If I do say so myself. Seriously though, I'm working on getting more testimonials.",
+            quote: "Building... Actual testimonials are underway.",
             name: 'Me'
         }
     ]
