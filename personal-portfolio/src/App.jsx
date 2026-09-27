@@ -25,6 +25,12 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 
 const scrollNormalizer = isTouchOnly ? null : ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
 
+export function holdScrollNormalizer (hold) {
+    if (!scrollNormalizer) return
+    if (hold) scrollNormalizer.disable()
+    else if (!document.documentElement.classList.contains('menu-open')) scrollNormalizer.enable()
+}
+
 let lvhProbe = null
 export function stableViewportHeight () {
     if (!lvhProbe) {
@@ -97,8 +103,7 @@ export const Inter = memo(function Inter ({ text }) {
                 scrub: 1,
                 ...(sticky ? {} : {
                     pin: true,
-                    pinSpacing: true,
-                    anticipatePin: 1
+                    pinSpacing: true
                 }),
                 invalidateOnRefresh: true,
                 preventOverlaps: 'inter-fade',

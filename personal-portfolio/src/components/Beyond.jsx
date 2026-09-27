@@ -4,10 +4,10 @@ import { CompletionRing } from './About'
 import { Bar } from './Hero'
 import color from '../color.js'
 
-import aftereffects from '../assets/external-icons/aftereffects.png'
-import figma from '../assets/external-icons/figma.png'
+import aftereffects from '../assets/external-icons/aftereffects.svg'
+import figma from '../assets/external-icons/figma.svg'
 import ibis from '../assets/external-icons/ibis.png'
-import remotion from '../assets/external-icons/remotion.png'
+import remotion from '../assets/external-icons/remotion.svg'
 
 import motion from '../assets/motion.png'
 import pencilling from '../assets/pencilling.png'

@@ -97,7 +97,7 @@
                                     .hamburger-menu:focus-visible .bar { background-color: var(--lum-1); }
 
                                     @media (hover: hover) {
-                                        .hamburger-menu:hover .bar { background-color: var(--lum-1); }
+                                        .hamburger-menu:hover .bar { background-color: var(--accent-2); }
                                     }
 
                                 .hamburger {
@@ -175,7 +175,7 @@
                                     .hamburger-slot > ul {
                                         flex-flow: row wrap;
                                         align-content: flex-start;
-                                        gap: 1.5rem 4rem;
+                                        gap: .75rem 4rem;
                                         min-height: calc(var(--slot-h) - 1.5rem);
                                         margin-top: 1.5rem;
                                         padding-block: 1.5rem 0;

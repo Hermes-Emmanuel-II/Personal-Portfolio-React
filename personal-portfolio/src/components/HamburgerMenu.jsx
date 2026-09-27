@@ -52,7 +52,7 @@ export default function HamburgerMenu ({ isOpen, onClose, onOpenRecents }) {
     if (!slot) return null
 
     return createPortal(
-        <ul className = 'column gap-lg'>
+        <ul className = 'column'>
                 <ul>
                     <span>Sections</span>
                     <HamburgerOption destination = 'work' prompt = 'Work' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>

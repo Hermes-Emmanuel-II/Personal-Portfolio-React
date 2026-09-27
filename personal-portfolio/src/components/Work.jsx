@@ -4,19 +4,22 @@ import { Clarity, Glass, Trail } from './Header'
 import { Bar, Idea } from './Hero'
 import Inspect from './Inspect'
 import { getRecentItems } from './Recents'
+import gsap from 'gsap'
+import { holdScrollNormalizer } from '../App'
 
-import blender from '../assets/external-icons/blender.png'
-import bootstrap from '../assets/external-icons/bootstrap.png'
-import css from '../assets/external-icons/css.png'
-import figma from '../assets/external-icons/figma.png'
-import git from '../assets/external-icons/git.png'
-import html from '../assets/external-icons/html.png'
-import javascript from '../assets/external-icons/javascript.png'
-import react from '../assets/external-icons/react.png'
-import tailwind from '../assets/external-icons/tailwind.png'
-import three from '../assets/external-icons/three.png'
-import typescript from '../assets/external-icons/typescript.png'
-import vsc from '../assets/external-icons/vsc.png'
+import blender from '../assets/external-icons/blender.svg'
+import bootstrap from '../assets/external-icons/bootstrap.svg'
+import css from '../assets/external-icons/css.svg'
+import figma from '../assets/external-icons/figma.svg'
+import git from '../assets/external-icons/git.svg'
+import gsapIcon from '../assets/external-icons/gsap.svg'
+import html from '../assets/external-icons/html.svg'
+import javascript from '../assets/external-icons/javascript.svg'
+import react from '../assets/external-icons/react.svg'
+import tailwind from '../assets/external-icons/tailwind.svg'
+import three from '../assets/external-icons/three.svg'
+import typescript from '../assets/external-icons/typescript.svg'
+import vsc from '../assets/external-icons/vsc.svg'
 
 import face from '../assets/face.png'
 import gears from '../assets/gears.png'
@@ -24,6 +27,315 @@ import gears from '../assets/gears.png'
 export function SectionHeader (props) {
     const temp = props.title
     return <div className = 'section-header in-w'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
+}
+
+const CASE_STEPS = ['The Point', 'Stack', 'Challenges', 'Trade-offs', 'Outcome']
+
+function squareWave (steps, r = 10.7, e = .6) {
+    const top = e
+    const bottom = 100 - e
+    const end = steps * 100 - e
+    let d = `M ${ e } ${ bottom } L ${ e } ${ top + r } A ${ r } ${ r } 0 0 1 ${ e + r } ${ top }`
+    for (let i = 1; i <= steps; i++) {
+        const x = i === steps ? end : i * 100
+        const high = i % 2 === 1
+        const y = high ? top : bottom
+        const nextY = high ? bottom : top
+        const sweepIn = high ? 1 : 0
+        d += ` L ${ x - r } ${ y } A ${ r } ${ r } 0 0 ${ sweepIn } ${ x } ${ high ? y + r : y - r }`
+        if (i === steps) {
+            d += ` L ${ x } ${ nextY }`
+        } else {
+            d += ` L ${ x } ${ high ? nextY - r : nextY + r } A ${ r } ${ r } 0 0 ${ 1 - sweepIn } ${ x + r } ${ nextY }`
+        }
+    }
+    return d
+}
+
+const CASE_WAVE = squareWave(CASE_STEPS.length)
+const CASE_SIGNAL_SPEED = `${ CASE_STEPS.length * .75 }s`
+const BOARD = { cx: 78, cy: 38, r: 18, squash: .62, tilt: -64, depth: 3.6 }
+const BOARD_RINGS = [
+    { scale: 1, tone: 'a' },
+    { scale: .76, tone: 'b' },
+    { scale: .52, tone: 'a' },
+    { scale: .28, tone: 'b' },
+    { scale: .1, tone: 'bull' }
+]
+
+function boardRim ({ cx, cy, r, squash, tilt, depth }) {
+    const rad = tilt * Math.PI / 180
+    const cos = Math.cos(rad)
+    const sin = Math.sin(rad)
+    const a = r
+    const b = r * squash
+    const dx = Math.cos(FLIGHT) * depth
+    const dy = Math.sin(FLIGHT) * depth
+    const lx = dx * cos + dy * sin
+    const ly = -dx * sin + dy * cos
+    const t = Math.atan2(-b * lx, a * ly)
+    const point = angle => {
+        const px = a * Math.cos(angle)
+        const py = b * Math.sin(angle)
+        return [cx + px * cos - py * sin, cy + px * sin + py * cos]
+    }
+    const [x1, y1] = point(t)
+    const [x2, y2] = point(t + Math.PI)
+    return { back: [cx + dx, cy + dy], edges: `M ${ x1 } ${ y1 } l ${ dx } ${ dy } M ${ x2 } ${ y2 } l ${ dx } ${ dy }` }
+}
+
+const FLIGHT = 26 * Math.PI / 180
+
+const RIM = boardRim(BOARD)
+
+const DART = <>
+    <path className = 'dart-fletch' d = 'M 26 -.2 L 29.5 -1 L 36 -1.3 L 35 -.2'/>
+    <path className = 'dart-fletch' d = 'M 26 .2 L 29.5 1 L 36 1.3 L 35 .2'/>
+    <path className = 'dart-shaft' d = 'M 15 -.9 L 26 -.9 L 26 .9 L 15 .9 Z'/>
+    <path className = 'dart-fletch' d = 'M 25.5 -.9 L 29 -6.5 L 36.5 -7 L 35.5 -.9'/>
+    <path className = 'dart-fletch' d = 'M 25.5 .9 L 29 6.5 L 36.5 7 L 35.5 .9'/>
+    <path className = 'dart-barrel' d = 'M 7 -1.2 Q 7.5 -1.9 9 -1.9 L 14 -1.9 Q 15.5 -1.9 15.5 -.9 L 15.5 .9 Q 15.5 1.9 14 1.9 L 9 1.9 Q 7.5 1.9 7 1.2 Z'/>
+    <path className = 'dart-grip' d = 'M 9.5 -1.9 L 9.5 1.9 M 11 -1.9 L 11 1.9 M 12.5 -1.9 L 12.5 1.9'/>
+    <path className = 'dart-tip' d = 'M 0 0 L 7 -.55 L 7 .55 Z'/>
+</>
+
+function PurposeTarget () {
+    const { cx, cy, r, squash, tilt } = BOARD
+    const [bx, by] = RIM.back
+    return <svg className = 'purpose-target' viewBox = '0 0 100 60' preserveAspectRatio = 'xMaxYMax meet' aria-hidden = 'true'>
+        <g className = 'purpose-board'>
+            <ellipse className = 'purpose-side' cx = { bx } cy = { by } rx = { r } ry = { r * squash } transform = { `rotate(${ tilt } ${ bx } ${ by })` }/>
+            <path className = 'purpose-side' d = { RIM.edges }/>
+            { BOARD_RINGS.map(ring => (
+                <ellipse key = { ring.scale } className = { `purpose-ring ${ ring.tone }` } cx = { cx } cy = { cy } rx = { r * ring.scale } ry = { r * squash * ring.scale } transform = { `rotate(${ tilt } ${ cx } ${ cy })` }/>
+            )) }
+        </g>
+        <g className = 'purpose-dart'>
+            <g transform = 'rotate(206) scale(.8)'>{ DART }</g>
+        </g>
+    </svg>
+}
+
+const HOOP_ANGLE = FLIGHT * 180 / Math.PI
+const HOOP_ORIGIN = [8, 7]
+const HOOP_FIRST = 34
+const HOOP_GAP = 20
+const HOOP_SHRINK = .78
+
+function hoopAlong (distance) {
+    const a = HOOP_ANGLE * Math.PI / 180
+    return [HOOP_ORIGIN[0] + Math.cos(a) * distance, HOOP_ORIGIN[1] + Math.sin(a) * distance]
+}
+
+function hoopDepth (u) {
+    return HOOP_FIRST + HOOP_GAP * (1 - HOOP_SHRINK ** u) / (1 - HOOP_SHRINK)
+}
+
+const HOOPS = [0, 1, 2].map(u => {
+    const [x, y] = hoopAlong(hoopDepth(u))
+    const r = 10 * HOOP_SHRINK ** u
+    const rx = r * .577
+    return { x, y, r, rx, ri: r * .8, rxi: rx * .8, d: rx * .3 }
+})
+
+function hoopShapes ({ r, rx, ri, rxi, d }) {
+    return {
+        near: {
+            fill: `M 0 ${ -r } A ${ rx } ${ r } 0 0 0 0 ${ r } L 0 ${ ri } A ${ rxi } ${ ri } 0 0 1 0 ${ -ri } Z`,
+            line: `M 0 ${ -r } A ${ rx } ${ r } 0 0 0 0 ${ r } M 0 ${ -ri } A ${ rxi } ${ ri } 0 0 0 0 ${ ri }`
+        },
+        far: {
+            fill: `M 0 ${ -r } L ${ d } ${ -r } A ${ rx } ${ r } 0 0 1 ${ d } ${ r } L 0 ${ r } L 0 ${ ri } A ${ rxi } ${ ri } 0 0 0 0 ${ -ri } Z`,
+            line: `M 0 ${ -r } L ${ d } ${ -r } A ${ rx } ${ r } 0 0 1 ${ d } ${ r } L 0 ${ r } M 0 ${ -r } A ${ rx } ${ r } 0 0 1 0 ${ r } M 0 ${ -ri } A ${ rxi } ${ ri } 0 0 1 0 ${ ri }`
+        }
+    }
+}
+
+function OutcomeHoops () {
+    const layer = part => HOOPS.map((hoop, index) => (
+        <g key = { index } className = { `hoop-pulse-${ index }` } style = {{ transformOrigin: `${ hoop.x }px ${ hoop.y }px` }}>
+            <g transform = { `translate(${ hoop.x } ${ hoop.y }) rotate(${ HOOP_ANGLE })` }>
+                { part === 'back'
+                    ? <ellipse className = 'hoop-back' cx = { hoop.d } cy = '0' rx = { hoop.rxi } ry = { hoop.ri }/>
+                    : <>
+                        <path className = 'hoop-fill' d = { hoopShapes(hoop)[part].fill }/>
+                        <path className = 'hoop-line' d = { hoopShapes(hoop)[part].line }/>
+                    </> }
+            </g>
+        </g>
+    ))
+    return <svg className = 'purpose-target outcome-target' viewBox = '0 0 100 60' preserveAspectRatio = 'xMaxYMax meet' aria-hidden = 'true'>
+        { layer('back') }
+        { layer('far') }
+        <g className = 'outcome-dart'>
+            <g transform = { `rotate(${ 180 + HOOP_ANGLE })` }>{ DART }</g>
+        </g>
+        { layer('near') }
+    </svg>
+}
+
+function usePocketScroll (listRef, rows) {
+    const [edges, setEdges] = useState({ top: false, bottom: false })
+
+    function update () {
+        const el = listRef.current
+        if (!el) return
+        const box = el.getBoundingClientRect()
+        const rects = [...el.querySelectorAll(rows)].map(child => child.getBoundingClientRect())
+        const top = rects.some(r => r.top < box.top - .5 && r.bottom > box.top + .5)
+        const bottom = rects.some(r => r.top < box.bottom - .5 && r.bottom > box.bottom + .5)
+        setEdges(prev => (prev.top === top && prev.bottom === bottom) ? prev : { top, bottom })
+    }
+
+    useEffect(() => {
+        const el = listRef.current
+        if (!el) return
+        const host = el.closest('.case-signal-pocket') || el
+        let hovered = false
+        let target = el.scrollTop
+        let tween = null
+
+        function scrollList (delta, duration = .5) {
+            const max = el.scrollHeight - el.clientHeight
+            if (max <= 0 || delta === 0) return false
+            const from = tween && tween.isActive() ? target : el.scrollTop
+            if ((delta < 0 && from <= 0) || (delta > 0 && from >= max - 1)) return false
+            target = Math.min(max, Math.max(0, from + delta))
+            tween = gsap.to(el, { scrollTop: target, duration, ease: 'power3.out', overwrite: true })
+            return true
+        }
+
+        function onWheel (e) {
+            const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * el.clientHeight : e.deltaY
+            if (!scrollList(step)) return
+            e.preventDefault()
+            e.stopPropagation()
+        }
+
+        function onKeyDown (e) {
+            if (!hovered && !host.contains(document.activeElement)) return
+            const first = el.querySelector(rows)
+            const row = first ? first.getBoundingClientRect().height : 40
+            const delta = e.key === 'ArrowDown' ? row
+                : e.key === 'ArrowUp' ? -row
+                : e.key === 'PageDown' ? el.clientHeight
+                : e.key === 'PageUp' ? -el.clientHeight
+                : 0
+            if (!scrollList(delta)) return
+            e.preventDefault()
+            e.stopImmediatePropagation()
+        }
+
+        function onEnter (e) {
+            if (e.pointerType !== 'mouse') return
+            hovered = true
+            holdScrollNormalizer(true)
+        }
+
+        function onLeave (e) {
+            if (e.pointerType !== 'mouse') return
+            hovered = false
+            holdScrollNormalizer(false)
+        }
+
+        host.addEventListener('wheel', onWheel, { passive: false })
+        host.addEventListener('pointerenter', onEnter)
+        host.addEventListener('pointerleave', onLeave)
+        window.addEventListener('keydown', onKeyDown, true)
+        return () => {
+            host.removeEventListener('wheel', onWheel)
+            host.removeEventListener('pointerenter', onEnter)
+            host.removeEventListener('pointerleave', onLeave)
+            window.removeEventListener('keydown', onKeyDown, true)
+            holdScrollNormalizer(false)
+        }
+    }, [])
+
+    return { edges, update }
+}
+
+function NotesList ({ intro, items, label, tabIndex }) {
+    const listRef = useRef(null)
+    const { edges, update } = usePocketScroll(listRef, ':scope > p, li')
+
+    useEffect(() => {
+        const el = listRef.current
+        if (!el) return
+        update()
+        const observer = new ResizeObserver(update)
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [items])
+
+    return <div
+        ref = { listRef }
+        className = { `case-signal-scroll case-signal-notes column ${ edges.top ? 'fade-top' : '' } ${ edges.bottom ? 'fade-bottom' : '' }` }
+        onScroll = { update }
+        tabIndex = { tabIndex }
+        data-keep-tabbable
+        role = 'region'
+        aria-label = { label }
+    >
+        <p>{ intro }</p>
+        <ul className = 'column'>
+            { items.map(item => (
+                <li key = { item.title }>
+                    <span className = 'block'>{ item.title }</span>
+                    <p>{ item.text }</p>
+                </li>
+            )) }
+        </ul>
+    </div>
+}
+
+function StackList ({ items, tabIndex }) {
+    const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name))
+    const [open, setOpen] = useState(null)
+    const listRef = useRef(null)
+    const { edges, update } = usePocketScroll(listRef, ':scope > li')
+
+    useEffect(() => {
+        const el = listRef.current
+        if (!el) return
+        update()
+        const observer = new ResizeObserver(update)
+        observer.observe(el)
+        ;[...el.children].forEach(child => observer.observe(child))
+        return () => observer.disconnect()
+    }, [items, open])
+
+    return <div className = 'case-signal-stack-wrap relative'>
+        <ul
+            ref = { listRef }
+            className = { `case-signal-scroll case-signal-stack column ${ edges.top ? 'fade-top' : '' } ${ edges.bottom ? 'fade-bottom' : '' }` }
+            onScroll = { update }
+        >
+            { sorted.map((tech, index) => (
+                <li key = { tech.name } className = { open === index ? 'open' : '' }>
+                    <div className = 'case-signal-row flex in-w'>
+                        <div className = 'flex gap-md'>
+                            { tech.icon ? <img className = 'square' src = { tech.icon } alt = ''/> : <span className = 'case-signal-blank block square' aria-hidden = 'true'></span> }
+                            <span className = 'nowrap'>{ tech.name }</span>
+                        </div>
+                        <button
+                            type = 'button'
+                            className = 'center pointer'
+                            aria-expanded = { open === index }
+                            aria-label = { `Why ${ tech.name }` }
+                            onClick = { () => setOpen(open === index ? null : index) }
+                            tabIndex = { tabIndex }
+                            data-keep-tabbable
+                        >
+                            <span className = 'case-signal-toggle relative' aria-hidden = 'true'></span>
+                        </button>
+                    </div>
+                    <div className = 'case-signal-why'>
+                        <p>{ tech.why }</p>
+                    </div>
+                </li>
+            )) }
+        </ul>
+    </div>
 }
 
 function withDesktopPreview (src) {
@@ -70,6 +382,35 @@ function Work ({ onOpenRecents }) {
             mobileImage: null,
             notes: '<p>Tools employed include <span>HTML5</span> + <span>CSS3</span> + <span>React JavaScript</span>. <span>Git</span> for version control. <span>Blender</span> and <span>Three.js</span> for 3D asset in hero section. Demonstrated understanding of <a href = "https://en.wikipedia.org/wiki/React_(software)#Hooks" target = "_blank">hooks</a>, <a href = "https://en.wikipedia.org/wiki/Routing" target = "_blank">routing</a>, and complex styling such as <a href = "https://en.wikipedia.org/wiki/Mask_(computing)" target = "_blank">mask subtraction</a>, and <a href = "https://en.wikipedia.org/wiki/Filter_(graphics)" target = "_blank">glass filters</a>.</p>',
             github: 'personal-portfolio',
+            caseStudy: [
+                'One home for my work, where the site itself shows how I design and build.',
+                [
+                    { icon: react, name: 'React', why: 'Components and state for a page with many interactive parts.' },
+                    { icon: css, name: 'CSS', why: 'Hand-written for the glass, masks and trails, with no framework in the way.' },
+                    { icon: three, name: 'Three.js', why: 'Renders the hero gears and the particle background in the browser.' },
+                    { icon: blender, name: 'Blender', why: 'Modelled the 3D gears used in the hero.' },
+                    { icon: gsapIcon, name: 'GSAP', why: 'Drives the pinned section breaks and the smooth scrolling across the page.' }
+                ],
+                {
+                    intro: 'Every breakpoint and state was designed in Figma first. Getting the build to match it on every screen, phones especially, meant working through:',
+                    items: [
+                        { title: 'Glass distortion', text: 'Getting SVG filters to offset what sits behind each pane, then layering them under blur, gradients and borders so it reads as real glass.' },
+                        { title: 'Hero gears', text: 'Carrying the Blender model into Three.js with an iridescent glass material, an outline shader and a ring of green light.' },
+                        { title: 'Background gears', text: 'Animating a particle field in two places at once without a second WebGL context, by drawing it once and mirroring it.' },
+                        { title: 'Service mockups', text: 'Rebuilding browser, Figma, Blender, VS Code, Miro and Hotjar screens in pure HTML and CSS, and keeping them intact at every breakpoint.' },
+                        { title: 'Popups', text: 'Making glass windows draggable, squaring their corners as they meet the screen edge, and letting the inspector zoom and pan a full design.' }
+                    ]
+                },
+                {
+                    intro: 'A few deliberate calls, each giving something up to get something better:',
+                    items: [
+                        { title: 'Hand-written CSS', text: 'Every style written by hand instead of reaching for Tailwind or Bootstrap. Slower to build, but it gave full control over the glass, masks and trails.' },
+                        { title: 'Live previews', text: 'Projects run as live sites on tablet and up, and as images on phones, trading interactivity for speed where it counts most.' },
+                        { title: 'Touch-first motion', text: 'GSAP pins the section breaks on desktop, while touch devices get native sticky scrolling, giving up some choreography for scrolling that feels right under a finger.' }
+                    ]
+                },
+                'Live on Vercel, with a contact form that sends real email and attachments.'
+            ],
             tags: 'site',
             date: '2026-08-15'
         }
@@ -215,6 +556,62 @@ function Work ({ onOpenRecents }) {
     }, [])
 
     const canLoadPreview = useTabletUp()
+
+    const signalRef = useRef(null)
+    const signalDrag = useRef({ active: false, moved: false, startX: 0, scrollLeft: 0, pointerId: null })
+
+    useEffect(() => {
+        const el = signalRef.current
+        if (!el) return
+        function update () {
+            const max = el.scrollWidth - el.clientWidth
+            el.classList.toggle('fade-start', el.scrollLeft > 1)
+            el.classList.toggle('fade-end', el.scrollLeft < max - 1)
+        }
+        update()
+        el.addEventListener('scroll', update, { passive: true })
+        const ro = new ResizeObserver(update)
+        ro.observe(el)
+        return () => {
+            el.removeEventListener('scroll', update)
+            ro.disconnect()
+        }
+    }, [])
+
+    function onSignalPointerDown (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return
+        signalDrag.current = { active: true, moved: false, startX: e.clientX, scrollLeft: signalRef.current.scrollLeft, pointerId: e.pointerId }
+    }
+
+    function onSignalPointerMove (e) {
+        const drag = signalDrag.current
+        if (!drag.active) return
+        const el = signalRef.current
+        const dx = e.clientX - drag.startX
+        if (!drag.moved) {
+            if (Math.abs(dx) < 4) return
+            drag.moved = true
+            el.setPointerCapture(drag.pointerId)
+            el.classList.add('dragging')
+        }
+        el.scrollLeft = drag.scrollLeft - dx
+    }
+
+    function onSignalPointerUp () {
+        const drag = signalDrag.current
+        if (!drag.active) return
+        drag.active = false
+        const el = signalRef.current
+        el.classList.remove('dragging')
+        if (drag.pointerId !== null && el.hasPointerCapture(drag.pointerId)) el.releasePointerCapture(drag.pointerId)
+    }
+
+    function onSignalClickCapture (e) {
+        if (!signalDrag.current.moved) return
+        signalDrag.current.moved = false
+        e.preventDefault()
+        e.stopPropagation()
+    }
 
     return <section id = 'work' ref = { workRef } className = 'column center relative'>
         <SectionHeader symbol = '\\' title = 'work' />
@@ -418,6 +815,59 @@ function Work ({ onOpenRecents }) {
                         No projects available under this category at the moment.
                     </span>
                 }
+            </section>
+            <section
+                ref = { signalRef }
+                className = 'case-signal in-w'
+                aria-label = 'Case study'
+                onPointerDown = { onSignalPointerDown }
+                onPointerMove = { onSignalPointerMove }
+                onPointerUp = { onSignalPointerUp }
+                onPointerCancel = { onSignalPointerUp }
+                onClickCapture = { onSignalClickCapture }
+                onDragStart = { (e) => e.preventDefault() }
+            >
+                <div className = 'case-signal-track flex relative'>
+                    { CASE_STEPS.map((label, index) => (
+                        <div key = { label } className = { `case-signal-step center ${ index % 2 === 0 ? 'high' : 'low' }` }>
+                            <article className = { `case-signal-pocket square column gap-md relative ${ index === 0 ? 'purpose' : index === 4 ? 'outcome' : '' }` }>
+                                <span className = 'case-signal-label relative'>
+                                    { label }
+                                    { index % 2 === 0 && <span className = 'case-signal-index absolute'>{ `${ index + 1 }.0` }</span> }
+                                </span>
+                                { Array.isArray(result[current]?.caseStudy?.[index]) ? (
+                                    <StackList key = { result[current].title } items = { result[current].caseStudy[index] } tabIndex = { inView ? 0 : -1 }/>
+                                ) : result[current]?.caseStudy?.[index]?.items ? (
+                                    <NotesList key = { result[current].title } intro = { result[current].caseStudy[index].intro } items = { result[current].caseStudy[index].items } label = { label } tabIndex = { inView ? 0 : -1 }/>
+                                ) : <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p> }
+                                { index === 0 && <PurposeTarget/> }
+                                { index === 4 && <OutcomeHoops/> }
+                                { index % 2 === 1 && <span className = 'case-signal-index absolute'>{ `${ index + 1 }.0` }</span> }
+                            </article>
+                        </div>
+                    )) }
+                    <svg className = 'case-signal-wave absolute' viewBox = { `0 0 ${ CASE_STEPS.length * 100 } 100` } aria-hidden = 'true'>
+                        <defs>
+                            <radialGradient id = 'case-signal-glow'>
+                                <stop offset = '10%' stopColor = '#80FF00'/>
+                                <stop offset = '60%' stopColor = '#00FFFF'/>
+                                <stop offset = '100%' stopColor = '#00FFFF' stopOpacity = '0'/>
+                            </radialGradient>
+                            <filter id = 'case-signal-blur' x = '-50%' y = '-50%' width = '200%' height = '200%'>
+                                <feGaussianBlur stdDeviation = '5.5'/>
+                            </filter>
+                            <mask id = 'case-signal-mask' maskUnits = 'userSpaceOnUse' x = '-10' y = '-10' width = { CASE_STEPS.length * 100 + 20 } height = '120'>
+                                <path d = { CASE_WAVE } fill = 'none' stroke = '#FFF' strokeWidth = '2' vectorEffect = 'non-scaling-stroke'/>
+                            </mask>
+                        </defs>
+                        <path className = 'case-signal-line' d = { CASE_WAVE } vectorEffect = 'non-scaling-stroke'/>
+                        <g mask = 'url(#case-signal-mask)'>
+                            <ellipse rx = '21' ry = '10.5' fill = 'url(#case-signal-glow)' filter = 'url(#case-signal-blur)'>
+                                <animateMotion dur = { CASE_SIGNAL_SPEED } repeatCount = 'indefinite' rotate = 'auto' path = { CASE_WAVE }/>
+                            </ellipse>
+                        </g>
+                    </svg>
+                </div>
             </section>
             <section className = 'flex count gap-xlg center in-w'>
                 <span className = 'relative'>Curated and not exhaustive</span>

@@ -59,6 +59,68 @@
     100% { rotate: 360deg; scale: 1; opacity: 100%; }
 }
 
+@keyframes purpose-dart {
+    0% { transform: translate(38.4px, 18.7px); opacity: 0; }
+    20% { transform: translate(36.6px, 17.8px); opacity: 1; }
+    22% { transform: translate(36.6px, 17.8px); animation-timing-function: cubic-bezier(.6, 0, 1, .8); }
+    27% { transform: translate(78px, 38px); animation-timing-function: ease-out; }
+    28.5% { transform: translate(78.9px, 38.4px); }
+    31%, 80% { transform: translate(78px, 38px); opacity: 1; }
+    95%, 100% { transform: translate(78px, 38px); opacity: 0; }
+}
+
+@keyframes outcome-dart {
+    0% { transform: translate(22.553px, 14.098px) scale(0.502); opacity: 0; }
+    20%, 22% { transform: translate(25.423px, 15.498px) scale(0.488); opacity: 1; }
+    23% { transform: translate(30.428px, 17.939px) scale(0.462); opacity: 1; }
+    24% { transform: translate(35.168px, 20.251px) scale(0.437); opacity: 1; }
+    25% { transform: translate(39.659px, 22.441px) scale(0.414); opacity: 1; }
+    26% { transform: translate(43.912px, 24.516px) scale(0.392); opacity: 1; }
+    27% { transform: translate(47.941px, 26.481px) scale(0.372); opacity: 1; }
+    28% { transform: translate(51.758px, 28.342px) scale(0.352); opacity: 1; }
+    29% { transform: translate(55.373px, 30.105px) scale(0.334); opacity: 1; }
+    30% { transform: translate(58.797px, 31.775px) scale(0.316); opacity: 1; }
+    31% { transform: translate(62.041px, 33.357px) scale(0.299); opacity: 1; }
+    32% { transform: translate(65.113px, 34.856px) scale(0.284); opacity: 1; }
+    33% { transform: translate(68.023px, 36.275px) scale(0.269); opacity: 1; }
+    34% { transform: translate(70.78px, 37.62px) scale(0.254); opacity: 1; }
+    35% { transform: translate(73.391px, 38.894px) scale(0.241); opacity: 1; }
+    36% { transform: translate(75.865px, 40.1px) scale(0.228); opacity: 1; }
+    37% { transform: translate(78.208px, 41.243px) scale(0.216); opacity: 1; }
+    38% { transform: translate(80.427px, 42.325px) scale(0.205); opacity: 1; }
+    39% { transform: translate(82.529px, 43.35px) scale(0.194); opacity: 1; }
+    40% { transform: translate(84.521px, 44.322px) scale(0.184); opacity: 0.8; }
+    41% { transform: translate(86.407px, 45.242px) scale(0.174); opacity: 0.6; }
+    42% { transform: translate(88.194px, 46.113px) scale(0.165); opacity: 0.4; }
+    43% { transform: translate(89.886px, 46.939px) scale(0.156); opacity: 0.2; }
+    44% { transform: translate(91.489px, 47.72px) scale(0.148); opacity: 0; }
+    100% { transform: translate(91.489px, 47.72px) scale(0.148); opacity: 0; }
+}
+
+@keyframes hoop-pulse-0 {
+    0%, 24.8% { transform: scale(1); }
+    26.2% { transform: scale(1.12); }
+    31.8%, 100% { transform: scale(1); }
+}
+
+@keyframes hoop-pulse-1 {
+    0%, 29.3% { transform: scale(1); }
+    30.8% { transform: scale(1.12); }
+    36.3%, 100% { transform: scale(1); }
+}
+
+@keyframes hoop-pulse-2 {
+    0%, 33.9% { transform: scale(1); }
+    35.4% { transform: scale(1.12); }
+    40.9%, 100% { transform: scale(1); }
+}
+
+@keyframes purpose-board {
+    0%, 27% { transform: scale(1); }
+    29% { transform: scale(.94); }
+    36%, 100% { transform: scale(1); }
+}
+
 @keyframes continuous-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -204,6 +266,18 @@
     100% { opacity: 0; }
 }
 
+@property --fade-start {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0rem;
+}
+
+@property --fade-end {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0rem;
+}
+
 @property --angle {
     syntax: '<angle>';
     initial-value: 0deg;
@@ -299,14 +373,17 @@
 }
 
 .gradient-text {
-    background-image: var(--gradient);
+    background:
+        repeating-linear-gradient(to right, #00999995 0%, #00CCCC95 12.5%, #80FF0095 25%, #00CCCC95 40%, #00999995 50%),
+        linear-gradient(#7CFC0075, #7CFC0075);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    background-size: 200% auto;
+    -webkit-text-fill-color: transparent;
+    width: fit-content;
     animation: dynamic-gradient 6s linear infinite;
     will-change: background-position;
-    -webkit-text-fill-color: transparent;
 }
 
 .hide {
@@ -628,8 +705,8 @@
                                     .idea-link:focus-visible .idea svg,
                                     .quick .idea.active span,
                                     .quick .idea.active svg {
-                                        color: var(--lum-1);
-                                        fill: var(--lum-1);
+                                        color: var(--accent-2);
+                                        fill: var(--accent-2);
                                     }
 
                                     .quick .idea svg { height: 2rem; }
@@ -1367,9 +1444,12 @@
                                                 fill: var(--lum-1);
                                             }
 
+                        #work,
+                        #about,
+                        #contact { scroll-margin-top: calc(7.5rem + 2rem + 3rem); }
+
                         #work {
                             gap: 3.75rem;
-                            scroll-margin-top: 3rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
@@ -1386,7 +1466,7 @@
                             bottom: 0;
                             left: calc(var(--band-bleed) * -1);
                             right: calc(var(--band-bleed) * -1);
-                            border-radius: 2.5rem 2.5rem 0 0;
+                            border-radius: 4rem 4rem 0 0;
                             background: linear-gradient(to bottom, color-mix(in srgb, #000 50%, transparent) 0%, transparent 20rem);
                             z-index: -2;
                             pointer-events: none;
@@ -1718,6 +1798,338 @@
                                                 color: var(--lum-2);
                                                 fill: var(--lum-2);
                                             }
+
+                                .case-signal {
+                                    --card: 20rem;
+                                    --pad: .5rem;
+                                    --step-w: calc(var(--card) + var(--pad) * 2);
+                                    padding-block: .5rem;
+                                    contain: inline-size;
+                                    overflow-x: auto;
+                                    overflow-y: hidden;
+                                    overscroll-behavior-x: contain;
+                                    scrollbar-width: none;
+                                    --fade-start: 0rem;
+                                    --fade-end: 0rem;
+                                    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+                                    mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+                                    transition: --fade-start .3s ease, --fade-end .3s ease;
+                                }
+
+                                .case-signal.fade-start { --fade-start: 6rem; }
+                                .case-signal.fade-end { --fade-end: 6rem; }
+
+                                .case-signal::-webkit-scrollbar { display: none; }
+
+                                .case-signal.dragging,
+                                .case-signal.dragging * {
+                                    cursor: grabbing;
+                                    user-select: none;
+                                }
+
+                                    .case-signal-track {
+                                        width: max-content;
+                                        height: var(--step-w);
+                                    }
+
+                                        .case-signal-step {
+                                            flex: 0 0 var(--step-w);
+                                            height: 100%;
+                                            padding: var(--pad);
+                                        }
+
+                                            .case-signal-pocket {
+                                                width: var(--card);
+                                                border-radius: 1.75rem;
+                                                padding: 1.5rem;
+                                                overflow: hidden;
+                                                color: var(--lum-2);
+                                            }
+
+                                            .case-signal-step.high .case-signal-pocket { justify-content: flex-start; }
+
+                                            .case-signal-step.low .case-signal-pocket {
+                                                justify-content: flex-end;
+                                                padding-bottom: calc(1.5rem + var(--fs-1-3) + 1rem);
+                                            }
+
+                                            .case-signal-pocket.purpose,
+                                            .case-signal-pocket.outcome { isolation: isolate; }
+
+                                                .case-signal-label {
+                                                    font-family: var(--font-2);
+                                                    font-size: var(--fs-1-2);
+                                                    color: var(--accent-2);
+                                                    text-transform: uppercase;
+                                                    white-space: nowrap;
+                                                }
+
+                                                .case-signal-index {
+                                                    left: 1.5rem;
+                                                    bottom: 1.5rem;
+                                                    font-family: var(--font-2);
+                                                    font-size: var(--fs-1-3);
+                                                    line-height: 1;
+                                                    color: var(--lum-2);
+                                                }
+
+                                                .case-signal-label .case-signal-index {
+                                                    left: 0;
+                                                    bottom: auto;
+                                                    top: calc(100% + .5rem + (1.75rem + 1rem) * 3 + 1rem);
+                                                }
+
+                                                .case-signal-scroll {
+                                                    --fade: 1.25rem;
+                                                    --bar: .375rem;
+                                                    padding-right: 1.5rem;
+                                                    overflow-y: auto;
+                                                    -webkit-mask:
+                                                        linear-gradient(to bottom, transparent 0, #000 var(--fade-top, 0px), #000 calc(100% - var(--fade-bottom, 0px)), transparent 100%) left top / calc(100% - var(--bar)) 100% no-repeat,
+                                                        linear-gradient(#000 0 0) right top / var(--bar) 100% no-repeat;
+                                                    mask:
+                                                        linear-gradient(to bottom, transparent 0, #000 var(--fade-top, 0px), #000 calc(100% - var(--fade-bottom, 0px)), transparent 100%) left top / calc(100% - var(--bar)) 100% no-repeat,
+                                                        linear-gradient(#000 0 0) right top / var(--bar) 100% no-repeat;
+                                                }
+
+                                                @supports not selector(::-webkit-scrollbar) {
+                                                    .case-signal-scroll {
+                                                        scrollbar-width: thin;
+                                                        scrollbar-color: var(--lum-2) rgba(124, 252, 0, .2);
+                                                    }
+                                                }
+
+                                                .case-signal-scroll::-webkit-scrollbar { width: var(--bar); }
+
+                                                .case-signal-scroll::-webkit-scrollbar-track {
+                                                    background-color: rgba(124, 252, 0, .2);
+                                                    border-radius: .25rem;
+                                                }
+
+                                                .case-signal-scroll::-webkit-scrollbar-thumb {
+                                                    background-color: var(--lum-2);
+                                                    border-radius: .25rem;
+                                                }
+
+                                                .case-signal-scroll::-webkit-scrollbar-thumb:hover { background-color: var(--lum-1); }
+
+                                                .case-signal-scroll::-webkit-scrollbar-thumb:active { background-color: var(--accent-2); }
+
+                                                .case-signal-scroll.fade-top { --fade-top: var(--fade); }
+
+                                                .case-signal-scroll.fade-bottom { --fade-bottom: var(--fade); }
+
+                                                .case-signal-stack {
+                                                    --row-h: calc(1.75rem + 1rem);
+                                                    list-style: none;
+                                                    max-height: calc(var(--row-h) * 3);
+                                                }
+
+                                                .case-signal-notes {
+                                                    flex: 0 0 auto;
+                                                    height: calc((1.75rem + 1rem) * 3);
+                                                    outline: none;
+                                                }
+
+                                                    .case-signal-notes ul { list-style: none; }
+
+                                                    .case-signal-notes li {
+                                                        position: relative;
+                                                        padding-block: .5rem;
+                                                    }
+
+                                                    .case-signal-notes > p { padding-bottom: .5rem; }
+
+                                                    .case-signal-pocket .case-signal-notes p {
+                                                        display: block;
+                                                        overflow: visible;
+                                                        -webkit-line-clamp: none;
+                                                        line-clamp: none;
+                                                    }
+
+                                                        .case-signal-notes li span {
+                                                            font-size: var(--fs-1-4);
+                                                            color: var(--lum-1);
+                                                            padding-bottom: .25rem;
+                                                        }
+
+                                                    .case-signal-stack li { flex-shrink: 0; }
+
+                                                    .case-signal-stack li { position: relative; }
+
+                                                    .case-signal-stack li:not(:last-child)::after,
+                                                    .case-signal-notes li:not(:last-child)::after {
+                                                        content: '';
+                                                        position: absolute;
+                                                        bottom: 0;
+                                                        left: 0;
+                                                        right: 0;
+                                                        height: 1px;
+                                                        background-color: var(--lum-2);
+                                                        transform: scaleY(.5);
+                                                        transform-origin: bottom;
+                                                    }
+
+                                                        .case-signal-row img {
+                                                            filter: grayscale(1);
+                                                            transition: filter var(--tran-1);
+                                                        }
+
+                                                        .case-signal-stack li:focus-within .case-signal-row img,
+                                                        .case-signal-stack li.open .case-signal-row img { filter: none; }
+
+                                                        .case-signal-stack li:hover .case-signal-row img {
+                                                            filter: none;
+                                                            transition-delay: .25s;
+                                                        }
+
+                                                        .case-signal-row {
+                                                            height: var(--row-h);
+                                                            padding-block: .5rem;
+                                                            justify-content: space-between;
+                                                            align-items: center;
+                                                            gap: .5rem;
+                                                            color: var(--lum-2);
+                                                        }
+
+                                                        .case-signal-row button {
+                                                            width: 1.75rem;
+                                                            height: 1.75rem;
+                                                            flex-shrink: 0;
+                                                            border-radius: 50%;
+                                                        }
+
+                                                        .case-signal-row > div {
+                                                            align-items: center;
+                                                            min-width: 0;
+                                                        }
+
+                                                        .case-signal-stack img,
+                                                        .case-signal-blank {
+                                                            height: 1.75rem;
+                                                            flex-shrink: 0;
+                                                        }
+
+                                                        .case-signal-row > div span {
+                                                            font-size: var(--fs-1-4);
+                                                            overflow: hidden;
+                                                            text-overflow: ellipsis;
+                                                        }
+
+                                                        .case-signal-toggle {
+                                                            width: .75rem;
+                                                            height: .75rem;
+                                                        }
+
+                                                        .case-signal-toggle::before,
+                                                        .case-signal-toggle::after {
+                                                            content: '';
+                                                            position: absolute;
+                                                            top: 50%;
+                                                            left: 0;
+                                                            width: 100%;
+                                                            height: 2px;
+                                                            margin-top: -1px;
+                                                            border-radius: 1px;
+                                                            background-color: var(--lum-2);
+                                                            transition: rotate var(--tran-1), background-color var(--tran-1);
+                                                        }
+
+                                                        .case-signal-toggle::after { rotate: 90deg; }
+
+                                                        .case-signal-stack li.open .case-signal-toggle::after { rotate: 0deg; }
+
+                                                        .case-signal-row button:hover .case-signal-toggle::before,
+                                                        .case-signal-row button:hover .case-signal-toggle::after,
+                                                        .case-signal-row button:focus-visible .case-signal-toggle::before,
+                                                        .case-signal-row button:focus-visible .case-signal-toggle::after { background-color: var(--accent-2); }
+
+                                                        .case-signal-why {
+                                                            display: grid;
+                                                            grid-template-rows: 0fr;
+                                                            transition: grid-template-rows var(--tran-1);
+                                                        }
+
+                                                        .case-signal-stack li.open .case-signal-why { grid-template-rows: 1fr; }
+
+                                                            .case-signal-stack .case-signal-why p {
+                                                                min-height: 0;
+                                                                overflow: hidden;
+                                                                display: block;
+                                                                padding: 0;
+                                                                -webkit-line-clamp: none;
+                                                                line-clamp: none;
+                                                            }
+
+                                                            .case-signal-stack li.open .case-signal-why p { padding-bottom: .75rem; }
+
+                                                .case-signal-pocket p {
+                                                    font-size: var(--fs-1-4);
+                                                    line-height: 1.4;
+                                                    display: -webkit-box;
+                                                    -webkit-box-orient: vertical;
+                                                    -webkit-line-clamp: 5;
+                                                    line-clamp: 5;
+                                                    overflow: hidden;
+                                                }
+
+                                        .case-signal-wave {
+                                            inset: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            overflow: visible;
+                                            pointer-events: none;
+                                        }
+
+                                            .case-signal-line {
+                                                fill: none;
+                                                stroke: var(--signal-color);
+                                                stroke-width: 2;
+                                            }
+
+                                            .purpose-target {
+                                                flex: 1 1 0;
+                                                min-height: 0;
+                                                width: 100%;
+                                                overflow: hidden;
+                                                pointer-events: none;
+                                            }
+
+                                                .purpose-target ellipse,
+                                                .purpose-target path {
+                                                    fill: var(--BGC);
+                                                    stroke: var(--lum-2);
+                                                    stroke-width: .5;
+                                                    stroke-linejoin: round;
+                                                    vector-effect: non-scaling-stroke;
+                                                }
+
+                                                .purpose-target path.purpose-side { fill: none; }
+
+                                                .purpose-target path.dart-grip,
+                                                .purpose-target path.dart-fletch { fill: none; }
+
+                                                .purpose-board {
+                                                    transform-origin: 78px 38px;
+                                                    animation: purpose-board 3.5s ease-out infinite;
+                                                }
+
+                                                .purpose-dart { animation: purpose-dart 3.5s infinite; }
+
+                                                .purpose-target path.hoop-fill { stroke: none; }
+
+                                                .purpose-target path.hoop-line { fill: none; }
+
+                                                .purpose-target ellipse.hoop-back { fill: none; }
+
+                                                .hoop-pulse-0 { animation: hoop-pulse-0 3.5s ease-out infinite; }
+
+                                                .hoop-pulse-1 { animation: hoop-pulse-1 3.5s ease-out infinite; }
+
+                                                .hoop-pulse-2 { animation: hoop-pulse-2 3.5s ease-out infinite; }
+
+                                                .outcome-dart { animation: outcome-dart 3.5s linear infinite; }
+
 
                                 .count { justify-content: space-between; }
 
@@ -2102,7 +2514,6 @@
 
                         #about {
                             gap: 3.75rem;
-                            scroll-margin-top: 3rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
@@ -3947,7 +4358,6 @@
 
                         #contact {
                             gap: 3.75rem;
-                            scroll-margin-top: 3rem;
                             margin-inline: 8rem;
                             max-width: 76.5rem;
                             align-self: center;
@@ -4010,7 +4420,6 @@
                                             transition: var(--tran-1, .3s ease);
                                         }
 
-                                        /* Placeholders mix toward the field's background so they read as hints, not typed text */
                                         .contact-form div input::placeholder,
                                         .contact-form div textarea::placeholder {
                                             color: color-mix(in srgb, var(--lum-2) 55%, var(--BGC));
@@ -4028,7 +4437,7 @@
                                         .contact-form div textarea:focus::placeholder { color: color-mix(in srgb, var(--lum-1) 65%, var(--accent-1)); }
 
                                         .contact-form div textarea {
-                                            height: 11.75rem;
+                                            height: 11.25rem;
                                             width: 100%;
                                             resize: none;
                                         }
@@ -4050,7 +4459,6 @@
                                             overflow: visible;
                                         }
 
-                                            /* Three short glows follow the border one after another: cyan tail, lawngreen middle, cyan lead */
                                             .message .trail,
                                             .message .trail-wrapper::before,
                                             .message .trail-wrapper::after {
