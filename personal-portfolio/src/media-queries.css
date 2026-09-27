@@ -5,7 +5,7 @@
     /* HEADER */
                         header {
                             --card-x: var(--header-x);
-                            --card-pad: 3rem;
+                            --card-pad: 2.25rem;
                             position: fixed;
                             top: var(--header-top);
                             left: var(--card-x);
@@ -673,7 +673,7 @@
 @media (max-width: 550px) {
     /* HEADER */
                         header {
-                            padding: 1.5rem 3rem;
+                            padding: 1.5rem 2.25rem;
                             zoom: var(--header-zoom);
                         }
 
