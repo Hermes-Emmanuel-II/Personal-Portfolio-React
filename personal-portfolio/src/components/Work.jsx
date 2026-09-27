@@ -53,8 +53,12 @@ function squareWave (steps, r = 10.7, e = .6) {
 }
 
 const CASE_WAVE = squareWave(CASE_STEPS.length)
-const CASE_SIGNAL_SPEED = `${ CASE_STEPS.length * .75 }s`
-const BOARD = { cx: 78, cy: 38, r: 18, squash: .62, tilt: -64, depth: 3.6 }
+const CASE_SIGNAL_TIME = CASE_STEPS.length * .5
+const CASE_SIGNAL_SPEED = `${ CASE_SIGNAL_TIME }s`
+const CASE_TRAIL = Array.from({ length: 8 }, (_, i) => i)
+const CASE_TRAIL_GAP = .07
+const CASE_TRAIL_FADE = .08
+const BOARD = { cx: 78, cy: 38, r: 18, squash: .62, tilt: -90, depth: 3.6 }
 const BOARD_RINGS = [
     { scale: 1, tone: 'a' },
     { scale: .76, tone: 'b' },
@@ -84,11 +88,11 @@ function boardRim ({ cx, cy, r, squash, tilt, depth }) {
     return { back: [cx + dx, cy + dy], edges: `M ${ x1 } ${ y1 } l ${ dx } ${ dy } M ${ x2 } ${ y2 } l ${ dx } ${ dy }` }
 }
 
-const FLIGHT = 26 * Math.PI / 180
+const FLIGHT = 0
 
 const RIM = boardRim(BOARD)
 
-function dartParts (flight) {
+function dartParts (flight, toward = false) {
     const along = flight + Math.PI
     const fore = Math.sqrt(1 - BOARD.squash ** 2)
     const axis = [Math.cos(along) * fore, Math.sin(along) * fore]
@@ -105,20 +109,30 @@ function dartParts (flight) {
     const cylinder = (t0, t1, r) => `${ line([...arc(t0, r, Math.PI, Math.PI * 2), ...arc(t1, r, 0, Math.PI)]) } Z`
     const fin = a => `${ line([at(25.5, .9, a), at(29, 6.5, a), at(36.5, 7, a), at(35.5, .9, a)]) } Z`
     const q = Math.PI / 4
+    const side = toward ? 0 : Math.PI
     return {
-        far: [fin(q), fin(3 * q)],
-        near: [fin(5 * q), fin(7 * q)],
+        far: toward ? [fin(5 * q), fin(7 * q)] : [fin(q), fin(3 * q)],
+        near: toward ? [fin(q), fin(3 * q)] : [fin(5 * q), fin(7 * q)],
         tip: `${ line([at(0, 0, 0), at(7, .55, 0), at(7, .55, Math.PI)]) } Z`,
         barrel: cylinder(7, 15.5, 1.9),
-        face: ring(15.5, 1.9),
-        grip: [9.5, 11, 12.5].map(t => line(arc(t, 1.9, Math.PI, Math.PI * 2))).join(' '),
+        face: ring(toward ? 7 : 15.5, 1.9),
+        grip: [9.5, 11, 12.5].map(t => line(arc(t, 1.9, side, side + Math.PI))).join(' '),
         shaft: cylinder(15.5, 35.5, .9),
-        butt: ring(35.5, .9)
+        butt: toward ? null : ring(35.5, .9)
     }
 }
 
-function Dart ({ flight }) {
-    const parts = dartParts(flight)
+function Dart ({ flight, toward = false }) {
+    const parts = dartParts(flight, toward)
+    if (toward) return <>
+        { parts.far.map((d, i) => <path key = { i } className = 'dart-fletch' d = { d }/>) }
+        <path className = 'dart-shaft' d = { parts.shaft }/>
+        { parts.near.map((d, i) => <path key = { i } className = 'dart-fletch' d = { d }/>) }
+        <path className = 'dart-barrel' d = { parts.barrel }/>
+        <path className = 'dart-grip' d = { parts.grip }/>
+        <path className = 'dart-barrel' d = { parts.face }/>
+        <path className = 'dart-tip' d = { parts.tip }/>
+    </>
     return <>
         { parts.far.map((d, i) => <path key = { i } className = 'dart-fletch' d = { d }/>) }
         <path className = 'dart-tip' d = { parts.tip }/>
@@ -134,7 +148,7 @@ function Dart ({ flight }) {
 function PurposeTarget () {
     const { cx, cy, r, squash, tilt } = BOARD
     const [bx, by] = RIM.back
-    return <svg className = 'purpose-target' viewBox = '0 0 100 60' preserveAspectRatio = 'xMaxYMax meet' aria-hidden = 'true'>
+    return <svg className = 'purpose-target' viewBox = '-23 15 121 44' preserveAspectRatio = 'xMaxYMid meet' aria-hidden = 'true'>
         <g className = 'purpose-board'>
             <ellipse className = 'purpose-side' cx = { bx } cy = { by } rx = { r } ry = { r * squash } transform = { `rotate(${ tilt } ${ bx } ${ by })` }/>
             <path className = 'purpose-side' d = { RIM.edges }/>
@@ -197,12 +211,14 @@ function OutcomeHoops () {
         </g>
     ))
     return <svg className = 'purpose-target outcome-target' viewBox = '2 0 94 24' preserveAspectRatio = 'xMidYMid meet' aria-hidden = 'true'>
-        { layer('back') }
-        { layer('far') }
-        <g className = 'outcome-dart'>
-            <Dart flight = { 0 }/>
+        <g transform = 'translate(98 0) scale(-1 1)'>
+            { layer('back') }
+            { layer('near') }
+            <g className = 'outcome-dart'>
+                <Dart flight = { Math.PI } toward/>
+            </g>
+            { layer('far') }
         </g>
-        { layer('near') }
     </svg>
 }
 
@@ -878,8 +894,12 @@ function Work ({ onOpenRecents }) {
                                         <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p>
                                         <OutcomeHoops/>
                                     </div>
+                                ) : index === 0 ? (
+                                    <div className = 'case-signal-body column gap-md'>
+                                        <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p>
+                                        <PurposeTarget/>
+                                    </div>
                                 ) : <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p> }
-                                { index === 0 && <PurposeTarget/> }
                                 { index % 2 === 1 && <span className = 'case-signal-index absolute'>{ `${ index + 1 }.0` }</span> }
                             </article>
                         </div>
@@ -900,9 +920,12 @@ function Work ({ onOpenRecents }) {
                         </defs>
                         <path className = 'case-signal-line' d = { CASE_WAVE } vectorEffect = 'non-scaling-stroke'/>
                         <g mask = 'url(#case-signal-mask)'>
-                            <ellipse rx = '21' ry = '10.5' fill = 'url(#case-signal-glow)' filter = 'url(#case-signal-blur)'>
-                                <animateMotion dur = { CASE_SIGNAL_SPEED } repeatCount = 'indefinite' rotate = 'auto' path = { CASE_WAVE }/>
-                            </ellipse>
+                            { [...CASE_TRAIL].reverse().map(i => (
+                                <ellipse key = { i } rx = '21' ry = { 10.5 * (1 - i * .06) } fill = 'url(#case-signal-glow)' fillOpacity = { 1 - i / CASE_TRAIL.length } filter = 'url(#case-signal-blur)'>
+                                    <animateMotion dur = { CASE_SIGNAL_SPEED } begin = { `-${ (CASE_SIGNAL_TIME - i * CASE_TRAIL_GAP).toFixed(2) }s` } repeatCount = 'indefinite' rotate = 'auto' path = { CASE_WAVE }/>
+                                    <animate attributeName = 'opacity' dur = { CASE_SIGNAL_SPEED } begin = { `-${ (CASE_SIGNAL_TIME - i * CASE_TRAIL_GAP).toFixed(2) }s` } repeatCount = 'indefinite' values = '0;1;1;0' keyTimes = { `0;${ CASE_TRAIL_FADE };${ 1 - CASE_TRAIL_FADE };1` }/>
+                                </ellipse>
+                            )) }
                         </g>
                     </svg>
                 </div>

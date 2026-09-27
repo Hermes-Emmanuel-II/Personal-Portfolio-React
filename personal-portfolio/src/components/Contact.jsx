@@ -145,6 +145,26 @@ function Contact () {
         return () => observer.disconnect()
     }, [files.length, !!warning])
 
+    const formRef = useRef(null)
+
+    useLayoutEffect(() => {
+        const form = formRef.current
+        if (!form) return
+        const first = form.firstElementChild
+        const message = form.querySelector('.message')
+        if (!first || !message) return
+        function align () {
+            const box = form.getBoundingClientRect()
+            const scale = box.height ? form.offsetHeight / box.height : 1
+            form.style.setProperty('--gear-shift', `${ (message.getBoundingClientRect().top - first.getBoundingClientRect().top) * scale }px`)
+        }
+        align()
+        const observer = new ResizeObserver(align)
+        observer.observe(form)
+        observer.observe(first)
+        return () => observer.disconnect()
+    }, [])
+
     function onFilesPointerDown (e) {
         if (e.pointerType !== 'mouse' || e.button !== 0) return
         const el = filesRef.current
@@ -221,7 +241,7 @@ function Contact () {
         <SectionHeader symbol = '>_ ' title = 'hello'/>
         <article className = 'content relative column gap-lg'>
             <p>Let's make something together! I'm open to both exploring new opportunities and collaborating. Feel free to drop a 'hi' so we can start something or maybe just rub minds.</p>
-            <form className = 'contact-form column gap-lg' onSubmit = { handleSubmit }>
+            <form ref = { formRef } className = 'contact-form column gap-lg' onSubmit = { handleSubmit }>
                 <div className = 'flex gap-lg relative'>
                     <input
                         type = 'text'

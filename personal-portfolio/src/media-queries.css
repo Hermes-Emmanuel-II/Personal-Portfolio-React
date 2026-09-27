@@ -687,7 +687,7 @@
                                 width: var(--gear-size);
                                 height: var(--gear-size);
                                 right: auto;
-                                left: max(calc(100% - 30rem), calc(var(--hero-content-right, 0px) - .5rem));
+                                left: max(calc(100% - 30rem), var(--hero-content-right, 0px));
                             }         
                             
                                         .crosshair-orbit {
@@ -723,5 +723,5 @@
 
                                             .contact-warning span { white-space: normal; }
 
-                                    .contact-form div:first-child img { top: 6.325rem; }
+                                    .contact-form { --gear-top: 6.325rem; }
 }
