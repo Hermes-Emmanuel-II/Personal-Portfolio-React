@@ -15,7 +15,6 @@ import pixel from '../assets/pixel.png'
 
 import bronze from '../assets/works/bronze.png'
 import cephalopod from '../assets/works/cephalopod.png'
-import haoqi from '../assets/works/haoqi.mp4'
 import machu from '../assets/works/machu.png'
 
 export default function Beyond () {
