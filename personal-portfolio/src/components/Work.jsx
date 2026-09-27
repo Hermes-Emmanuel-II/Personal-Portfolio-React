@@ -8,7 +8,7 @@ import gsap from 'gsap'
 import { holdScrollNormalizer } from '../App'
 
 import blender from '../assets/external-icons/blender.svg'
-import bootstrap from '../assets/external-icons/bootstrap.svg'
+import bootstrap from '../assets/external-icons/bootstrap.png'
 import css from '../assets/external-icons/css.svg'
 import figma from '../assets/external-icons/figma.svg'
 import git from '../assets/external-icons/git.svg'
@@ -35,19 +35,19 @@ function squareWave (steps, r = 10.7, e = .6) {
     const top = e
     const bottom = 100 - e
     const end = steps * 100 - e
-    let d = `M ${ e } ${ bottom } L ${ e } ${ top + r } A ${ r } ${ r } 0 0 1 ${ e + r } ${ top }`
+    let d = `M ${ e } ${ top }`
     for (let i = 1; i <= steps; i++) {
-        const x = i === steps ? end : i * 100
         const high = i % 2 === 1
         const y = high ? top : bottom
+        if (i === steps) {
+            d += ` L ${ end } ${ y }`
+            break
+        }
+        const x = i * 100
         const nextY = high ? bottom : top
         const sweepIn = high ? 1 : 0
         d += ` L ${ x - r } ${ y } A ${ r } ${ r } 0 0 ${ sweepIn } ${ x } ${ high ? y + r : y - r }`
-        if (i === steps) {
-            d += ` L ${ x } ${ nextY }`
-        } else {
-            d += ` L ${ x } ${ high ? nextY - r : nextY + r } A ${ r } ${ r } 0 0 ${ 1 - sweepIn } ${ x + r } ${ nextY }`
-        }
+        d += ` L ${ x } ${ high ? nextY - r : nextY + r } A ${ r } ${ r } 0 0 ${ 1 - sweepIn } ${ x + r } ${ nextY }`
     }
     return d
 }
@@ -88,16 +88,48 @@ const FLIGHT = 26 * Math.PI / 180
 
 const RIM = boardRim(BOARD)
 
-const DART = <>
-    <path className = 'dart-fletch' d = 'M 26 -.2 L 29.5 -1 L 36 -1.3 L 35 -.2'/>
-    <path className = 'dart-fletch' d = 'M 26 .2 L 29.5 1 L 36 1.3 L 35 .2'/>
-    <path className = 'dart-shaft' d = 'M 15 -.9 L 26 -.9 L 26 .9 L 15 .9 Z'/>
-    <path className = 'dart-fletch' d = 'M 25.5 -.9 L 29 -6.5 L 36.5 -7 L 35.5 -.9'/>
-    <path className = 'dart-fletch' d = 'M 25.5 .9 L 29 6.5 L 36.5 7 L 35.5 .9'/>
-    <path className = 'dart-barrel' d = 'M 7 -1.2 Q 7.5 -1.9 9 -1.9 L 14 -1.9 Q 15.5 -1.9 15.5 -.9 L 15.5 .9 Q 15.5 1.9 14 1.9 L 9 1.9 Q 7.5 1.9 7 1.2 Z'/>
-    <path className = 'dart-grip' d = 'M 9.5 -1.9 L 9.5 1.9 M 11 -1.9 L 11 1.9 M 12.5 -1.9 L 12.5 1.9'/>
-    <path className = 'dart-tip' d = 'M 0 0 L 7 -.55 L 7 .55 Z'/>
-</>
+function dartParts (flight) {
+    const along = flight + Math.PI
+    const fore = Math.sqrt(1 - BOARD.squash ** 2)
+    const axis = [Math.cos(along) * fore, Math.sin(along) * fore]
+    const tilt = flight - Math.PI / 2
+    const wide = [Math.cos(tilt), Math.sin(tilt)]
+    const deep = [Math.cos(along) * BOARD.squash, Math.sin(along) * BOARD.squash]
+    const at = (t, r, a) => [
+        axis[0] * t + r * (Math.cos(a) * wide[0] + Math.sin(a) * deep[0]),
+        axis[1] * t + r * (Math.cos(a) * wide[1] + Math.sin(a) * deep[1])
+    ]
+    const line = points => points.map(([x, y], i) => `${ i ? 'L' : 'M' } ${ x.toFixed(3) } ${ y.toFixed(3) }`).join(' ')
+    const arc = (t, r, from, to, steps = 16) => Array.from({ length: steps + 1 }, (_, i) => at(t, r, from + (to - from) * i / steps))
+    const ring = (t, r) => `${ line(arc(t, r, 0, Math.PI * 2, 32)) } Z`
+    const cylinder = (t0, t1, r) => `${ line([...arc(t0, r, Math.PI, Math.PI * 2), ...arc(t1, r, 0, Math.PI)]) } Z`
+    const fin = a => `${ line([at(25.5, .9, a), at(29, 6.5, a), at(36.5, 7, a), at(35.5, .9, a)]) } Z`
+    const q = Math.PI / 4
+    return {
+        far: [fin(q), fin(3 * q)],
+        near: [fin(5 * q), fin(7 * q)],
+        tip: `${ line([at(0, 0, 0), at(7, .55, 0), at(7, .55, Math.PI)]) } Z`,
+        barrel: cylinder(7, 15.5, 1.9),
+        face: ring(15.5, 1.9),
+        grip: [9.5, 11, 12.5].map(t => line(arc(t, 1.9, Math.PI, Math.PI * 2))).join(' '),
+        shaft: cylinder(15.5, 35.5, .9),
+        butt: ring(35.5, .9)
+    }
+}
+
+function Dart ({ flight }) {
+    const parts = dartParts(flight)
+    return <>
+        { parts.far.map((d, i) => <path key = { i } className = 'dart-fletch' d = { d }/>) }
+        <path className = 'dart-tip' d = { parts.tip }/>
+        <path className = 'dart-barrel' d = { parts.barrel }/>
+        <path className = 'dart-grip' d = { parts.grip }/>
+        <path className = 'dart-barrel' d = { parts.face }/>
+        <path className = 'dart-shaft' d = { parts.shaft }/>
+        <path className = 'dart-shaft' d = { parts.butt }/>
+        { parts.near.map((d, i) => <path key = { i } className = 'dart-fletch' d = { d }/>) }
+    </>
+}
 
 function PurposeTarget () {
     const { cx, cy, r, squash, tilt } = BOARD
@@ -111,13 +143,13 @@ function PurposeTarget () {
             )) }
         </g>
         <g className = 'purpose-dart'>
-            <g transform = 'rotate(206) scale(.8)'>{ DART }</g>
+            <g transform = 'scale(.95)'><Dart flight = { FLIGHT }/></g>
         </g>
     </svg>
 }
 
-const HOOP_ANGLE = FLIGHT * 180 / Math.PI
-const HOOP_ORIGIN = [8, 7]
+const HOOP_ANGLE = 0
+const HOOP_ORIGIN = [0, 12]
 const HOOP_FIRST = 34
 const HOOP_GAP = 20
 const HOOP_SHRINK = .78
@@ -134,8 +166,8 @@ function hoopDepth (u) {
 const HOOPS = [0, 1, 2].map(u => {
     const [x, y] = hoopAlong(hoopDepth(u))
     const r = 10 * HOOP_SHRINK ** u
-    const rx = r * .577
-    return { x, y, r, rx, ri: r * .8, rxi: rx * .8, d: rx * .3 }
+    const rx = r * BOARD.squash
+    return { x, y, r, rx, ri: r * .82, rxi: rx - r * .18, d: rx * .3 }
 })
 
 function hoopShapes ({ r, rx, ri, rxi, d }) {
@@ -164,11 +196,11 @@ function OutcomeHoops () {
             </g>
         </g>
     ))
-    return <svg className = 'purpose-target outcome-target' viewBox = '0 0 100 60' preserveAspectRatio = 'xMaxYMax meet' aria-hidden = 'true'>
+    return <svg className = 'purpose-target outcome-target' viewBox = '2 0 94 24' preserveAspectRatio = 'xMidYMid meet' aria-hidden = 'true'>
         { layer('back') }
         { layer('far') }
         <g className = 'outcome-dart'>
-            <g transform = { `rotate(${ 180 + HOOP_ANGLE })` }>{ DART }</g>
+            <Dart flight = { 0 }/>
         </g>
         { layer('near') }
     </svg>
@@ -358,12 +390,16 @@ function useTabletUp () {
 }
 
 function Work ({ onOpenRecents }) {
-    const stack = [
+    const core = [
         { icon: blender, text: 'Blender' },
         { icon: bootstrap, text: 'Bootstrap' },
         { icon: css, text: 'Cascading Stylesheet' },
-        { icon: figma, text: 'Figma' },
+        { icon: figma, text: 'Figma' }
+    ]
+
+    const more = [
         { icon: git, text: 'Git' },
+        { icon: gsapIcon, text: 'GSAP' },
         { icon: html, text: 'Hyper Text Markup Language' },
         { icon: javascript, text: 'JavaScript' },
         { icon: react, text: 'React' },
@@ -435,8 +471,6 @@ function Work ({ onOpenRecents }) {
         { key: 'site', label: 'Websites' }
     ]
 
-    const firstSix = stack.slice(6)
-    const rest = stack.slice(0, 6)
 
     const [visible, setVisible] = useState(false)
     const [current, setCurrent] = useState(0)
@@ -626,7 +660,7 @@ function Work ({ onOpenRecents }) {
                 tabIndex = { inView ? 0 : -1 } data-keep-tabbable
             >
                 <ul className = 'stack-first flex gap-lg in-w'>
-                    { rest.map(item => {
+                    { core.map(item => {
                         return <li className = 'center square relative' key = { item.text }>
                             <img
                                 src = { item.icon }
@@ -642,7 +676,7 @@ function Work ({ onOpenRecents }) {
                 <div className = { `stack-ellipsis absolute round ${ visible ? 'hidden' : '' }` }></div>
                 <div className = { `stack-rest-shell in-w ${ visible ? 'visible' : '' }` }>
                     <ul className = { `stack-rest flex gap-lg in-w ${ visible ? 'visible' : '' }` }>
-                        { firstSix.map(item => {
+                        { more.map(item => {
                             return <li className = 'center square relative' key = { item.text }>
                                 <img
                                     src = { item.icon }
@@ -839,9 +873,13 @@ function Work ({ onOpenRecents }) {
                                     <StackList key = { result[current].title } items = { result[current].caseStudy[index] } tabIndex = { inView ? 0 : -1 }/>
                                 ) : result[current]?.caseStudy?.[index]?.items ? (
                                     <NotesList key = { result[current].title } intro = { result[current].caseStudy[index].intro } items = { result[current].caseStudy[index].items } label = { label } tabIndex = { inView ? 0 : -1 }/>
+                                ) : index === 4 ? (
+                                    <div className = 'case-signal-body column gap-md'>
+                                        <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p>
+                                        <OutcomeHoops/>
+                                    </div>
                                 ) : <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p> }
                                 { index === 0 && <PurposeTarget/> }
-                                { index === 4 && <OutcomeHoops/> }
                                 { index % 2 === 1 && <span className = 'case-signal-index absolute'>{ `${ index + 1 }.0` }</span> }
                             </article>
                         </div>

@@ -1,7 +1,7 @@
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Glass, Trail, useWidthCheck } from './Header'
+import { Glass, Trail } from './Header'
 import ThreeDViewer from './ThreeDViewer'
 import { smoothScrollTo } from '../App'
 import resume from '../assets/resume.pdf'
@@ -32,7 +32,6 @@ function Hero ({ onOpenRecents, recentsOpen }) {
     const quickRef = useRef(null)
     const quickWidthRef = useRef(null)
     const [inView, setInView] = useState(true)
-    const showGear = useWidthCheck('(min-width: 600.1px)')
     const tabbable = inView
 
     useEffect(() => {
@@ -64,6 +63,31 @@ function Hero ({ onOpenRecents, recentsOpen }) {
         observer.observe(cta)
         return () => observer.disconnect()
     }, [visible])
+
+    useLayoutEffect(() => {
+        const hero = heroRef.current
+        const quick = quickRef.current
+        const text = heroTextRef.current
+        if (!hero || !quick || !text) return
+        function place () {
+            const gear = hero.querySelector('.gears')
+            const base = ((gear && gear.offsetParent) || document.body).getBoundingClientRect().left
+            const range = document.createRange()
+            const inked = [...text.querySelectorAll('.main-heading > p, .heading p')].map(el => {
+                range.selectNodeContents(el)
+                return Math.max(...[...range.getClientRects()].map(r => r.right))
+            })
+            const boxes = [text.querySelector('.cta'), quick].filter(Boolean).map(el => el.getBoundingClientRect().right)
+            const right = Math.max(...inked, ...boxes) - base
+            hero.style.setProperty('--hero-content-right', `${ right }px`)
+        }
+        place()
+        const observer = new ResizeObserver(place)
+        observer.observe(hero)
+        observer.observe(quick)
+        observer.observe(text)
+        return () => observer.disconnect()
+    }, [])
 
     useLayoutEffect(() => {
         const quick = quickRef.current
@@ -112,7 +136,7 @@ function Hero ({ onOpenRecents, recentsOpen }) {
 
     return <section id = 'hero' ref = { heroRef } className = 'center'>
         <div className = 'aura absolute'></div>
-        { showGear && <ThreeDViewer/> }
+        <ThreeDViewer/>
         <article className = 'hero-text column gap-lg' ref = { heroTextRef }>
             <div className = 'main-heading emphasis column relative'>
                 <p className = 'gradient-text'>Frontend Developer</p>
