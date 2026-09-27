@@ -70,11 +70,7 @@
 
                             nav.center.flex { display: none; }
 
-                            .home {
-                                right: 2.75rem;
-                                bottom: 2.75rem;
-                                z-index: 4;
-                            }
+                            .home { display: none; }
 
                             .status {
                                 margin-right: 0;
@@ -664,8 +660,6 @@
 
 @media (max-width: 620px) {
     /* HEADER */
-                            .home { display: none; }
-
                             .status { display: none; }
 
     /* SECTION TRANSITIONS (INTER) */

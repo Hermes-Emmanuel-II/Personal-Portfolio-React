@@ -4010,8 +4010,13 @@
                                             transition: var(--tran-1, .3s ease);
                                         }
 
+                                        /* Placeholders mix toward the field's background so they read as hints, not typed text */
                                         .contact-form div input::placeholder,
-                                        .contact-form div textarea::placeholder { color: var(--lum-2) }
+                                        .contact-form div textarea::placeholder {
+                                            color: color-mix(in srgb, var(--lum-2) 55%, var(--BGC));
+                                            opacity: 1;
+                                            transition: color var(--tran-1, .3s ease);
+                                        }
 
                                         .contact-form div input:focus,
                                         .contact-form div textarea:focus {
@@ -4020,7 +4025,7 @@
                                         }
 
                                         .contact-form div input:focus::placeholder,
-                                        .contact-form div textarea:focus::placeholder { color: var(--lum-1); }
+                                        .contact-form div textarea:focus::placeholder { color: color-mix(in srgb, var(--lum-1) 65%, var(--accent-1)); }
 
                                         .contact-form div textarea {
                                             height: 11.75rem;
@@ -4045,7 +4050,32 @@
                                             overflow: visible;
                                         }
 
-                                            .message .trail { offset-path: rect(0 100% 100% 0 round .75rem); }
+                                            /* Three short glows follow the border one after another: cyan tail, lawngreen middle, cyan lead */
+                                            .message .trail,
+                                            .message .trail-wrapper::before,
+                                            .message .trail-wrapper::after {
+                                                position: absolute;
+                                                width: 5rem;
+                                                height: 2.5rem;
+                                                filter: blur(8px);
+                                                offset-path: rect(0 100% 100% 0 round .75rem);
+                                                animation: move-trail 10s linear infinite;
+                                            }
+
+                                            .message .trail {
+                                                background: radial-gradient(closest-side, #80FF00 0%, #3FFF81 45%, #00FFFF 70%, transparent 100%);
+                                                animation-delay: -.25s;
+                                            }
+
+                                            .message .trail-wrapper::before,
+                                            .message .trail-wrapper::after {
+                                                content: '';
+                                                background: radial-gradient(closest-side, #00FFFF 0%, #00FFFF 50%, transparent 100%);
+                                            }
+
+                                            .message .trail-wrapper::before { animation-delay: 0s; }
+
+                                            .message .trail-wrapper::after { animation-delay: -.5s; }
 
                                         .message img { top: -3rem; }
 
