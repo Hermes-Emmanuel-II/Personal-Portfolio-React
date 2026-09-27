@@ -400,8 +400,8 @@
                     content: '';
                     position: absolute;
                     inset: 0;
-                    backdrop-filter: blur(2px);
                     -webkit-backdrop-filter: blur(2px);
+                    backdrop-filter: blur(2px);
                     z-index: 1;
                     pointer-events: none;
                     border-radius: inherit;
@@ -831,8 +831,8 @@
                             }
 
                                 nav > .glass-distort {
-                                    backdrop-filter: url(#glass-distortion-nav);
                                     -webkit-backdrop-filter: url(#glass-distortion-nav);
+                                    backdrop-filter: url(#glass-distortion-nav);
                                 }
 
                                 nav > .glass-distort { filter: brightness(calc(2/3)); }
@@ -903,8 +903,8 @@
                                 .skip:focus-within::after { border-radius: .5rem; }
 
                                     .skip .glass-distort {
-                                        backdrop-filter: url(#glass-distortion-skip);
                                         -webkit-backdrop-filter: url(#glass-distortion-skip);
+                                        backdrop-filter: url(#glass-distortion-skip);
                                     }
 
                                     .skip ul {
@@ -1227,6 +1227,17 @@
                             height: calc(25vh + 4.25rem) !important;
                             height: calc(25lvh + 4.25rem) !important;
                         }
+
+                        .inter-track {
+                            height: 75vh;
+                            height: 75lvh;
+                            pointer-events: none;
+                        }
+
+                            .inter-track > .inter {
+                                position: sticky;
+                                top: 0;
+                            }
 
                             .inter {
                                 font-size: var(--fs-2-1);
@@ -1923,8 +1934,8 @@
                 }
 
                     .inspect-popup .glass-distort {
-                        backdrop-filter: url(#glass-distortion-inspect);
                         -webkit-backdrop-filter: url(#glass-distortion-inspect);
+                        backdrop-filter: url(#glass-distortion-inspect);
                     }
 
                     .inspect-wrapper { padding: .5rem; }
@@ -3962,17 +3973,15 @@
                                 z-index: -1;
                                 filter: blur(9rem);
                                 pointer-events: none;
-                                overflow: hidden;
-                                transform: none;
-                                translate: -50% -50%;
-                                will-change: rotate, scale, opacity;
-                                animation: aura-spin 15s linear infinite;
                             }
 
                             .contact-aura::before {
                                 inset: 0;
                                 content: '';
                                 position: absolute;
+                                transform-origin: 50% 50%;
+                                will-change: transform, opacity;
+                                animation: aura 15s linear infinite;
                                 background: conic-gradient(
                                     from 0deg at 50% 50%,
                                     #00FFFF 0deg,
@@ -3983,7 +3992,7 @@
                                     #FFC0CB 300deg,
                                     #00FFFF 360deg
                                 );
-                                border-radius: calc((100vw / 3) / 2);
+                                border-radius: 9999px;
                             }
 
                                 #contact .content p { color: var(--lum-2); }
@@ -4309,8 +4318,8 @@
                                 }
 
                     .recents-popup .glass-distort {
-                        backdrop-filter: url(#glass-distortion-recent);
                         -webkit-backdrop-filter: url(#glass-distortion-recent);
+                        backdrop-filter: url(#glass-distortion-recent);
                     }
 
                     .recents-popup *:not(.recents-popup .glass-distort):not(.explanation-tooltip) {

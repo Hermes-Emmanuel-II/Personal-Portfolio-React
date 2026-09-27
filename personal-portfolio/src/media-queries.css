@@ -49,8 +49,8 @@
                             background:
                                 linear-gradient(rgba(128,255,0,.375) 0%, transparent 40%, transparent 60%, rgba(0,255,255,.375) 100%),
                                 linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
-                            backdrop-filter: blur(2px);
                             -webkit-backdrop-filter: blur(2px);
+                            backdrop-filter: blur(2px);
                             z-index: -1;
                             pointer-events: none;
                         }
@@ -62,8 +62,8 @@
                             height: auto;
                             border-radius: inherit;
                             background-color: color-mix(in srgb, var(--BGC) 60%, transparent);
-                            backdrop-filter: blur(1rem);
                             -webkit-backdrop-filter: blur(1rem);
+                            backdrop-filter: blur(1rem);
                             z-index: -3;
                             pointer-events: none;
                         }
