@@ -779,7 +779,7 @@ function About () {
                             </div>
                             <div className = { `service-panel hotjar in-w column relative nowrap ${ currentIndex == 3 ? 'active' : '' }` }>
                                 <div className = 'hotjar-header center emphasis relative'>
-                                    <i>Subjects</i>
+                                    <p>Subjects</p>
                                     <i className = 'fa-solid fa-bars'></i>
                                     <div className = 'heat absolute'>
                                         <div className = 'round absolute square'></div>

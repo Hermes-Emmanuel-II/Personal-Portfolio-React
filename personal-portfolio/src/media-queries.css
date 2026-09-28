@@ -85,6 +85,8 @@
 
                                     /* when in beyond, back tooltip should have upper border radii as 0 and bg as bgc no before and after */
 
+                        header:has(~ #beyond) { --card-pad: 1.5rem; }
+
                             .hamburger-menu {
                                 display: flex;
                                 position: relative;
@@ -299,7 +301,7 @@
                             margin-top: 5rem;
                         }
 
-                                .stack-wrapper { width: min(100%, calc((5rem * 5) + (1.5rem * 4))); }
+                                .stack-wrapper { width: min(100%, calc((5rem * 5) + (1.5rem * 4) + (var(--stack-edge) * 2))); }
 
                                     .stack-wrapper + .quick .quick-options {
                                         flex: 1 1 0;
@@ -673,6 +675,8 @@
                             zoom: var(--header-zoom);
                         }
 
+                        header:has(~ #beyond) { padding-inline: 1.5rem; }
+
     /* HERO */
                                                 .main-heading { font-size: 3.75rem; }
 
@@ -688,7 +692,7 @@
                             
                                         .crosshair-orbit {
                                             zoom: calc(.75 / .675);
-                                            --cx: calc(50% + .675px);
+                                            --cx: calc(50% + .75px);
                                             --cy: calc(50% + (.125rem / 2));
                                         }                            
 

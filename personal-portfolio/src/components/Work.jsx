@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useRef, useState } from 'react'
+import { Fragment, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { Clarity, Glass, Trail } from './Header'
 import { Bar, Idea } from './Hero'
@@ -29,7 +29,7 @@ export function SectionHeader (props) {
     return <div className = 'section-header in-w'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
 }
 
-const CASE_STEPS = ['The Point', 'Stack', 'Challenges', 'Trade-offs', 'Outcome']
+const CASE_STEPS = ['The Point', 'Stack', 'Challenges', 'Trade-offs', 'Outcome', '★']
 
 function squareWave (steps, r = 10.7, e = .6) {
     const top = e
@@ -222,6 +222,66 @@ function OutcomeHoops () {
     </svg>
 }
 
+function FeatureReel ({ items, step, tabIndex }) {
+    const [active, setActive] = useState(0)
+    const [inView, setInView] = useState(false)
+    const frameRef = useRef(null)
+    const videoRef = useRef(null)
+    const item = items[active] ?? items[0]
+
+    useEffect(() => {
+        const el = frameRef.current
+        if (!el) return
+        const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: .5 })
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [])
+
+    useEffect(() => {
+        const video = videoRef.current
+        if (video) {
+            if (inView) video.play().catch(() => {})
+            else video.pause()
+            return
+        }
+        if (!inView || items.length < 2) return
+        const timer = setTimeout(() => setActive(i => (i + 1) % items.length), 6000)
+        return () => clearTimeout(timer)
+    }, [inView, active, items.length])
+
+    function next () { if (items.length > 1) setActive(i => (i + 1) % items.length) }
+
+    return <div className = 'case-signal-body case-signal-reel relative'>
+        <div ref = { frameRef } className = 'case-signal-reel-frame relative in-w in-h'>
+            { item?.video && <video
+                key = { item.video }
+                ref = { videoRef }
+                className = 'absolute in-w in-h block'
+                src = { item.video }
+                muted
+                playsInline
+                preload = 'metadata'
+                loop = { items.length < 2 }
+                onEnded = { next }
+            /> }
+            <p key = { active } className = 'case-signal-reel-text absolute'>{ item?.text }</p>
+            { items.length > 1 && <div className = 'case-signal-reel-pager absolute flex'>
+                { items.map((_, index) => (
+                    <button
+                        key = { index }
+                        type = 'button'
+                        className = { `pointer ${ index === active ? 'active' : '' }` }
+                        aria-pressed = { index === active }
+                        onClick = { () => setActive(index) }
+                        tabIndex = { tabIndex }
+                        data-keep-tabbable
+                    >{ `${ step }.${ index + 1 }` }</button>
+                )) }
+            </div> }
+        </div>
+    </div>
+}
+
 function usePocketScroll (listRef, rows) {
     const [edges, setEdges] = useState({ top: false, bottom: false })
 
@@ -409,20 +469,20 @@ function Work ({ onOpenRecents }) {
     const core = [
         { icon: blender, text: 'Blender' },
         { icon: bootstrap, text: 'Bootstrap' },
-        { icon: css, text: 'Cascading Stylesheet' },
+        { icon: css, text: 'Cascading Style Sheets (CSS)' },
         { icon: figma, text: 'Figma' }
     ]
 
     const more = [
         { icon: git, text: 'Git' },
-        { icon: gsapIcon, text: 'GSAP' },
-        { icon: html, text: 'Hyper Text Markup Language' },
+        { icon: gsapIcon, text: 'GreenSock Animation Platform (GSAP)' },
+        { icon: html, text: 'HyperText Markup Language (HTML)' },
         { icon: javascript, text: 'JavaScript' },
         { icon: react, text: 'React' },
         { icon: tailwind, text: 'Tailwind' },
         { icon: three, text: 'Three.js' },
         { icon: typescript, text: 'TypeScript' },
-        { icon: vsc, text: 'Visual Studio Code' }
+        { icon: vsc, text: 'Visual Studio Code (VS Code)' }
     ]
 
     const projects = [
@@ -461,7 +521,14 @@ function Work ({ onOpenRecents }) {
                         { title: 'Touch-first motion', text: 'GSAP pins the section breaks on desktop, while touch devices get native sticky scrolling, giving up some choreography for scrolling that feels right under a finger.' }
                     ]
                 },
-                'Live on Vercel, with a contact form that sends real email and attachments.'
+                'Live on Vercel, with a contact form that sends real email and attachments.',
+                {
+                    features: [
+                        { video: null, text: 'Glass panes that bend whatever sits behind them.' },
+                        { video: null, text: 'A signal that runs the case study from start to finish.' },
+                        { video: null, text: 'Dots that melt into a label when you hover the stack.' }
+                    ]
+                }
             ],
             tags: 'site',
             date: '2026-08-15'
@@ -489,6 +556,88 @@ function Work ({ onOpenRecents }) {
 
 
     const [visible, setVisible] = useState(false)
+    const [stackName, setStackName] = useState(null)
+    const stackNameTimer = useRef(null)
+
+    function showStackName (name, delay) {
+        clearTimeout(stackNameTimer.current)
+        stackNameTimer.current = setTimeout(() => setStackName(name), delay)
+    }
+
+    useEffect(() => () => clearTimeout(stackNameTimer.current), [])
+
+    const [orb, setOrb] = useState({ phase: 'dots', dur: .25 })
+    const [shownName, setShownName] = useState(null)
+    const [nameOut, setNameOut] = useState(false)
+    const [arrived, setArrived] = useState(false)
+    const orbTimers = useRef([])
+    const splitTimer = useRef(null)
+    const stackRef = useRef(null)
+    const stackFirstRef = useRef(null)
+    const stackInnerRef = useRef(null)
+    const stackNameRef = useRef(null)
+
+    function orbLater (fn, ms) { orbTimers.current.push(setTimeout(fn, ms)) }
+
+    useEffect(() => {
+        orbTimers.current.forEach(clearTimeout)
+        orbTimers.current = []
+        clearTimeout(splitTimer.current)
+        setArrived(false)
+        if (visible) {
+            setOrb(prev => prev.phase === 'dots' ? { phase: 'blob-top', dur: .25 } : prev)
+            orbLater(() => setOrb({ phase: 'blob', dur: .5 }), 375)
+            orbLater(() => setArrived(true), 875)
+        } else {
+            setNameOut(true)
+            orbLater(() => setShownName(null), 260)
+            setOrb(prev => prev.phase === 'split' ? { phase: 'blob', dur: .25 } : prev)
+            orbLater(() => setOrb(prev => prev.phase === 'dots' ? prev : { phase: 'blob-top', dur: .5 }), 375)
+            orbLater(() => setOrb({ phase: 'dots', dur: .25 }), 875)
+        }
+    }, [visible])
+
+    useEffect(() => {
+        if (!visible || !arrived || stackName === shownName) return
+        clearTimeout(splitTimer.current)
+        const wait = orb.phase === 'split' ? 260 : 0
+        setNameOut(true)
+        setOrb({ phase: 'blob', dur: .25 })
+        splitTimer.current = setTimeout(() => {
+            setShownName(stackName)
+            setNameOut(false)
+            if (stackName) setOrb({ phase: 'split', dur: .3 })
+        }, wait)
+    }, [stackName, arrived])
+
+    useEffect(() => () => {
+        orbTimers.current.forEach(clearTimeout)
+        clearTimeout(splitTimer.current)
+    }, [])
+
+    function placeOrbs () {
+        const wrapper = stackRef.current
+        const first = stackFirstRef.current
+        const inner = stackInnerRef.current
+        const name = stackNameRef.current
+        if (!wrapper || !first || !inner || !name) return
+        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+        const text = name.firstElementChild
+        wrapper.style.setProperty('--orb-y0', `${ rem * -.25 }px`)
+        wrapper.style.setProperty('--orb-y1', `${ name.offsetHeight / -2 }px`)
+        wrapper.style.setProperty('--orb-x', `${ (text ? text.offsetWidth / 2 : 0) + rem * .875 }px`)
+    }
+
+    useLayoutEffect(placeOrbs, [shownName])
+
+    useLayoutEffect(() => {
+        const wrapper = stackRef.current
+        if (!wrapper) return
+        const observer = new ResizeObserver(placeOrbs)
+        observer.observe(stackFirstRef.current)
+        observer.observe(stackInnerRef.current)
+        return () => observer.disconnect()
+    }, [])
     const [current, setCurrent] = useState(0)
     const [inspectOpen, setInspectOpen] = useState(false)
     const [zoom, setZoom] = useState(0)
@@ -668,43 +817,55 @@ function Work ({ onOpenRecents }) {
         <article className = 'content center column gap-lg relative'>
             <span className = 'center block'>Turning complex ideas into sharp, functional interfaces — one dedicated build at a time.</span>
             <div
+                ref = { stackRef }
                 className = 'stack-wrapper gap-lg relative column in-w'
                 onMouseEnter = { () => setVisible(true) }
-                onMouseLeave = { () => setVisible(false) }
+                onMouseLeave = { () => { setVisible(false); showStackName(null, 0) } }
                 onFocus = { () => setVisible(true) }
                 onBlur = { (e) => { if (!e.currentTarget.contains(e.relatedTarget)) setVisible(false) } }
                 tabIndex = { inView ? 0 : -1 } data-keep-tabbable
             >
-                <ul className = 'stack-first flex gap-lg in-w'>
+                <ul ref = { stackFirstRef } className = 'stack-first flex gap-lg in-w'>
                     { core.map(item => {
-                        return <li className = 'center square relative' key = { item.text }>
+                        return <li className = 'center square relative' key = { item.text } onMouseEnter = { () => showStackName(item.text, 150) } onMouseLeave = { () => showStackName(null, 350) }>
                             <img
                                 src = { item.icon }
                                 alt = { item.text }
                                 className = 'in-w in-h'
                             />
-                            <Glass className = 'explanation-tooltip absolute nowrap'>
-                                <span className = 'relative center'>{ item.text }</span>
-                            </Glass>
                         </li>
                     }) }
                 </ul>
-                <div className = { `stack-ellipsis absolute round ${ visible ? 'hidden' : '' }` }></div>
+                <svg className = 'stack-goo absolute' width = '0' height = '0' aria-hidden = 'true'>
+                    <filter id = 'stack-goo'>
+                        <feGaussianBlur in = 'SourceGraphic' stdDeviation = '1.2'/>
+                        <feColorMatrix values = '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8'/>
+                    </filter>
+                </svg>
+                <div className = { `stack-orbs absolute ${ orb.phase }` } style = {{ '--orb-dur': `${ orb.dur }s` }} aria-hidden = 'true'>
+                    <span className = 'orb left'></span>
+                    <span className = 'orb mid'></span>
+                    <span className = 'orb right'></span>
+                </div>
                 <div className = { `stack-rest-shell in-w ${ visible ? 'visible' : '' }` }>
+                    <div ref = { stackInnerRef } className = 'stack-rest-inner in-w'>
                     <ul className = { `stack-rest flex gap-lg in-w ${ visible ? 'visible' : '' }` }>
                         { more.map(item => {
-                            return <li className = 'center square relative' key = { item.text }>
+                            return <li className = 'center square relative' key = { item.text } onMouseEnter = { () => showStackName(item.text, 150) } onMouseLeave = { () => showStackName(null, 350) }>
                                 <img
                                     src = { item.icon }
                                     alt = { item.text }
                                     className = 'in-w in-h'
                                 />
-                                <Glass className = 'explanation-tooltip absolute nowrap'>
-                                    <span className = 'relative center'>{ item.text }</span>
-                                </Glass>
                             </li>
                         }) }
                     </ul>
+                    <p ref = { stackNameRef } className = { `stack-name center ${ visible ? 'visible' : '' }` } aria-live = 'polite'>
+                        <span className = { `stack-name-text ${ nameOut ? 'out' : '' }` }>
+                            <span key = { shownName ?? '' } className = 'nowrap'>{ shownName ?? '\u00A0' }</span>
+                        </span>
+                    </p>
+                    </div>
                 </div>
             </div>
             <section className = 'flex quick in-w'>
@@ -889,6 +1050,8 @@ function Work ({ onOpenRecents }) {
                                     <StackList key = { result[current].title } items = { result[current].caseStudy[index] } tabIndex = { inView ? 0 : -1 }/>
                                 ) : result[current]?.caseStudy?.[index]?.items ? (
                                     <NotesList key = { result[current].title } intro = { result[current].caseStudy[index].intro } items = { result[current].caseStudy[index].items } label = { label } tabIndex = { inView ? 0 : -1 }/>
+                                ) : result[current]?.caseStudy?.[index]?.features ? (
+                                    <FeatureReel key = { result[current].title } items = { result[current].caseStudy[index].features } step = { index + 1 } tabIndex = { inView ? 0 : -1 }/>
                                 ) : index === 4 ? (
                                     <div className = 'case-signal-body column gap-md'>
                                         <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p>
