@@ -29,7 +29,16 @@ export function SectionHeader (props) {
     return <div className = 'section-header in-w'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
 }
 
-const CASE_STEPS = ['The Point', 'Stack', 'Challenges', 'Trade-offs', 'Outcome', '★']
+const CASE_STEPS = [
+    { label: 'The Point', num: '1.0' },
+    { label: 'Stack', num: '2.0' },
+    { label: 'Challenges', num: '3.0' },
+    { label: 'Trade-offs', num: '4.0' },
+    { label: 'Outcome', num: '5.0' },
+    { label: 'Highlight', num: '6.1', feature: 0 },
+    { label: 'Highlight', num: '6.2', feature: 1 },
+    { label: 'Highlight', num: '6.3', feature: 2 }
+]
 
 function squareWave (steps, r = 10.7, e = .6) {
     const top = e
@@ -51,6 +60,9 @@ function squareWave (steps, r = 10.7, e = .6) {
     }
     return d
 }
+
+const ORB_MERGE = .3
+const ORB_SPLIT = .4
 
 const CASE_WAVE = squareWave(CASE_STEPS.length)
 const CASE_SIGNAL_TIME = CASE_STEPS.length * .5
@@ -222,12 +234,49 @@ function OutcomeHoops () {
     </svg>
 }
 
-function FeatureReel ({ items, step, tabIndex }) {
-    const [active, setActive] = useState(0)
+const PIN = { cx: 10, cy: 10, angle: Math.PI / 4, head: 7, headDepth: 3.4, collar: 3.2, collarEnd: 8, needleEnd: 17, needleBase: .9 }
+
+function pinParts ({ cx, cy, angle, head, headDepth, collar, collarEnd, needleEnd, needleBase }) {
+    const cos = Math.cos(angle)
+    const sin = Math.sin(angle)
+    const pt = ([x, y]) => `${ x.toFixed(2) } ${ y.toFixed(2) }`
+    const along = t => [cx + cos * t, cy + sin * t]
+    const off = (t, r, s) => { const [x, y] = along(t); return [x - sin * r * s, y + cos * r * s] }
+    const capsule = (t0, t1, r) => {
+        const line = `M ${ pt(off(t0, r, -1)) } L ${ pt(off(t1, r, -1)) } A ${ r } ${ r } 0 0 1 ${ pt(off(t1, r, 1)) } L ${ pt(off(t0, r, 1)) }`
+        return { fill: `${ line } Z`, line }
+    }
+    return {
+        needle: `M ${ pt(off(collarEnd - 1, needleBase, -1)) } L ${ pt(along(needleEnd)) } L ${ pt(off(collarEnd - 1, needleBase, 1)) } Z`,
+        tip: along(needleEnd),
+        collar: capsule(headDepth - 1, collarEnd, collar),
+        head: capsule(0, headDepth, head),
+        face: [
+            { cx, cy, r: head },
+            { cx: cx - .5, cy: cy - .5, r: head * .72 },
+            { cx: cx - 1.3, cy: cy - 1.3, r: head * .3 }
+        ]
+    }
+}
+
+const PIN_PARTS = pinParts(PIN)
+
+function PinMark () {
+    const [tipX, tipY] = PIN_PARTS.tip
+    return <svg className = 'pin-mark' viewBox = { `0 0 ${ tipX.toFixed(2) } ${ tipY.toFixed(2) }` } aria-hidden = 'true'>
+        <path className = 'pin-needle' d = { PIN_PARTS.needle }/>
+        <path className = 'pin-fill' d = { PIN_PARTS.collar.fill }/>
+        <path className = 'pin-line' d = { PIN_PARTS.collar.line }/>
+        <path className = 'pin-fill' d = { PIN_PARTS.head.fill }/>
+        <path className = 'pin-line' d = { PIN_PARTS.head.line }/>
+        { PIN_PARTS.face.map((c, i) => <circle key = { i } cx = { c.cx } cy = { c.cy } r = { c.r }/>) }
+    </svg>
+}
+
+function FeatureClip ({ item, label }) {
     const [inView, setInView] = useState(false)
     const frameRef = useRef(null)
     const videoRef = useRef(null)
-    const item = items[active] ?? items[0]
 
     useEffect(() => {
         const el = frameRef.current
@@ -239,46 +288,27 @@ function FeatureReel ({ items, step, tabIndex }) {
 
     useEffect(() => {
         const video = videoRef.current
-        if (video) {
-            if (inView) video.play().catch(() => {})
-            else video.pause()
-            return
-        }
-        if (!inView || items.length < 2) return
-        const timer = setTimeout(() => setActive(i => (i + 1) % items.length), 6000)
-        return () => clearTimeout(timer)
-    }, [inView, active, items.length])
-
-    function next () { if (items.length > 1) setActive(i => (i + 1) % items.length) }
+        if (!video) return
+        if (inView) video.play().catch(() => {})
+        else video.pause()
+    }, [inView])
 
     return <div className = 'case-signal-body case-signal-reel relative'>
         <div ref = { frameRef } className = 'case-signal-reel-frame relative in-w in-h'>
             { item?.video && <video
-                key = { item.video }
                 ref = { videoRef }
                 className = 'absolute in-w in-h block'
                 src = { item.video }
                 muted
                 playsInline
+                loop
                 preload = 'metadata'
-                loop = { items.length < 2 }
-                onEnded = { next }
             /> }
-            <p key = { active } className = 'case-signal-reel-text absolute'>{ item?.text }</p>
-            { items.length > 1 && <div className = 'case-signal-reel-pager absolute flex'>
-                { items.map((_, index) => (
-                    <button
-                        key = { index }
-                        type = 'button'
-                        className = { `pointer ${ index === active ? 'active' : '' }` }
-                        aria-pressed = { index === active }
-                        onClick = { () => setActive(index) }
-                        tabIndex = { tabIndex }
-                        data-keep-tabbable
-                    >{ `${ step }.${ index + 1 }` }</button>
-                )) }
-            </div> }
+            <p className = 'case-signal-reel-text absolute'>{ item?.text ?? '—' }</p>
         </div>
+        <span className = 'case-signal-label case-signal-reel-label absolute' aria-label = { label }>
+            <PinMark/>
+        </span>
     </div>
 }
 
@@ -591,7 +621,7 @@ function Work ({ onOpenRecents }) {
         } else {
             setNameOut(true)
             orbLater(() => setShownName(null), 260)
-            setOrb(prev => prev.phase === 'split' ? { phase: 'blob', dur: .25 } : prev)
+            setOrb(prev => prev.phase === 'split' ? { phase: 'blob', dur: ORB_MERGE } : prev)
             orbLater(() => setOrb(prev => prev.phase === 'dots' ? prev : { phase: 'blob-top', dur: .5 }), 375)
             orbLater(() => setOrb({ phase: 'dots', dur: .25 }), 875)
         }
@@ -600,13 +630,13 @@ function Work ({ onOpenRecents }) {
     useEffect(() => {
         if (!visible || !arrived || stackName === shownName) return
         clearTimeout(splitTimer.current)
-        const wait = orb.phase === 'split' ? 260 : 0
+        const wait = orb.phase === 'split' ? ORB_MERGE * 1000 + 20 : 0
         setNameOut(true)
-        setOrb({ phase: 'blob', dur: .25 })
+        setOrb({ phase: 'blob', dur: ORB_MERGE })
         splitTimer.current = setTimeout(() => {
             setShownName(stackName)
             setNameOut(false)
-            if (stackName) setOrb({ phase: 'split', dur: .3 })
+            if (stackName) setOrb({ phase: 'split', dur: ORB_SPLIT })
         }, wait)
     }, [stackName, arrived])
 
@@ -1039,34 +1069,37 @@ function Work ({ onOpenRecents }) {
                 onDragStart = { (e) => e.preventDefault() }
             >
                 <div className = 'case-signal-track flex relative'>
-                    { CASE_STEPS.map((label, index) => (
-                        <div key = { label } className = { `case-signal-step center ${ index % 2 === 0 ? 'high' : 'low' }` }>
-                            <article className = { `case-signal-pocket square column gap-md relative ${ index === 0 ? 'purpose' : index === 4 ? 'outcome' : '' }` }>
-                                <span className = 'case-signal-label relative'>
+                    { CASE_STEPS.map((step, index) => {
+                        const label = step.label
+                        const feature = step.feature !== undefined
+                        const data = feature ? result[current]?.caseStudy?.[5]?.features?.[step.feature] : result[current]?.caseStudy?.[index]
+                        return <div key = { step.num } className = { `case-signal-step center ${ index % 2 === 0 ? 'high' : 'low' }` }>
+                            <article className = { `case-signal-pocket square column gap-md relative ${ index === 0 ? 'purpose' : index === 4 ? 'outcome' : feature ? 'highlight' : '' }` }>
+                                { !feature && <span className = 'case-signal-label relative'>
                                     { label }
-                                    { index % 2 === 0 && <span className = 'case-signal-index absolute'>{ `${ index + 1 }.0` }</span> }
-                                </span>
-                                { Array.isArray(result[current]?.caseStudy?.[index]) ? (
-                                    <StackList key = { result[current].title } items = { result[current].caseStudy[index] } tabIndex = { inView ? 0 : -1 }/>
-                                ) : result[current]?.caseStudy?.[index]?.items ? (
-                                    <NotesList key = { result[current].title } intro = { result[current].caseStudy[index].intro } items = { result[current].caseStudy[index].items } label = { label } tabIndex = { inView ? 0 : -1 }/>
-                                ) : result[current]?.caseStudy?.[index]?.features ? (
-                                    <FeatureReel key = { result[current].title } items = { result[current].caseStudy[index].features } step = { index + 1 } tabIndex = { inView ? 0 : -1 }/>
+                                    { index % 2 === 0 && <span className = 'case-signal-index absolute'>{ step.num }</span> }
+                                </span> }
+                                { feature ? (
+                                    <FeatureClip key = { `${ result[current]?.title }-${ step.num }` } item = { data } label = { label }/>
+                                ) : Array.isArray(data) ? (
+                                    <StackList key = { result[current].title } items = { data } tabIndex = { inView ? 0 : -1 }/>
+                                ) : data?.items ? (
+                                    <NotesList key = { result[current].title } intro = { data.intro } items = { data.items } label = { label } tabIndex = { inView ? 0 : -1 }/>
                                 ) : index === 4 ? (
                                     <div className = 'case-signal-body column gap-md'>
-                                        <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p>
+                                        <p>{ data ?? '—' }</p>
                                         <OutcomeHoops/>
                                     </div>
                                 ) : index === 0 ? (
                                     <div className = 'case-signal-body column gap-md'>
-                                        <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p>
+                                        <p>{ data ?? '—' }</p>
                                         <PurposeTarget/>
                                     </div>
-                                ) : <p>{ result[current]?.caseStudy?.[index] ?? '—' }</p> }
-                                { index % 2 === 1 && <span className = 'case-signal-index absolute'>{ `${ index + 1 }.0` }</span> }
+                                ) : <p>{ data ?? '—' }</p> }
+                                { (index % 2 === 1 || feature) && <span className = 'case-signal-index absolute'>{ step.num }</span> }
                             </article>
                         </div>
-                    )) }
+                    }) }
                     <svg className = 'case-signal-wave absolute' viewBox = { `0 0 ${ CASE_STEPS.length * 100 } 100` } aria-hidden = 'true'>
                         <defs>
                             <radialGradient id = 'case-signal-glow'>
