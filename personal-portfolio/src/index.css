@@ -2180,9 +2180,7 @@
                                                 .case-signal-reel-frame {
                                                     overflow: hidden;
                                                     border-radius: .75rem;
-                                                    background:
-                                                        radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent-1) 45%, transparent), transparent 70%),
-                                                        #262626;
+                                                    background: radial-gradient(120% 90% at 50% -15%, color-mix(in srgb, var(--accent-1) 50%, transparent), transparent 75%);
                                                     outline: 1px solid color-mix(in srgb, var(--lum-2) 15%, transparent);
                                                     outline-offset: -1px;
                                                 }
