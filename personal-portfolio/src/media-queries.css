@@ -1,6 +1,6 @@
 @media (max-width: 1024px) {
     /* GEARS BACKGROUND */
-                            .gears-bg-layer { width: calc(330px - 1rem); }
+                            .gears-bg-layer { width: 450px; }
 
     /* HEADER */
                         header {

@@ -359,7 +359,6 @@ function Contact () {
                         </ul>
                     </div> }
                     <Glass as = 'button' type = 'submit' className = 'contact-send relative' distort = { false } disabled = { status === 'sending' } aria-busy = { status === 'sending' } tabIndex = { inView ? 0 : -1 } data-keep-tabbable>
-                        <Trail once = { true }/>
                         <Idea as = 'span' text = { status === 'sending' ? 'Sending...' : status === 'sent' ? 'Sent!' : 'Send' } cltxt = 'fa-solid fa-paper-plane'/>
                     </Glass>
                 </div>
