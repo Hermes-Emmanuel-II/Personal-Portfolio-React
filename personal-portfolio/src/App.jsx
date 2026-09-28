@@ -122,8 +122,8 @@ export const Inter = memo(function Inter ({ text }) {
             {
                 opacity: 0,
                 ease: 'none',
-                duration: 0.25
-            }, 0.125)
+                duration: 0.2
+            }, 0.0625)
     }, { scope: sticky ? trackRef : containerRef })
 
     useEffect(() => () => clearTimeout(timeoutRef.current), [])

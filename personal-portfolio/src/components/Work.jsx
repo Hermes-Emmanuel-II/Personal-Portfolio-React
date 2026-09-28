@@ -930,8 +930,8 @@ function Work ({ onOpenRecents }) {
                     </svg>
                 </div>
             </section>
-            <section className = 'flex count gap-xlg center in-w'>
-                <span className = 'relative'>Curated and not exhaustive</span>
+            <section className = 'flex count center in-w'>
+                <span className = 'relative'>Curated and non-exhaustive project list</span>
                 <div className = 'flex center'>
                     <div className = 'round center square'>
                         <span className = 'emphasis'>{ result.length }</span>

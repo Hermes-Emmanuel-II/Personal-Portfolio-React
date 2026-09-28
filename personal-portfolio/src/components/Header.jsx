@@ -189,6 +189,24 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
     }, [location.pathname])
 
     const headerRef = useRef(null)
+    const [atEnd, setAtEnd] = useState(false)
+
+    useEffect(() => {
+        const root = document.documentElement
+        function check () {
+            setAtEnd(window.scrollY + window.innerHeight >= root.scrollHeight - 2)
+        }
+        check()
+        window.addEventListener('scroll', check, { passive: true })
+        window.addEventListener('resize', check)
+        const ro = new ResizeObserver(check)
+        ro.observe(document.body)
+        return () => {
+            window.removeEventListener('scroll', check)
+            window.removeEventListener('resize', check)
+            ro.disconnect()
+        }
+    }, [location.pathname])
 
     useEffect(() => {
         if (!menuOpen) return
@@ -339,7 +357,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
             </Glass>
         <a
             href = '#'
-            className = { `home ${ isHome ? 'none' : '' }` }
+            className = { `home ${ isHome ? 'none' : '' } ${ atEnd ? 'at-end' : '' }` }
             tabIndex = { !isHome ? 0 : -1 }
             data-keep-tabbable
             onClick = { (e) => { e.preventDefault(); smoothScrollTo(0) } }

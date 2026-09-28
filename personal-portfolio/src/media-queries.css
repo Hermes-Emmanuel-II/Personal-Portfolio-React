@@ -389,10 +389,6 @@
 
                                                     .analytics-chrome { padding-left: 1.5rem; }
 
-                                                                .analytics .analytics-url span::before { content: 'analytics.google.com/analytics/web'; }
-
-                                                                .miro .analytics-url span::before { content: 'miro.com/app/board/uXjVK_alpha010101010flex'; }
-
                                                         .analytics-chrome-tabs { padding-left: 0; }
 
                                                             .analytics-chrome-tab { border-top-left-radius: .5rem; }
@@ -692,7 +688,7 @@
                             
                                         .crosshair-orbit {
                                             zoom: calc(.75 / .675);
-                                            --cx: calc(50% + .875px);
+                                            --cx: calc(50% + .675px);
                                             --cy: calc(50% + (.125rem / 2));
                                         }                            
 

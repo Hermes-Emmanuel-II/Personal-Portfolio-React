@@ -1043,8 +1043,13 @@
 
                                     .home .clarity .glass.explanation-tooltip {
                                         top: auto;
-                                        bottom: calc(100% + 1.5rem);
+                                        bottom: calc(100% + 1.7375rem);
                                         pointer-events: none;
+                                    }
+
+                                    .home.at-end .clarity .glass.explanation-tooltip {
+                                        border-bottom-left-radius: 0;
+                                        border-bottom-right-radius: 0;
                                     }
 
                             .status { justify-content: space-evenly; }
@@ -1464,7 +1469,7 @@
                             left: calc(var(--band-bleed) * -1);
                             right: calc(var(--band-bleed) * -1);
                             border-radius: 4rem 4rem 0 0;
-                            background: linear-gradient(to bottom, color-mix(in srgb, #000 50%, transparent) 0%, transparent 20rem);
+                            background: linear-gradient(to bottom, color-mix(in srgb, #00000075 50%, transparent) 0%, transparent 15rem);
                             z-index: -2;
                             pointer-events: none;
                         }
@@ -2135,20 +2140,27 @@
                                                 .outcome-dart { animation: outcome-dart 3.5s linear infinite; }
 
 
-                                .count { justify-content: space-between; }
+                                .count {
+                                    justify-content: space-between;
+                                    gap: 3rem;
+                                }
 
-                                    .count > span {
+                                    .count > span,
+                                    .disclaimer {
                                         color: var(--accent-1);
                                         font-size: var(--fs-1-2);
                                         text-wrap: wrap;
                                     }
 
-                                    .count > span::after {
+                                    .count > span::after,
+                                    .disclaimer::after {
                                         content: '*';
                                         font-size: var(--fs-1-0);
                                         position: absolute;
                                         margin-left: .25rem;
                                     }
+
+                                    #about .disclaimer { text-align: left; }
 
                                     .count > div { gap: .75rem; }
 
@@ -2549,7 +2561,7 @@
                                         }
 
                                         .crosshair-orbit {
-                                            --cx: calc(50% + (.25rem / 2));
+                                            --cx: calc(50% + (.125rem / 2));
                                             --cy: calc(50% + (.125rem / 2));
                                             left: calc(var(--cx) - 2.0625rem);
                                             top: calc(var(--cy) - 2.0625rem);
@@ -2856,6 +2868,12 @@
                                                                     color: #C4C7C5;
                                                                 }
 
+                                                                .analytics-url span {
+                                                                    min-width: 0;
+                                                                    overflow: hidden;
+                                                                    text-overflow: ellipsis;
+                                                                }
+
                                                                 .analytics-url .analytics-star { margin-left: auto; }
 
                                                             .analytics-avatar {
@@ -2864,7 +2882,7 @@
                                                                 background: linear-gradient(135deg, #8AB4F8, #1A73E8);
                                                             }
 
-                                                                .analytics .analytics-url span::before { content: 'analytics.google.com/anal...'; }
+                                                                .analytics .analytics-url span::before { content: 'analytics.google.com/analytics/web'; }
 
                                                     .analytics-tabs {
                                                         padding: .5rem 1rem .625rem 1rem;
@@ -3184,7 +3202,7 @@
 
                                                                 .miro .analytics-favicon { background: #FFD02F; }
 
-                                                                .miro .analytics-url span::before { content: 'miro.com/app/board/uXjVK...'; }
+                                                                .miro .analytics-url span::before { content: 'miro.com/app/board/uXjVK_alpha010101010flex'; }
 
                                                     .miro-grid {
                                                         z-index: 0;
@@ -3557,7 +3575,7 @@
                                                         .vsc-status span:last-child { margin-left: auto; }
 
                                                 .iphone-status-bar {
-                                                    padding: .5rem 1.5rem;
+                                                    padding: .5rem 1rem;
                                                     z-index: 3;
                                                     justify-content: space-between;
                                                     color: var(--lum-1);
@@ -3627,7 +3645,10 @@
                                                         justify-content: space-between;
                                                     }
 
+                                                        .hotjar-header i:not([class]) { font-family: var(--font-2); }
+
                                                         .hotjar-header i::before {
+                                                            font-style: normal;
                                                             content: '🕮';
                                                             color: var(--accent-1);
                                                             margin-right: .25rem;
@@ -4277,7 +4298,7 @@
                                                 height: calc(100% * (2/5));
                                                 border-bottom: none;
                                                 bottom: 0;
-                                                border-radius: 2rem 2rem 0 0;
+                                                border-radius: 1.25rem 1.25rem 0 0;
                                                 left: 2.5rem;
                                                 overflow: hidden;
                                                 border-color: var(--lum-2);
@@ -4382,7 +4403,7 @@
                         }
 
                             .contact-aura {
-                                height: 18.5rem;
+                                height: 12rem;
                                 aspect-ratio: 2 / 1;
                                 z-index: -1;
                                 filter: blur(9rem);
@@ -4414,6 +4435,9 @@
                                     .contact-form { --gear-top: 1.75rem; }
 
                                     .contact-form div { overflow: hidden; }
+
+                                    .contact-form > div:first-child,
+                                    .contact-form .message { border-radius: .75rem; }
 
                                         .contact-form div input,
                                         .contact-form div textarea {

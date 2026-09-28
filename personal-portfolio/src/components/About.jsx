@@ -1070,6 +1070,7 @@ function About () {
                     </button>
                 </div>
             </div>
+            <span className = 'disclaimer relative in-w'>Shaped around each project, not set in stone</span>
         </article>
     </section>
 }
