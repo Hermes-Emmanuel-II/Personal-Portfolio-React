@@ -122,7 +122,7 @@ export const Inter = memo(function Inter ({ text }) {
             {
                 opacity: 0,
                 ease: 'none',
-                duration: 0.2
+                duration: .125
             }, 0.0625)
     }, { scope: sticky ? trackRef : containerRef })
 
