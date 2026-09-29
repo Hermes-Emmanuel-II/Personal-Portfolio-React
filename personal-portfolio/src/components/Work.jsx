@@ -523,7 +523,7 @@ function Work ({ onOpenRecents }) {
             src: 'personal-portfolio-react-lime.vercel.app/',
             figma: portfolioFigma,
             mobileImage: null,
-            notes: '<p>Tools employed include <span>HTML5</span> + <span>CSS3</span> + <span>React JavaScript</span>. <span>Git</span> for version control. <span>Blender</span> and <span>Three.js</span> for 3D asset in hero section. Demonstrated understanding of <a href = "https://en.wikipedia.org/wiki/React_(software)#Hooks" target = "_blank">hooks</a>, <a href = "https://en.wikipedia.org/wiki/Routing" target = "_blank">routing</a>, and complex styling such as <a href = "https://en.wikipedia.org/wiki/Mask_(computing)" target = "_blank">mask subtraction</a>, and <a href = "https://en.wikipedia.org/wiki/Filter_(graphics)" target = "_blank">glass filters</a>.</p>',
+            notes: '<ul><li><span>Tone</span> — Dark and restrained, with one bright accent doing the work.</li><li><span>Color</span> — Teal surfaces on charcoal, with lawngreen reserved for what matters.</li><li><span>Type</span> — Michroma for presence, Comfortaa for ease.</li><li><span>Depth</span> — Glass for what floats, solid teal for what holds content.</li><li><span>Identity</span> — The gears, kept mechanical and slow.</li></ul>',
             github: 'personal-portfolio',
             caseStudy: [
                 'One home for my work, where the site itself shows how I design and build.',

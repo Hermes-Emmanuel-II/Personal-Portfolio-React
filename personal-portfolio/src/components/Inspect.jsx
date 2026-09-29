@@ -50,6 +50,7 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
   function onInspectKeyDown (e) {
     const el = inspectScrollRef.current
     if (!el) return
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) e.stopPropagation()
     const step = 60
     switch (e.key) {
       case 'ArrowUp':
