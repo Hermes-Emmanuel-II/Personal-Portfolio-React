@@ -549,7 +549,7 @@ function Work ({ onOpenRecents }) {
                     items: [
                         { title: 'Hand-written CSS', text: 'Every style written by hand instead of reaching for Tailwind or Bootstrap. Slower to build, but it gave full control over the glass, masks and trails.' },
                         { title: 'Live previews', text: 'Projects run as live sites on tablet and up, and as images on phones, trading interactivity for speed where it counts most.' },
-                        { title: 'Touch-first motion', text: 'GSAP pins the section breaks on desktop, while touch devices get native sticky scrolling, giving up some choreography for scrolling that feels right under a finger.' }
+                        { title: 'Lighter motion on phones', text: 'GSAP pins the section breaks on desktop, touch devices get native sticky scrolling, and the smallest screens drop the section words entirely, giving up some choreography for scrolling that feels right under a finger.' }
                     ]
                 },
                 'Live on Vercel, with a contact form that sends real email and attachments.',
