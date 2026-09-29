@@ -2556,12 +2556,22 @@
 
                                 .right { --dir-delay: 2s; }
 
+                                @media (hover: none) and (pointer: coarse) {
+                                    .inspect-scroll { outline: none; }
+
+                                    .inspect-scroll:focus-within img { border-color: var(--accent-1); }
+
+                                    .inspect-scroll:focus-within .down,
+                                    .inspect-scroll:focus-within .right { animation: none; }
+
+                                    .direction-indicator { display: none; }
+                                }
+
                                 .inspect-scroll img {
                                     display: block;
                                     -webkit-user-drag: none;
                                     padding: 0rem;
                                     margin: 5rem;
-                                    border: var(--border);
                                     cursor: grab;
                                     transition: border var(--tran-1);
                                 }
