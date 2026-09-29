@@ -6,6 +6,8 @@ import { Popup } from './Popup'
 
 export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut, zoomLevel, maxZoomLevel, scale }) {
   const inspectScrollRef = useRef(null)
+  const notesRef = useRef(null)
+  const [notesEdges, setNotesEdges] = useState({ top: false, bottom: false })
   const [dragging, setDragging] = useState(false)
   const dragState = useRef({ dragging: false, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 })
   const atMinZoom = zoomLevel <= 0
@@ -74,6 +76,27 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
     }
   }
 
+  function updateNotesEdges () {
+    const el = notesRef.current
+    if (!el) return
+    const top = el.scrollTop > 1
+    const bottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1
+    setNotesEdges(prev => (prev.top === top && prev.bottom === bottom) ? prev : { top, bottom })
+  }
+
+  useEffect(() => {
+    const el = notesRef.current
+    if (!el) return
+    updateNotesEdges()
+    const observer = new ResizeObserver(updateNotesEdges)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [isOpen, project])
+
+  function onNotesKeyDown (e) {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) e.stopPropagation()
+  }
+
   useEffect(() => {
     resetPan()
   }, [zoomLevel])
@@ -136,8 +159,16 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
         </section>
         <section className = 'column gap-lg in-h'>
           <div className = 'column gap-lg'>
-            <div>Notes</div>
+            <div>Design Notes</div>
             <div
+              ref = { notesRef }
+              className = { `notes-scroll ${ notesEdges.top ? 'fade-top' : '' } ${ notesEdges.bottom ? 'fade-bottom' : '' }` }
+              onScroll = { updateNotesEdges }
+              tabIndex = { isOpen ? 0 : -1 }
+              data-keep-tabbable
+              role = 'region'
+              aria-label = { `${ project.title } notes` }
+              onKeyDown = { onNotesKeyDown }
               dangerouslySetInnerHTML = {{ __html: project.notes }}
             />
           </div>
