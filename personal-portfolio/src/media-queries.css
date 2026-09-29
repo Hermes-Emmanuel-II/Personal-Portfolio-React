@@ -690,11 +690,7 @@
                                 left: max(calc(100% - 30rem), var(--hero-content-right, 0px));
                             }         
                             
-                                        .crosshair-orbit {
-                                            zoom: calc(.75 / .675);
-                                            --cx: calc(50% + .75px);
-                                            --cy: calc(50% + (.125rem / 2));
-                                        }                            
+                                        .crosshair-orbit { zoom: calc(.75 / .675); }
 
     /* CONTACT */
                                         .footer-socials a {
