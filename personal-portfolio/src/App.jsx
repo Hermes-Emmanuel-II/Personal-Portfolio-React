@@ -115,14 +115,14 @@ export const Inter = memo(function Inter ({ text }) {
         tl.to(containerRef.current, {
             height: 0,
             ease: 'none',
-            duration: 1
+            duration: 1.25
         }, 0)
         .fromTo(spanRef.current,
             { opacity: 1 },
             {
                 opacity: 0,
                 ease: 'none',
-                duration: .125
+                duration: .1875
             }, 0.0625)
     }, { scope: sticky ? trackRef : containerRef })
 
