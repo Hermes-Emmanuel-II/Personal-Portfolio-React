@@ -23,6 +23,7 @@ import vsc from '../assets/external-icons/vsc.svg'
 
 import face from '../assets/face.png'
 import gears from '../assets/gears.png'
+import portfolioFigma from '../assets/figma/personal-portfolio-figma.png'
 
 export function SectionHeader (props) {
     const temp = props.title
@@ -520,7 +521,7 @@ function Work ({ onOpenRecents }) {
             title: 'Personal Portfolio',
             text: '<p><span>You are here!</span> E&shy;ssen&shy;tia&shy;lly has all of my public pro&shy;fe&shy;ssio&shy;nal data.</p>',
             src: 'personal-portfolio-react-lime.vercel.app/',
-            figma: '',
+            figma: portfolioFigma,
             mobileImage: null,
             notes: '<p>Tools employed include <span>HTML5</span> + <span>CSS3</span> + <span>React JavaScript</span>. <span>Git</span> for version control. <span>Blender</span> and <span>Three.js</span> for 3D asset in hero section. Demonstrated understanding of <a href = "https://en.wikipedia.org/wiki/React_(software)#Hooks" target = "_blank">hooks</a>, <a href = "https://en.wikipedia.org/wiki/Routing" target = "_blank">routing</a>, and complex styling such as <a href = "https://en.wikipedia.org/wiki/Mask_(computing)" target = "_blank">mask subtraction</a>, and <a href = "https://en.wikipedia.org/wiki/Filter_(graphics)" target = "_blank">glass filters</a>.</p>',
             github: 'personal-portfolio',
