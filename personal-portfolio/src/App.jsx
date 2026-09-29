@@ -139,15 +139,16 @@ function Home ({ menuOpen, closeMenu }) {
     const [recentsOpen, setRecentsOpen] = useState(false)
     const openRecents = useCallback(() => setRecentsOpen(true), [])
     const closeRecents = useCallback(() => setRecentsOpen(false), [])
+    const showInter = useWidthCheck('(min-width: 620.1px)')
 
     return <>
         <HamburgerMenu isOpen = { menuOpen } onClose = { closeMenu } onOpenRecents = { openRecents }/>
         <Hero onOpenRecents = { openRecents } recentsOpen = { recentsOpen }/>
-        <Inter text = 'WORK'/>
+        { showInter && <Inter text = 'WORK'/> }
         <Work onOpenRecents = { openRecents }/>
-        <Inter text = 'ABOUT'/>
+        { showInter && <Inter text = 'ABOUT'/> }
         <About/>
-        <Inter text = 'HELLO'/>
+        { showInter && <Inter text = 'HELLO'/> }
         <Contact/>
         <Recents isOpen = { recentsOpen } onClose = { closeRecents }/>
     </>
