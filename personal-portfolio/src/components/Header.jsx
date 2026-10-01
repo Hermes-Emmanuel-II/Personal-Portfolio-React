@@ -302,7 +302,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                             tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'contact') }
-                        >Hello?</a>
+                        >Contact</a>
                     </li>
                     <Glass className = { `slider absolute in-h ${ isHome ? 'hide' : '' }` }
                         style = {{

@@ -326,13 +326,13 @@ function About () {
                                     <li ref = { el => { analyticsTabItemRefs.current[3] = el } } style = { analyticsTabsFit[3] === false ? { visibility: 'hidden' } : undefined }>Admin</li>
                                 </ul>
                                 <div className = 'analytics-body in-w relative flex'>
-                                    <div className = 'analytics-rail'>◂</div>
+                                    <div className = 'analytics-rail center'><i className = 'fa-solid fa-caret-left'></i></div>
                                     <div className = 'analytics-report'>
                                         <div className = 'analytics-title emphasis'>Audience Overview</div>
                                         <ul className = 'analytics-actions flex gap emphasis' ref = { analyticsActionsRef }>
                                             <li ref = { el => { analyticsActionItemRefs.current[0] = el } } style = { analyticsActionsFit[0] === false ? { visibility: 'hidden' } : undefined }>Email</li>
                                             <li ref = { el => { analyticsActionItemRefs.current[1] = el } } style = { analyticsActionsFit[1] === false ? { visibility: 'hidden' } : undefined }>Export</li>
-                                            <li ref = { el => { analyticsActionItemRefs.current[2] = el } } style = { analyticsActionsFit[2] === false ? { visibility: 'hidden' } : undefined }>▾</li>
+                                            <li ref = { el => { analyticsActionItemRefs.current[2] = el } } style = { analyticsActionsFit[2] === false ? { visibility: 'hidden' } : undefined }><i className = 'fa-solid fa-caret-down'></i></li>
                                             <li ref = { el => { analyticsActionItemRefs.current[3] = el } } style = { analyticsActionsFit[3] === false ? { visibility: 'hidden' } : undefined }>Add to Dashboard</li>
                                             <li ref = { el => { analyticsActionItemRefs.current[4] = el } } style = { analyticsActionsFit[4] === false ? { visibility: 'hidden' } : undefined }>Shortcut</li>
                                         </ul>

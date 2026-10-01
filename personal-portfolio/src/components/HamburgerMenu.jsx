@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 
 import { smoothScrollTo } from '../App'
-import resume from '../assets/resume.pdf'
+import resume from '../assets/Ifechukwu_Ibeneme_Resume.pdf'
 
 function HamburgerOption ({ action, destination, href, prompt, tabIndex, onSelect }) {
     function handleClick (e) {
@@ -57,7 +57,7 @@ export default function HamburgerMenu ({ isOpen, onClose, onOpenRecents }) {
                     <span>Sections</span>
                     <HamburgerOption destination = 'work' prompt = 'Work' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
                     <HamburgerOption destination = 'about' prompt = 'About' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
-                    <HamburgerOption destination = 'contact' prompt = 'Get in Touch' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
+                    <HamburgerOption destination = 'contact' prompt = 'Contact' tabIndex = { isOpen ? 0 : -1 } onSelect = { onClose }/>
                 </ul>
                 <ul>
                     <span>Access</span>

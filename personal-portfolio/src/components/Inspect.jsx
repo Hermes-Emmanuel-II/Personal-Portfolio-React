@@ -172,18 +172,18 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
               dangerouslySetInnerHTML = {{ __html: project.notes }}
             />
           </div>
-          { project.github && (
+          { project.figmaUrl && (
             <Glass
               as = 'a'
               className = 'relative pointer gap-md'
-              href = { `https://github.com/Hermes-Emmanuel-II/${ project.github }` }
+              href = { project.figmaUrl }
               target = '_blank'
               rel = 'noreferrer'
               tabIndex = { isOpen ? 0 : -1 }
               data-keep-tabbable
             >
               <Trail once = { true } />
-              <Idea text = 'Github' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
+              <Idea text = 'Figma' cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
             </Glass>
           )}
         </section>

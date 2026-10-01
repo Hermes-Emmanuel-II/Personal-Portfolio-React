@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Glass, Trail } from './Header'
 import ThreeDViewer from './ThreeDViewer'
 import { smoothScrollTo } from '../App'
-import resume from '../assets/resume.pdf'
+import resume from '../assets/Ifechukwu_Ibeneme_Resume.pdf'
 
 export function Idea ({ as: Tag = 'button', text, cltxt, onClick, tabIndex, className = '', ...rest }) {
     return <Tag

@@ -148,7 +148,7 @@ function Home ({ menuOpen, closeMenu }) {
         <Work onOpenRecents = { openRecents }/>
         { showInter && <Inter text = 'ABOUT'/> }
         <About/>
-        { showInter && <Inter text = 'HELLO'/> }
+        { showInter && <Inter text = 'SAY HI?'/> }
         <Contact/>
         <Recents isOpen = { recentsOpen } onClose = { closeRecents }/>
     </>
@@ -312,7 +312,7 @@ export default function App () {
             <Routes>
                 <Route path = '/' element = { <Home menuOpen = { menuOpen } closeMenu = { closeMenu }/> } />
                 <Route path = '/beyond' element = {
-                    <Suspense fallback = { <div className = 'loading-screen absolute center in-w in-h'>Loading…</div> }>
+                    <Suspense fallback = { <div className = 'loading-screen absolute ctr-abs-xy in-w in-h'>Loading…</div> }>
                         <Beyond/>
                     </Suspense>
                 } />

@@ -1405,13 +1405,14 @@
                                             }
 
                                     .stats .glass::after,
-                                    .description > .glass::after {
+                                    .description > .glass::after,
+                                    .description > .project-actions > .glass::after {
                                         background:
                                             linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
                                             linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
                                     }
 
-                                    .description .glass:not(.popup-base),
+                                    .description .glass:not(.popup-base):not(.round):not(.explanation-tooltip),
                                     .stats .glass {
                                         z-index: 2;
                                         padding: 1rem 1.5rem;
@@ -1794,6 +1795,25 @@
                                                 zoom: .2;
                                             }
 
+                                            .preview-loader {
+                                                inset: 0;
+                                                z-index: 1;
+                                                justify-content: flex-start;
+                                                align-items: flex-start;
+                                                padding: 1rem 1.5rem;
+                                                border-radius: inherit;
+                                                background-color: var(--BGC);
+                                                font-family: var(--font-2);
+                                                color: var(--lum-1);
+                                                pointer-events: none;
+                                                transition: opacity var(--tran-2);
+                                            }
+
+                                            .preview-loader.done {
+                                                opacity: 0;
+                                                transition-delay: 4s;
+                                            }
+
                                         .current-project section:first-of-type > .clarity {
                                             top: 1.25rem;
                                             left: 1.25rem;
@@ -1842,13 +1862,68 @@
                                             pointer-events: none;
                                         }
 
-                                        .description > .glass.relative { width: fit-content; }
+                                        .description > .glass.relative,
+                                        .description > .project-actions { width: fit-content; }
+
+                                        .description > .project-actions { gap: .75rem; }
 
                                             .description .glass .idea span,
                                             .description .glass .idea svg,
                                             .stats .glass .idea span::after {
                                                 color: var(--lum-2);
                                                 fill: var(--lum-2);
+                                            }
+
+                                            .description .project-actions > .glass.github-action::after {
+                                                background:
+                                                    linear-gradient(rgba(124, 252, 0, .25) 0%, rgba(124, 252, 0, .25) 100%),
+                                                    linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                            }
+
+                                            .description .project-actions a {
+                                                color: var(--lum-2);
+                                                font-family: var(--font-1);
+                                                font-size: var(--fs-1-2);
+                                                letter-spacing: 6.25%;
+                                                word-spacing: .0625em;
+                                            }
+
+                                            /* Eye button tooltip: identical to the site's other tooltips, only placed
+                                               beside the button with the same .75rem gap the actions row uses */
+                                            .description .project-actions > .clarity > .explanation-tooltip {
+                                                top: 50%;
+                                                bottom: auto;
+                                                left: calc(100% + .75rem);
+                                                right: auto;
+                                                transform: translateY(-50%);
+                                                cursor: default;
+                                            }
+
+                                                .description .project-actions > .clarity > .explanation-tooltip * { cursor: default; }
+
+                                            .description .project-actions > .clarity:hover .explanation-tooltip,
+                                            .description .project-actions > .clarity:has(:focus-visible) .explanation-tooltip {
+                                                opacity: 1;
+                                                transition-delay: 2s;
+                                            }
+
+                                            /* Touch: a tap opens the inspector, so a hover tooltip would only linger behind afterwards */
+                                            @media (hover: none) {
+                                                .description .project-actions > .clarity > .explanation-tooltip { display: none; }
+                                            }
+
+                                            .description .github-action .idea span,
+                                            .description .github-action .idea svg {
+                                                color: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1));
+                                                fill: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1));
+                                            }
+
+                                            .description .github-action:hover .idea span,
+                                            .description .github-action:hover .idea svg,
+                                            .description .github-action:focus-visible .idea span,
+                                            .description .github-action:focus-visible .idea svg {
+                                                color: var(--lum-1);
+                                                fill: var(--lum-1);
                                             }
 
                                 .case-signal {
@@ -3079,10 +3154,13 @@
                                                         .analytics-rail {
                                                             width: 1rem;
                                                             height: 1.125rem;
+                                                            flex-shrink: 0;
                                                             border: .5px solid var(--lum-2);
                                                             border-top: none;
                                                             color: #7A7A7A;
                                                         }
+
+                                                            .analytics-rail .mini-caret { height: .3125rem; }
 
                                                         .analytics-report {
                                                             flex: 1;
@@ -3102,9 +3180,17 @@
                                                                 list-style: none;
                                                                 font-size: .5rem;
                                                                 letter-spacing: 0;
+                                                                align-items: center;
                                                             }
 
-                                                                .analytics-actions li:nth-child(3) { margin-left: -.875rem; }
+                                                                .analytics-actions li:nth-child(3) {
+                                                                    display: flex;
+                                                                    align-items: center;
+                                                                    margin-left: -.625rem;
+                                                                    line-height: 1;
+                                                                }
+
+                                                                    .analytics-actions .mini-caret { height: .3125rem; }
 
                                                             .analytics-segments {
                                                                 padding: .25rem;
@@ -4252,11 +4338,11 @@
 
                                                         .maze-tool {
                                                             width: 1rem;
-                                                            padding: .125rem;
-                                                            text-align: center;
+                                                            flex-shrink: 0;
                                                             border: .5px solid var(--lum-2);
                                                             border-radius: .25rem;
-                                                            font-size: .625rem;
+                                                            font-size: .4375rem;
+                                                            line-height: 1;
                                                         }
 
                                                         .maze-share {
@@ -5183,3 +5269,12 @@
                                         right: 0;
                                         bottom: 0;
                                     }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

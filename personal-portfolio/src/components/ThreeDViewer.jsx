@@ -1,7 +1,42 @@
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Lightformer, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+
+function usePerfGate (ref) {
+    const [active, setActive] = useState(true)
+
+    useEffect(() => {
+        const el = ref.current
+        const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const visible = { current: true }
+        let io
+
+        function evaluate () {
+            setActive(!document.hidden && !mql.matches && visible.current)
+        }
+
+        if (el && 'IntersectionObserver' in window) {
+            io = new IntersectionObserver(([entry]) => {
+                visible.current = entry.isIntersecting
+                evaluate()
+            }, { threshold: 0 })
+            io.observe(el)
+        }
+
+        document.addEventListener('visibilitychange', evaluate)
+        mql.addEventListener('change', evaluate)
+        evaluate()
+
+        return () => {
+            document.removeEventListener('visibilitychange', evaluate)
+            mql.removeEventListener('change', evaluate)
+            if (io) io.disconnect()
+        }
+    }, [ref])
+
+    return active
+}
 
 function useGearMaterials () {
   return useMemo(() => {
@@ -107,9 +142,19 @@ function CylinderRing({
 }
 
 export default function ThreeDViewer () {
+  const rootRef = useRef(null)
+  const active = usePerfGate(rootRef)
+
   return (
-    <div className = 'gears relative pointer-events-none'>
-      <Canvas camera = {{ position: [2.5, 0, 5], fov: 50 }} dpr = { [1, 1.5] } className = 'in-w in-h' style = {{ pointerEvents: 'none' }}>
+    <div ref = { rootRef } className = 'gears relative pointer-events-none'>
+      <Canvas
+        camera = {{ position: [2.5, 0, 5], fov: 50 }}
+        dpr = { [1, 1.5] }
+        gl = {{ powerPreference: 'low-power' }}
+        frameloop = { active ? 'always' : 'never' }
+        className = 'in-w in-h'
+        style = {{ pointerEvents: 'none' }}
+      >
         <Environment resolution = { 256 }>
           <CylinderRing
             count = { 8 }

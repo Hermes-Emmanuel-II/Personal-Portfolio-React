@@ -221,7 +221,7 @@
                             }
 
                                     ul ul li a {
-                                        font-size: var(--fs-1-0);
+                                        font-size: var(--fs-1-1);
                                         font-weight: 1000;
                                         line-height: 1.2;
                                         color: var(--lum-2);
@@ -327,6 +327,7 @@
                                         .current-project section:first-of-type .trail-wrapper {
                                             left: 0;
                                             top: calc(1.5rem - 2px);
+                                            bottom: 2px; /* sit directly above the description's 2px outline */
                                             right: 0;
                                             margin-inline: auto;
                                             width: calc(50% + 4px);
@@ -336,7 +337,7 @@
                                             z-index: 2;
                                         }
 
-                                            .current-project .trail-wrapper .trail { offset-path: rect(0 100% 100% 0 round 1rem 0 0 0); }
+                                            .current-project .trail-wrapper .trail { offset-path: rect(0 100% 100% 0 round 1rem 1rem 0 0); }
 
                                         .iframe-clip {
                                             width: 50%;
@@ -346,6 +347,8 @@
                                             margin-inline: auto;
                                             transform: translateY(1.5rem);
                                         }
+
+                                            .preview-loader { padding: 0; }
 
                                         .current-project section:first-of-type > .clarity {
                                             z-index: 3;

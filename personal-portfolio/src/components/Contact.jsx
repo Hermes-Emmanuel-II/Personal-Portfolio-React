@@ -238,7 +238,7 @@ function Contact () {
 
     return <section id = 'contact' ref = { contactRef } className = 'column center relative'>
         <div className = 'contact-aura absolute ctr-abs-xy'></div>
-        <SectionHeader symbol = '>_ ' title = 'hello'/>
+        <SectionHeader symbol = '>_ ' title = 'Contact'/>
         <article className = 'content relative column gap-lg'>
             <p>Let's make something together! I'm open to both exploring new opportunities and collaborating. Feel free to drop a 'hi' so we can start something or maybe just rub minds.</p>
             <form ref = { formRef } className = 'contact-form column gap-lg' onSubmit = { handleSubmit }>

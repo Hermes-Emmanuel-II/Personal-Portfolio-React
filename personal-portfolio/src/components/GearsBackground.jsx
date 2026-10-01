@@ -16,6 +16,41 @@ function clamp (value, min, max) {
     return Math.min(max, Math.max(min, value))
 }
 
+function usePerfGate (ref) {
+    const [active, setActive] = useState(true)
+
+    useEffect(() => {
+        const el = ref.current
+        const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const visible = { current: true }
+        let io
+
+        function evaluate () {
+            setActive(!document.hidden && !mql.matches && visible.current)
+        }
+
+        if (el && 'IntersectionObserver' in window) {
+            io = new IntersectionObserver(([entry]) => {
+                visible.current = entry.isIntersecting
+                evaluate()
+            }, { threshold: 0 })
+            io.observe(el)
+        }
+
+        document.addEventListener('visibilitychange', evaluate)
+        mql.addEventListener('change', evaluate)
+        evaluate()
+
+        return () => {
+            document.removeEventListener('visibilitychange', evaluate)
+            mql.removeEventListener('change', evaluate)
+            if (io) io.disconnect()
+        }
+    }, [ref])
+
+    return active
+}
+
 function generateGearPositions (offsetX, offsetY, phaseOffset, teeth, radius) {
     const positions = []
     const totalSegments = teeth * 2
@@ -170,12 +205,13 @@ function GearPair () {
     )
 }
 
-function GearsCanvas ({ onCanvasReady }) {
+function GearsCanvas ({ onCanvasReady, active }) {
     return (
         <Canvas
             camera = {{ position: [0, 0, 80], fov: 75 }}
             gl = {{ preserveDrawingBuffer: true, powerPreference: 'low-power', antialias: false }}
             dpr = { [1, 1.5] }
+            frameloop = { active ? 'always' : 'never' }
             style = {{ pointerEvents: 'none' }}
         >
             { onCanvasReady && <CanvasHandle onReady = { onCanvasReady }/> }
@@ -184,7 +220,7 @@ function GearsCanvas ({ onCanvasReady }) {
     )
 }
 
-function MirrorCanvas ({ sourceEl }) {
+function MirrorCanvas ({ sourceEl, active }) {
     const canvasRef = useRef(null)
     const rafRef = useRef(null)
 
@@ -214,28 +250,30 @@ function MirrorCanvas ({ sourceEl }) {
             }
             rafRef.current = requestAnimationFrame(draw)
         }
-        draw()
+        if (active) draw()
 
         return () => {
             ro.disconnect()
             cancelAnimationFrame(rafRef.current)
         }
-    }, [sourceEl])
+    }, [sourceEl, active])
 
     return <canvas ref = { canvasRef } className = 'block in-w in-h'/>
 }
 
 export default function GearsBackground () {
     const [sourceEl, setSourceEl] = useState(null)
+    const rootRef = useRef(null)
+    const active = usePerfGate(rootRef)
 
     return (
-        <div className = 'gears-bg' aria-hidden = 'true'>
+        <div ref = { rootRef } className = 'gears-bg' aria-hidden = 'true'>
             <div className = 'webgl-background-top gears-bg-layer square'>
-                <GearsCanvas onCanvasReady = { setSourceEl }/>
+                <GearsCanvas onCanvasReady = { setSourceEl } active = { active }/>
             </div>
             <div className = 'webgl-background-bottom gears-bg-layer square'>
                 { sourceEl
-                    ? <MirrorCanvas sourceEl = { sourceEl }/>
+                    ? <MirrorCanvas sourceEl = { sourceEl } active = { active }/>
                     : null }
             </div>
         </div>
