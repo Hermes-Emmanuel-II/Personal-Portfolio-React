@@ -8,12 +8,11 @@ function usePerfGate (ref) {
 
     useEffect(() => {
         const el = ref.current
-        const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
         const visible = { current: true }
         let io
 
         function evaluate () {
-            setActive(!document.hidden && !mql.matches && visible.current)
+            setActive(!document.hidden && visible.current)
         }
 
         if (el && 'IntersectionObserver' in window) {
@@ -25,12 +24,10 @@ function usePerfGate (ref) {
         }
 
         document.addEventListener('visibilitychange', evaluate)
-        mql.addEventListener('change', evaluate)
         evaluate()
 
         return () => {
             document.removeEventListener('visibilitychange', evaluate)
-            mql.removeEventListener('change', evaluate)
             if (io) io.disconnect()
         }
     }, [ref])
