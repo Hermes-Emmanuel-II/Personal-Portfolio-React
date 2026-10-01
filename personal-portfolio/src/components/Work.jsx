@@ -29,6 +29,11 @@ import glassClip from '../assets/clips/glass.mp4'
 import signalClip from '../assets/clips/signal.mp4'
 import interClip from '../assets/clips/inter.mp4'
 import mockupsClip from '../assets/clips/mockups.mp4'
+import glassFallback from '../assets/clips/glass.webp'
+import signalFallback from '../assets/clips/signal.webp'
+import interFallback from '../assets/clips/inter.webp'
+import mockupsFallback from '../assets/clips/mockups.webp'
+import portfolioPreview from '../assets/previews/personal-portfolio.webp'
 
 export function SectionHeader (props) {
     const temp = props.title
@@ -312,16 +317,30 @@ function FeatureClip ({ item, label }) {
         }
     }, [])
 
+    const [useFallback, setUseFallback] = useState(false)
+
     useEffect(() => {
         const video = videoRef.current
         if (!video) return
-        if (inView) video.play().catch(() => {})
-        else video.pause()
-    }, [inView])
+        if (inView) {
+            video.muted = true
+            const attempt = video.play()
+            if (attempt) attempt.catch(err => {
+                // iOS Low Power Mode (and some data-saver modes) refuse autoplay → swap to the animated WebP
+                if (err?.name === 'NotAllowedError' && item?.fallback) setUseFallback(true)
+            })
+        } else video.pause()
+    }, [inView, item?.fallback])
 
     return <div className = 'case-signal-body case-signal-reel relative'>
         <div ref = { frameRef } className = 'case-signal-reel-frame relative in-w in-h'>
-            { item?.video && <video
+            { useFallback ? (inView && <img
+                className = 'absolute in-w in-h block'
+                style = {{ objectFit: 'cover' }}
+                src = { item.fallback }
+                alt = ''
+                decoding = 'async'
+            />) : item?.video && <video
                 ref = { videoRef }
                 className = 'absolute in-w in-h block'
                 src = { item.video }
@@ -548,7 +567,7 @@ function Work ({ onOpenRecents }) {
             src: 'personal-portfolio-react-lime.vercel.app/',
             figma: portfolioFigma,
             figmaUrl: 'https://www.figma.com/',
-            mobileImage: null,
+            mobileImage: portfolioPreview,
             notes: '<ul><li><span>Tone</span> — Dark and restrained, with one bright accent doing the work.</li><li><span>Color</span> — Teal surfaces on charcoal, with lawngreen reserved for what matters.</li><li><span>Type</span> — Michroma for presence, Comfortaa for ease.</li><li><span>Depth</span> — Glass for what floats, solid teal for what holds content.</li><li><span>Identity</span> — The gears, kept mechanical and slow.</li></ul>',
             github: 'personal-portfolio',
             caseStudy: [
@@ -581,10 +600,10 @@ function Work ({ onOpenRecents }) {
                 'Live on Vercel, with a contact form that sends real email and attachments.',
                 {
                     features: [
-                        { video: glassClip, text: 'Background distorting panes.' },
-                        { video: signalClip, text: 'A stylised project case study based off a square wave.' },
-                        { video: interClip, text: 'Ushering section titles with a hold-then-fold choreography.' },
-                        { video: mockupsClip, text: 'Mockups made with HTML and CSS as opposed to mere images.' }
+                        { video: glassClip, fallback: glassFallback, text: 'Background distorting panes.' },
+                        { video: signalClip, fallback: signalFallback, text: 'A stylised project case study based off a square wave.' },
+                        { video: interClip, fallback: interFallback, text: 'Ushering section titles with a hold-then-fold choreography.' },
+                        { video: mockupsClip, fallback: mockupsFallback, text: 'Mockups made with HTML and CSS as opposed to mere images.' }
                     ]
                 }
             ],
@@ -1036,9 +1055,12 @@ function Work ({ onOpenRecents }) {
                                     style = {{
                                         backgroundColor: 'var(--accent-1)',
                                         ...(result[current].mobileImage ? {
+                                            // Mirror the zoomed iframe: page width = frame width, pinned top-left, never cropped or stretched
+                                            backgroundColor: 'var(--BGC)',
                                             backgroundImage: `url(${ result[current].mobileImage })`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center'
+                                            backgroundSize: '100% auto',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: 'top left'
                                         } : {})
                                     }}
                                 /> }
