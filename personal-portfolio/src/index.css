@@ -2392,11 +2392,6 @@
                                     .stats .glass { padding-block: .2875rem; }
 
                                             .stats .glass .idea span {
-                                                z-index: 2;
-                                                color: var(--lum-2);
-                                            }
-
-                                            .stats .glass .idea span {
                                                 font-family: var(--font-2);
                                                 font-size: var(--fs-1-0);
                                                 background-image: var(--gradient);
@@ -2409,7 +2404,9 @@
                                                 -webkit-text-fill-color: rgba(0,255,255,.375);
                                                 display: flex;
                                                 height: calc(3.416rem - (2 * .2875rem));
-                                                line-height: 140%;
+                                                line-height: 130%;
+                                                z-index: 2;
+                                                color: var(--lum-2);
                                             }
 
                                             .stats .glass .idea svg {
@@ -4740,6 +4737,8 @@
                                         .contact-form div:first-child img { top: var(--gear-top); }
 
                                     .message { overflow: hidden; }
+
+                                        .message .trail-wrapper .trail { offset-path: rect(0 100% 100% 0 round .75rem); }
 
                                         .contact-form .message img { top: calc(var(--gear-top) - var(--gear-shift, 4.75rem)); }
 

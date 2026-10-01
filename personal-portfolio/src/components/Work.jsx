@@ -502,6 +502,20 @@ function withDesktopPreview (src) {
     return url + (url.includes('?') ? '&' : '?') + 'desktopPreview'
 }
 
+function useTabletUp () {
+    const query = '(min-width: 768px)'
+    const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+
+    useEffect(() => {
+        const mq = window.matchMedia(query)
+        const handleChange = (e) => setMatches(e.matches)
+        mq.addEventListener('change', handleChange)
+        return () => mq.removeEventListener('change', handleChange)
+    }, [])
+
+    return matches
+}
+
 function Work ({ onOpenRecents }) {
     const core = [
         { icon: blender, text: 'Blender' },
@@ -529,6 +543,7 @@ function Work ({ onOpenRecents }) {
             src: 'personal-portfolio-react-lime.vercel.app/',
             figma: portfolioFigma,
             figmaUrl: 'https://www.figma.com/',
+            mobileImage: null,
             notes: '<ul><li><span>Tone</span> — Dark and restrained, with one bright accent doing the work.</li><li><span>Color</span> — Teal surfaces on charcoal, with lawngreen reserved for what matters.</li><li><span>Type</span> — Michroma for presence, Comfortaa for ease.</li><li><span>Depth</span> — Glass for what floats, solid teal for what holds content.</li><li><span>Identity</span> — The gears, kept mechanical and slow.</li></ul>',
             github: 'personal-portfolio',
             caseStudy: [
@@ -554,7 +569,7 @@ function Work ({ onOpenRecents }) {
                     intro: 'A few deliberate calls, each giving something up to get something better:',
                     items: [
                         { title: 'Hand-written CSS', text: 'Every style written by hand instead of reaching for Tailwind or Bootstrap. Slower to build, but it gave full control over the glass, masks and trails.' },
-                        { title: 'Live previews', text: 'Projects run as live, scaled-down sites on every screen rather than screenshots, and only load once scrolled into view. Heavier on phones, but what you see is the real thing.' },
+                        { title: 'Live previews', text: 'Projects run as live sites on tablet and up, and as images on phones, trading interactivity for speed where it counts most.' },
                         { title: 'Lighter motion on phones', text: 'GSAP pins the section breaks on desktop, touch devices get native sticky scrolling, and the smallest screens drop the section words entirely, giving up some choreography for scrolling that feels right under a finger.' }
                     ]
                 },
@@ -794,15 +809,16 @@ function Work ({ onOpenRecents }) {
 
     const previewTitle = result[current]?.title ?? null
     const isEmbedded = new URLSearchParams(window.location.search).has('desktopPreview')
+    const canLoadPreview = useTabletUp()
 
-    // Only the current project ever holds a live iframe. It is armed the first time the
-    // section is in view, and switching projects swaps it out, unloading the old one.
+    // Tablet and up only. Only the current project ever holds a live iframe. It is armed the
+    // first time the section is in view, and switching projects swaps it out, unloading the old one.
     useEffect(() => {
-        if (isEmbedded || !inView || !previewTitle) return
+        if (!canLoadPreview || isEmbedded || !inView || !previewTitle) return
         setArmedPreview(previewTitle)
-    }, [inView, previewTitle, isEmbedded])
+    }, [canLoadPreview, inView, previewTitle, isEmbedded])
 
-    useEffect(() => { setPreviewReady(false) }, [previewTitle])
+    useEffect(() => { setPreviewReady(false) }, [previewTitle, canLoadPreview])
 
     const signalRef = useRef(null)
     const signalDrag = useRef({ active: false, moved: false, startX: 0, scrollLeft: 0, pointerId: null })
@@ -995,20 +1011,32 @@ function Work ({ onOpenRecents }) {
                         <section className = 'relative block in-h'>
                             <Trail once = { false } />
                             <div className = 'iframe-clip relative'>
-                                <iframe
-                                    key = { result[current].title }
-                                    ref = { iframeRef }
-                                    src = { armedPreview === result[current].title ? withDesktopPreview(result[current].src) : 'about:blank' }
-                                    title = { `${ result[current].title } live preview` }
-                                    onLoad = { (e) => { if (e.currentTarget.src !== 'about:blank') setPreviewReady(true) } }
-                                    frameBorder = '0'
-                                    scrolling = 'no'
-                                    tabIndex = { -1 }
+                                { canLoadPreview ? <>
+                                    <iframe
+                                        key = { result[current].title }
+                                        ref = { iframeRef }
+                                        src = { armedPreview === result[current].title ? withDesktopPreview(result[current].src) : 'about:blank' }
+                                        title = { `${ result[current].title } live preview` }
+                                        onLoad = { (e) => { if (e.currentTarget.src !== 'about:blank') setPreviewReady(true) } }
+                                        frameBorder = '0'
+                                        scrolling = 'no'
+                                        tabIndex = { -1 }
+                                        className = 'in-h in-w block'
+                                    />
+                                    <div className = { `preview-loader absolute column ${ previewReady ? 'done' : '' }` } role = 'status' aria-hidden = { previewReady }>
+                                        <span className = 'nowrap'>Loading…</span>
+                                    </div>
+                                </> : <div
                                     className = 'in-h in-w block'
-                                />
-                                <div className = { `preview-loader absolute column ${ previewReady ? 'done' : '' }` } role = 'status'>
-                                    <span className = 'nowrap'>Loading Preview…</span>
-                                </div>
+                                    style = {{
+                                        backgroundColor: 'var(--accent-1)',
+                                        ...(result[current].mobileImage ? {
+                                            backgroundImage: `url(${ result[current].mobileImage })`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center'
+                                        } : {})
+                                    }}
+                                /> }
                             </div>
                             <Clarity
                                 icon = {
@@ -1017,9 +1045,10 @@ function Work ({ onOpenRecents }) {
                                         <i className = 'fa-solid fa-rotate-right absolute duplicate'></i>
                                     </>
                                 }
-                                text = 'Reload'
+                                text = 'Refresh preview'
                                 onClick = { refresh }
-                                tabIndex = { inView ? 0 : -1 } data-keep-tabbable
+                                className = { !canLoadPreview ? 'none' : '' }
+                                tabIndex = { (canLoadPreview && inView) ? 0 : -1 } data-keep-tabbable
                             />
                         </section>
                         <section className = 'relative block in-h column gap-lg description'>
@@ -1042,7 +1071,7 @@ function Work ({ onOpenRecents }) {
                                     ) }
                                     <Clarity
                                         icon = { <i className = 'fa-regular fa-eye'></i> }
-                                        text = 'Design'
+                                        text = 'View Design'
                                         onClick = { () => setInspectOpen(true) }
                                         tabIndex = { inView ? 0 : -1 }
                                     />
