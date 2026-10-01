@@ -2266,7 +2266,7 @@
                                                     content: '';
                                                     position: absolute;
                                                     inset: 0;
-                                                    background: linear-gradient(to top, var(--BGC) 0%, transparent 75%);
+                                                    background: linear-gradient(to top, var(--BGC) 0%, var(--BGC) 25%, transparent 75%);
                                                     pointer-events: none;
                                                 }
 
