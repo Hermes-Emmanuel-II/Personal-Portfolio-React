@@ -25,6 +25,9 @@ import face from '../assets/face.png'
 import gears from '../assets/gears.png'
 import portfolioFigma from '../assets/figma/personal-portfolio-figma.png'
 
+import glassClip from '../assets/clips/glass.mp4'
+import signalClip from '../assets/clips/signal.mp4'
+
 export function SectionHeader (props) {
     const temp = props.title
     return <div className = 'section-header in-w'><span>{ props.symbol }</span>{ temp.toUpperCase() }</div>
@@ -576,8 +579,8 @@ function Work ({ onOpenRecents }) {
                 'Live on Vercel, with a contact form that sends real email and attachments.',
                 {
                     features: [
-                        { video: null, text: 'Glass panes that bend whatever sits behind them.' },
-                        { video: null, text: 'A signal that runs the case study from start to finish.' },
+                        { video: glassClip, text: 'Glass panes that bend whatever sits behind them.' },
+                        { video: signalClip, text: 'A signal that runs the case study from start to finish.' },
                         { video: null, text: 'Dots that melt into a label when you hover the stack.' },
                         { video: null, text: 'Section words that pin and fold away as you scroll, held in place on touch screens too.' }
                     ]
