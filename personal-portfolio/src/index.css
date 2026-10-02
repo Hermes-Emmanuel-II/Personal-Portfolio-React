@@ -753,7 +753,7 @@
                                 .content > span {
                                     text-align: center;
                                     font-size: var(--fs-1-2);
-                                    padding-inline: 1rem;
+                                    padding-inline: 3rem;
                                 }
 
                                     .quick > .clarity { position: static; }
@@ -2197,27 +2197,37 @@
                                                         }
 
                                                         .case-signal-toggle {
+                                                            /* even whole-pixel box so both 2px arms sit dead centre — a symmetrical + with no blurry half-pixels */
                                                             width: .75rem;
                                                             height: .75rem;
+                                                            width: round(.75rem, 2px);
+                                                            height: round(.75rem, 2px);
                                                         }
 
                                                         .case-signal-toggle::before,
                                                         .case-signal-toggle::after {
                                                             content: '';
                                                             position: absolute;
-                                                            top: 50%;
-                                                            left: 0;
-                                                            width: 100%;
-                                                            height: 2px;
-                                                            margin-top: -1px;
                                                             border-radius: 1px;
                                                             background-color: var(--lum-2);
-                                                            transition: rotate var(--tran-1), background-color var(--tran-1);
+                                                            transition: background-color var(--tran-1);
                                                         }
 
-                                                        .case-signal-toggle::after { rotate: 90deg; }
+                                                        .case-signal-toggle::before { /* horizontal arm */
+                                                            left: 0;
+                                                            right: 0;
+                                                            top: calc(50% - 1px);
+                                                            height: 2px;
+                                                        }
 
-                                                        .case-signal-stack li.open .case-signal-toggle::after { rotate: 0deg; }
+                                                        .case-signal-toggle::after { /* vertical arm */
+                                                            top: 0;
+                                                            bottom: 0;
+                                                            left: calc(50% - 1px);
+                                                            width: 2px;
+                                                        }
+
+                                                        .case-signal-stack li.open .case-signal-toggle::after { display: none; }
 
                                                         .case-signal-row button:hover .case-signal-toggle::before,
                                                         .case-signal-row button:hover .case-signal-toggle::after,

@@ -711,6 +711,8 @@
             font-size: .675rem;
         }
 
+                                    .content > span { padding-inline: 6rem; }
+
     /* CONTACT */
                                 .contact-form > div:first-child { flex-direction: column; }
 
