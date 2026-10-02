@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { CompletionRing } from './About'
 import { Bar } from './Hero'
 import color from '../color.js'
+import { smoothScrollTo } from '../App'
 
 import aftereffects from '../assets/external-icons/aftereffects.svg'
 import figma from '../assets/external-icons/figma.svg'
@@ -16,6 +18,11 @@ import pixel from '../assets/pixel.png'
 import bronze from '../assets/works/bronze.png'
 import cephalopod from '../assets/works/cephalopod.png'
 import machu from '../assets/works/machu.png'
+
+// 'Pixel Art' → 'pixel-art', used as the category's address: /beyond/pixel-art
+export function slugOf (title) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
 
 export default function Beyond () {
     const cards = [
@@ -83,7 +90,21 @@ export default function Beyond () {
 
     const tabIndex = 0
 
-    const [currentIndex, setCurrentIndex] = useState(0)
+    // The URL is the source of truth: /beyond opens the first category, /beyond/<slug> opens that one
+    const { category } = useParams()
+    const navigate = useNavigate()
+    const matchedIndex = category ? cards.findIndex(card => slugOf(card.title) === category) : 0
+    const currentIndex = Math.max(matchedIndex, 0)
+
+    function setCurrentIndex (index) {
+        const slug = slugOf(cards[index].title)
+        if (slug !== category) navigate(`/beyond/${ slug }`, { replace: true })
+    }
+
+    // Unknown category in the address (typo, renamed category) → fall back to plain /beyond
+    useEffect(() => {
+        if (category && matchedIndex === -1) navigate('/beyond', { replace: true })
+    }, [category, matchedIndex])
     const [entryIndex, setEntryIndex] = useState(0)
     const [bg, setBg] = useState(null)
     const [measuredDuration, setMeasuredDuration] = useState(null)
@@ -106,16 +127,6 @@ export default function Beyond () {
     useEffect(() => {
         setEntryIndex(0)
     }, [currentIndex])
-
-    useEffect(() => {
-        const stored = sessionStorage.getItem('beyondCategory')
-        if (stored === null) return
-        sessionStorage.removeItem('beyondCategory')
-        const index = parseInt(stored, 10)
-        if (!Number.isNaN(index) && index >= 0 && index < cards.length) {
-            setCurrentIndex(index)
-        }
-    }, [])
 
     useEffect(() => {
         if (!currentEntry || !currentEntry.video) {
@@ -238,7 +249,7 @@ export default function Beyond () {
                                     </button>
                                 ))
                                 ) : (
-                                <span>...</span>
+                                <span className = 'empty-note'>...</span>
                                 ) }
                         </div>
                     </div>
@@ -253,6 +264,19 @@ export default function Beyond () {
                     <span className = 'block in-w'>{ cards[currentIndex].exp }</span>
                 </div>
             </article>
+            { !currentEntry && <article className = 'relative column center beyond-empty'>
+                <span className = 'empty-note'>Works not uploaded yet.</span>
+                <button
+                    key = { currentIndex /* restart the nudge on each empty category */ }
+                    type = 'button'
+                    className = 'beyond-scroll-cue absolute center pointer'
+                    onClick = { () => smoothScrollTo('#beyond > article:first-child') }
+                    aria-label = 'Scroll to categories'
+                    data-keep-tabbable
+                >
+                    <span className = 'scroll-cue-chevrons' aria-hidden = 'true'></span>
+                </button>
+            </article> }
             { currentEntry && <article className = 'relative gap-lg column'>
                 <span>{ `Entry ${ entryIndex + 1 } — ${ currentEntry.title }` }</span>
                 <Bar vert = { false }/>

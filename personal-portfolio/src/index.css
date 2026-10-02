@@ -223,6 +223,22 @@
     }
 }
 
+@keyframes role-caret-blink {
+    50% { opacity: 0; }
+}
+
+@keyframes scroll-cue-wave {
+    0%, 100% { border-color: color-mix(in srgb, var(--lum-2) 25%, transparent); }
+    50% { border-color: var(--accent-2); }
+}
+
+@keyframes scroll-cue-out {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 @keyframes simulation {
     0% { left: 12%; top: 10%; }
     15% { left: 65%; top: 14%; }
@@ -416,14 +432,68 @@
 
 .in-w { width: 100%; }
 
-.loading-screen {
+.loading-screen { /* no backdrop: just the label, so it can't flash a block over the header */
     inset: 0;
     z-index: 999;
-    background-color: var(--BGC);
-    font-family: var(--font-2);
+    pointer-events: none;
+    font-family: var(--font-1);
     font-size: var(--fs-2-3);
     color: var(--lum-1);
 }
+
+/* Loaders and "nothing here yet" messages all use the body font, whatever section they sit in */
+.empty-note { font-family: var(--font-1) !important; }
+
+/* Beyond: "scroll for more" cue on the empty panel, shown only in stacked layouts (see media-queries.css).
+   Three stacked chevrons (the span + its ::before/::after) light up top to bottom, lum-2 at .25 → accent-2 at 1,
+   for 3s, then the cue fades away */
+.beyond-scroll-cue {
+    display: none;
+    bottom: 1.5rem;
+    left: 0;
+    right: 0;
+    width: 2.5rem;
+    height: 3rem;
+    margin-inline: auto;
+    background: none;
+    animation: scroll-cue-out .5s ease 3s forwards;
+}
+
+    .scroll-cue-chevrons,
+    .scroll-cue-chevrons::before,
+    .scroll-cue-chevrons::after {
+        box-sizing: border-box;
+        width: .75rem;
+        height: .75rem;
+        border-right: 2px solid color-mix(in srgb, var(--lum-2) 25%, transparent);
+        border-bottom: 2px solid color-mix(in srgb, var(--lum-2) 25%, transparent);
+        animation: scroll-cue-wave 1s ease-in-out infinite both;
+    }
+
+    .scroll-cue-chevrons { /* middle chevron */
+        position: relative;
+        display: block;
+        rotate: 45deg;
+        animation-delay: .2s;
+    }
+
+        .scroll-cue-chevrons::before,
+        .scroll-cue-chevrons::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .scroll-cue-chevrons::before { /* top chevron (offsets run along the rotated axes, so this is straight up) */
+            translate: -.45rem -.45rem;
+            animation-delay: 0s;
+        }
+
+        .scroll-cue-chevrons::after { /* bottom chevron */
+            translate: .45rem .45rem;
+            animation-delay: .4s;
+        }
 
 .none {
     display: none;
@@ -489,7 +559,11 @@
                                 background-color: transparent;
                             }
 
-                            button:hover, button:focus-visible { color: var(--lum-1); }
+                            button:focus-visible { color: var(--lum-1); }
+
+                            @media (hover: hover) {
+                                button:hover { color: var(--lum-1); }
+                            }
 
             /* SHARED / REUSABLE COMPONENTS */
 
@@ -573,8 +647,11 @@
                                     transition: background .5s ease;
                                 }
 
-                                .clarity > .glass.round:hover::before,
                                 .clarity > .glass.round:focus-visible::before { background: var(--accent-2); }
+
+                                @media (hover: hover) {
+                                    .clarity > .glass.round:hover::before { background: var(--accent-2); }
+                                }
 
                                 .clarity > .glass.round::after { z-index: 2; }
 
@@ -597,8 +674,11 @@
                                         transition: opacity .5s ease;
                                     }
 
-                                    .glass.round:hover .lin-grad-tran-hack::after,
                                     .glass.round:focus-visible .lin-grad-tran-hack::after { opacity: .5; }
+
+                                    @media (hover: hover) {
+                                        .glass.round:hover .lin-grad-tran-hack::after { opacity: .5; }
+                                    }
 
                                 .explanation-tooltip {
                                     top: calc(100% + 1.5rem);
@@ -642,10 +722,13 @@
                                     .clarity > .glass.round svg.fa-question:not(.duplicate),
                                     .clarity > .glass.round i.fa-question:not(.duplicate) { margin-left: .125rem; }
 
-                                    .clarity > .glass.round:hover svg,
-                                    .clarity > .glass.round:hover i,
                                     .clarity > .glass.round:focus-visible svg,
                                     .clarity > .glass.round:focus-visible i { color: var(--accent-2) !important; }
+
+                                    @media (hover: hover) {
+                                        .clarity > .glass.round:hover svg,
+                                            .clarity > .glass.round:hover i { color: var(--accent-2) !important; }
+                                    }
 
                                     .clarity > .glass.round svg.duplicate,
                                     .clarity > .glass.round i.duplicate {
@@ -710,15 +793,16 @@
                                     text-wrap: nowrap;
                                 }
 
-                                .quick button:hover,
                                 .quick .idea.active,
                                 .quick button:focus-visible { margin-inline: 1rem; }
+
+                                @media (hover: hover) {
+                                    .quick button:hover { margin-inline: 1rem; }
+                                }
 
                                     .quick > div:nth-child(2n - 1) *,
                                     .quick > a:nth-child(2n - 1) * { cursor: pointer; }
 
-                                    .quick .idea:hover span,
-                                    .quick .idea:hover svg,
                                     .quick .idea:focus-visible span,
                                     .quick .idea:focus-visible svg,
                                     .idea-link:focus-visible .idea span,
@@ -727,6 +811,14 @@
                                     .quick .idea.active svg {
                                         color: var(--accent-2);
                                         fill: var(--accent-2);
+                                    }
+
+                                    @media (hover: hover) {
+                                        .quick .idea:hover span,
+                                            .quick .idea:hover svg {
+                                            color: var(--accent-2);
+                                            fill: var(--accent-2);
+                                        }
                                     }
 
                                     .quick .idea svg { height: 2rem; }
@@ -886,6 +978,16 @@
                                     height: 12.5px;
                                 }
 
+                                    .role-caret {
+                                        display: inline-block;
+                                        width: 1px;
+                                        height: 1em;
+                                        margin-left: 2px;
+                                        vertical-align: text-bottom;
+                                        background-color: currentColor;
+                                        animation: role-caret-blink .8s steps(1) infinite;
+                                    }
+
                             nav {
                                 position: fixed;
                                 top: 2rem;
@@ -955,9 +1057,12 @@
                                             transition-delay: .25s;
                                         }
 
-                                        nav ul li a:hover,
                                         nav ul li a.active,
                                         nav ul li a:focus-visible { color: var(--accent-2); }
+
+                                        @media (hover: hover) {
+                                            nav ul li a:hover { color: var(--accent-2); }
+                                        }
 
                                     .slider {
                                         overflow: hidden;
@@ -988,17 +1093,27 @@
                                     transition: border-radius var(--tran-1) 0s;
                                 }
 
-                                .skip:hover,
                                 .skip:focus-within {
                                     height: 7.5rem;
                                     border-radius: .5rem;
                                     transition: height var(--tran-1) .25s, border-radius var(--tran-1) .25s;
                                 }
 
-                                .skip:hover::before,
-                                .skip:hover::after,
+                                @media (hover: hover) {
+                                    .skip:hover {
+                                        height: 7.5rem;
+                                        border-radius: .5rem;
+                                        transition: height var(--tran-1) .25s, border-radius var(--tran-1) .25s;
+                                    }
+                                }
+
                                 .skip:focus-within::before,
                                 .skip:focus-within::after { border-radius: .5rem; }
+
+                                @media (hover: hover) {
+                                    .skip:hover::before,
+                                        .skip:hover::after { border-radius: .5rem; }
+                                }
 
                                     .skip .glass-distort {
                                         -webkit-backdrop-filter: url(#glass-distortion-skip);
@@ -1012,11 +1127,18 @@
                                         transition: opacity var(--tran-1) 0s, visibility 0s linear var(--tran-1);
                                     }
 
-                                    .skip:hover ul,
                                     .skip:focus-within ul {
                                         opacity: 1;
                                         visibility: visible;
                                         transition: opacity 1s ease .25s, visibility 0s linear 0s;
+                                    }
+
+                                    @media (hover: hover) {
+                                        .skip:hover ul {
+                                            opacity: 1;
+                                            visibility: visible;
+                                            transition: opacity 1s ease .25s, visibility 0s linear 0s;
+                                        }
                                     }
 
                                         .skip ul li {
@@ -1046,16 +1168,28 @@
                                                 opacity: 0;
                                             }
 
-                                            .skip ul li:hover svg,
                                             .skip ul li:has(a:focus-visible) svg {
                                                 opacity: calc(1/3);
                                                 animation: slide 2s ease
                                             }
 
-                                            .skip ul li a:hover,
+                                            @media (hover: hover) {
+                                                .skip ul li:hover svg {
+                                                    opacity: calc(1/3);
+                                                    animation: slide 2s ease
+                                                }
+                                            }
+
                                             .skip ul li a:focus-visible {
                                                 background: var(--accent-1);
                                                 color: var(--lum-1);
+                                            }
+
+                                            @media (hover: hover) {
+                                                .skip ul li a:hover {
+                                                    background: var(--accent-1);
+                                                    color: var(--lum-1);
+                                                }
                                             }
 
                             .home {
@@ -1116,12 +1250,18 @@
                                         transition-delay: 2s;
                                     }
 
-                                    .back-button:hover .explanation-tooltip,
                                     .back-button:focus-visible .explanation-tooltip,
-                                    .home:hover .explanation-tooltip,
                                     .home:focus-visible .explanation-tooltip {
                                         opacity: 1;
                                         transition-delay: 2s;
+                                    }
+
+                                    @media (hover: hover) {
+                                        .back-button:hover .explanation-tooltip,
+                                            .home:hover .explanation-tooltip {
+                                            opacity: 1;
+                                            transition-delay: 2s;
+                                        }
                                     }
 
                                     .status > .clarity:hover .explanation-tooltip,
@@ -1144,23 +1284,38 @@
                                                 opacity: 0;
                                             }
 
-                                            .cta button:hover .trail-wrapper-once .trail-once,
                                             .cta button:focus-visible .trail-wrapper-once .trail-once {
                                                 animation: trail-move-fade 1.25s ease-in-out 1 forwards;
                                                 animation-delay: .25s;
                                             }
 
-                                        .cta button:hover .trail-wrapper-once,
+                                            @media (hover: hover) {
+                                                .cta button:hover .trail-wrapper-once .trail-once {
+                                                    animation: trail-move-fade 1.25s ease-in-out 1 forwards;
+                                                    animation-delay: .25s;
+                                                }
+                                            }
+
                                         .cta button:focus-visible .trail-wrapper-once {
                                             opacity: 1;
                                             animation: wrapper-fade 1.25s ease-in-out 1 forwards;
                                             animation-delay: .25s;
                                         }
 
-                                        .cta button:not(:hover):not(:focus-visible) .trail-wrapper-once {
-                                            opacity: 0;
-                                            animation: none;
-                                            transition: opacity .25s ease;
+                                        @media (hover: hover) {
+                                            .cta button:hover .trail-wrapper-once {
+                                                opacity: 1;
+                                                animation: wrapper-fade 1.25s ease-in-out 1 forwards;
+                                                animation-delay: .25s;
+                                            }
+                                        }
+
+                                        @media (hover: hover) {
+                                            .cta button:not(:hover):not(:focus-visible) .trail-wrapper-once {
+                                                opacity: 0;
+                                                animation: none;
+                                                transition: opacity .25s ease;
+                                            }
                                         }
 
                         #hero {
@@ -1305,13 +1460,20 @@
                                             .cta a span,
                                             .cta a svg { color: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1)); }
 
-                                            .cta a:hover span,
-                                            .cta a:hover svg,
                                             .cta a:focus-visible span,
                                             .cta a:focus-visible svg {
                                                 color: var(--lum-1);
                                                 -webkit-text-fill-color: var(--lum-1);
                                                 fill: var(--lum-1);
+                                            }
+
+                                            @media (hover: hover) {
+                                                .cta a:hover span,
+                                                    .cta a:hover svg {
+                                                    color: var(--lum-1);
+                                                    -webkit-text-fill-color: var(--lum-1);
+                                                    fill: var(--lum-1);
+                                                }
                                             }
 
                                             .cta a .trail-wrapper .trail { offset-path: rect(0 100% 100% 0 round calc(5rem / 3)); }
@@ -1392,32 +1554,53 @@
                                                 offset-path: rect(0 100% 100% 0 round calc((5rem / 3) - .75rem));
                                             }
 
-                                                .description .glass:has(> .trail-wrapper-once):hover .trail-wrapper-once .trail-once,
                                                 .description .glass:has(> .trail-wrapper-once):focus-within .trail-wrapper-once .trail-once {
                                                     animation: trail-move-fade 1.25s ease-in-out 1 forwards;
                                                     animation-delay: .25s;
                                                 }
 
-                                            .description .glass:has(> .trail-wrapper-once):hover .trail-wrapper-once,
+                                                @media (hover: hover) {
+                                                    .description .glass:has(> .trail-wrapper-once):hover .trail-wrapper-once .trail-once {
+                                                        animation: trail-move-fade 1.25s ease-in-out 1 forwards;
+                                                        animation-delay: .25s;
+                                                    }
+                                                }
+
                                             .description .glass:has(> .trail-wrapper-once):focus-within .trail-wrapper-once {
                                                 opacity: 1;
                                                 animation: wrapper-fade 1.25s ease-in-out 1 forwards;
                                                 animation-delay: .25s;
                                             }
 
-                                            .description .glass:has(> .trail-wrapper-once):not(:hover):not(:focus-within) .trail-wrapper-once {
-                                                opacity: 0;
-                                                animation: none;
-                                                transition: opacity .25s ease;
+                                            @media (hover: hover) {
+                                                .description .glass:has(> .trail-wrapper-once):hover .trail-wrapper-once {
+                                                    opacity: 1;
+                                                    animation: wrapper-fade 1.25s ease-in-out 1 forwards;
+                                                    animation-delay: .25s;
+                                                }
+                                            }
+
+                                            @media (hover: hover) {
+                                                .description .glass:has(> .trail-wrapper-once):not(:hover):not(:focus-within) .trail-wrapper-once {
+                                                    opacity: 0;
+                                                    animation: none;
+                                                    transition: opacity .25s ease;
+                                                }
                                             }
 
                                     .stats .glass,
                                     .stats .glass * { cursor: pointer; }
 
-                                            .current-project section:first-of-type > .clarity:hover .explanation-tooltip,
                                             .current-project section:first-of-type > .clarity:has(:focus-visible) .explanation-tooltip {
                                                 opacity: 1;
                                                 transition-delay: 2s;
+                                            }
+
+                                            @media (hover: hover) {
+                                                .current-project section:first-of-type > .clarity:hover .explanation-tooltip {
+                                                    opacity: 1;
+                                                    transition-delay: 2s;
+                                                }
                                             }
 
                                     .stats .glass::after,
@@ -1439,14 +1622,8 @@
                                         .description .glass,
                                         .description .glass:not(.description .inspect-popup) * { cursor: pointer; }
 
-                                            .description .glass:hover .idea span,
                                             .description .glass:focus-visible .idea span,
-                                            .description .glass:hover .idea svg,
                                             .description .glass:focus-visible .idea svg,
-                                            .stats .glass:hover .idea span::after,
-                                            .stats .glass:hover .idea span,
-                                            .stats .glass:hover .idea span::after,
-                                            .stats .glass:hover .idea svg,
                                             .stats .glass:focus-within .idea span::after,
                                             .stats .glass:focus-within .idea span,
                                             .stats .glass:focus-within .idea span::after,
@@ -1454,6 +1631,19 @@
                                                 color: var(--lum-1);
                                                 -webkit-text-fill-color: var(--lum-1);
                                                 fill: var(--lum-1);
+                                            }
+
+                                            @media (hover: hover) {
+                                                .description .glass:hover .idea span,
+                                                    .description .glass:hover .idea svg,
+                                                    .stats .glass:hover .idea span::after,
+                                                    .stats .glass:hover .idea span,
+                                                    .stats .glass:hover .idea span::after,
+                                                    .stats .glass:hover .idea svg {
+                                                    color: var(--lum-1);
+                                                    -webkit-text-fill-color: var(--lum-1);
+                                                    fill: var(--lum-1);
+                                                }
                                             }
 
                         #work,
@@ -1606,7 +1796,9 @@
                                             overflow: visible;
                                         }
 
-                                        .stack-wrapper li:hover { z-index: 2; }
+                                        @media (hover: hover) {
+                                            .stack-wrapper li:hover { z-index: 2; }
+                                        }
 
                                             .stack-wrapper li * { pointer-events: none; }
 
@@ -1617,8 +1809,11 @@
                                                 transition-delay: var(--stack-delay);
                                             }
 
-                                            .stack-wrapper:focus-visible li img,
-                                            .stack-wrapper li:hover img { filter: grayscale(0); }
+                                            .stack-wrapper:focus-visible li img { filter: grayscale(0); }
+
+                                            @media (hover: hover) {
+                                                .stack-wrapper li:hover img { filter: grayscale(0); }
+                                            }
 
                                         .stack-rest-inner { min-height: 0; }
 
@@ -1664,9 +1859,12 @@
 
                                     .quick-options { width: calc(534.06px + 2rem); }
 
-                                        #work article .quick button:hover,
-                                        #work article .quick button.active:hover,
                                         #work article .quick button.active:focus-visible { color: var(--lum-1); }
+
+                                        @media (hover: hover) {
+                                            #work article .quick button:hover,
+                                                #work article .quick button.active:hover { color: var(--lum-1); }
+                                        }
 
                                         #work article .quick button { margin-block: .25rem; }
 
@@ -1756,10 +1954,16 @@
 
                                         .current-project > span svg { color: var(--lum-2); }
 
-                                        .current-project > span:hover svg,
                                         .current-project > span:focus-visible svg {
                                             color: var(--lum-1);
                                             scale: 1.25;
+                                        }
+
+                                        @media (hover: hover) {
+                                            .current-project > span:hover svg {
+                                                color: var(--lum-1);
+                                                scale: 1.25;
+                                            }
                                         }
 
                                         .current-project > span > svg,
@@ -1819,7 +2023,7 @@
                                                 padding: 1rem 1.5rem;
                                                 border-radius: inherit;
                                                 background-color: var(--BGC);
-                                                font-family: var(--font-2);
+                                                font-family: var(--font-1);
                                                 color: var(--lum-1);
                                                 pointer-events: none;
                                                 transition: opacity var(--tran-2);
@@ -1850,10 +2054,13 @@
                                                     font-size: var(--fs-1-1);
                                                 }
 
-                                                .current-project section:first-of-type > .clarity:hover .glass svg:nth-child(2),
                                                 .current-project section:first-of-type > .clarity:has(:focus-visible) .glass svg:nth-child(2),
-                                                .current-project section:first-of-type > .clarity:hover .glass svg:nth-child(3),
                                                 .current-project section:first-of-type > .clarity:has(:focus-visible) .glass svg:nth-child(3) { transform: rotate(0deg) !important; }
+
+                                                @media (hover: hover) {
+                                                    .current-project section:first-of-type > .clarity:hover .glass svg:nth-child(2),
+                                                        .current-project section:first-of-type > .clarity:hover .glass svg:nth-child(3) { transform: rotate(0deg) !important; }
+                                                }
 
                                     .description { padding: 2rem; }
 
@@ -1917,10 +2124,16 @@
 
                                                 .description .project-actions > .clarity > .explanation-tooltip * { cursor: default; }
 
-                                            .description .project-actions > .clarity:hover .explanation-tooltip,
                                             .description .project-actions > .clarity:has(:focus-visible) .explanation-tooltip {
                                                 opacity: 1;
                                                 transition-delay: 2s;
+                                            }
+
+                                            @media (hover: hover) {
+                                                .description .project-actions > .clarity:hover .explanation-tooltip {
+                                                    opacity: 1;
+                                                    transition-delay: 2s;
+                                                }
                                             }
 
                                             /* Touch: a tap opens the inspector, so a hover tooltip would only linger behind afterwards */
@@ -1934,12 +2147,18 @@
                                                 fill: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1));
                                             }
 
-                                            .description .github-action:hover .idea span,
-                                            .description .github-action:hover .idea svg,
                                             .description .github-action:focus-visible .idea span,
                                             .description .github-action:focus-visible .idea svg {
                                                 color: var(--lum-1);
                                                 fill: var(--lum-1);
+                                            }
+
+                                            @media (hover: hover) {
+                                                .description .github-action:hover .idea span,
+                                                    .description .github-action:hover .idea svg {
+                                                    color: var(--lum-1);
+                                                    fill: var(--lum-1);
+                                                }
                                             }
 
                                 .case-signal {
@@ -2106,7 +2325,9 @@
                                                     border-radius: .25rem;
                                                 }
 
-                                                .case-signal-scroll::-webkit-scrollbar-thumb:hover { background-color: var(--lum-1); }
+                                                @media (hover: hover) {
+                                                    .case-signal-scroll::-webkit-scrollbar-thumb:hover { background-color: var(--lum-1); }
+                                                }
 
                                                 .case-signal-scroll::-webkit-scrollbar-thumb:active { background-color: var(--accent-2); }
 
@@ -2173,9 +2394,11 @@
                                                         .case-signal-stack li:focus-within .case-signal-row img,
                                                         .case-signal-stack li.open .case-signal-row img { filter: none; }
 
-                                                        .case-signal-stack li:hover .case-signal-row img {
-                                                            filter: none;
-                                                            transition-delay: .25s;
+                                                        @media (hover: hover) {
+                                                            .case-signal-stack li:hover .case-signal-row img {
+                                                                filter: none;
+                                                                transition-delay: .25s;
+                                                            }
                                                         }
 
                                                         .case-signal-row {
@@ -2245,10 +2468,13 @@
 
                                                         .case-signal-stack li.open .case-signal-toggle::after { display: none; }
 
-                                                        .case-signal-row button:hover .case-signal-toggle::before,
-                                                        .case-signal-row button:hover .case-signal-toggle::after,
                                                         .case-signal-row button:focus-visible .case-signal-toggle::before,
                                                         .case-signal-row button:focus-visible .case-signal-toggle::after { background-color: var(--accent-2); }
+
+                                                        @media (hover: hover) {
+                                                            .case-signal-row button:hover .case-signal-toggle::before,
+                                                                .case-signal-row button:hover .case-signal-toggle::after { background-color: var(--accent-2); }
+                                                        }
 
                                                         .case-signal-why {
                                                             display: grid;
@@ -2522,29 +2748,50 @@
                                         opacity: 0;
                                     }
 
-                                    .inspect-wrapper section:last-of-type > .glass:hover .trail-wrapper-once .trail-once,
                                     .inspect-wrapper section:last-of-type > .glass:focus-visible .trail-wrapper-once .trail-once {
                                         animation: trail-move-fade 1.25s ease-in-out 1 forwards;
                                         animation-delay: .25s;
                                     }
 
-                                .inspect-wrapper section:last-of-type > .glass:hover .trail-wrapper-once,
+                                    @media (hover: hover) {
+                                        .inspect-wrapper section:last-of-type > .glass:hover .trail-wrapper-once .trail-once {
+                                            animation: trail-move-fade 1.25s ease-in-out 1 forwards;
+                                            animation-delay: .25s;
+                                        }
+                                    }
+
                                 .inspect-wrapper section:last-of-type > .glass:focus-visible .trail-wrapper-once {
                                     opacity: 1;
                                     animation: wrapper-fade 1.25s ease-in-out 1 forwards;
                                     animation-delay: .25s;
                                 }
 
-                                .inspect-wrapper section:last-of-type > .glass:not(:hover):not(:focus-visible) .trail-wrapper-once {
-                                    opacity: 0;
-                                    animation: none;
-                                    transition: opacity .25s ease;
+                                @media (hover: hover) {
+                                    .inspect-wrapper section:last-of-type > .glass:hover .trail-wrapper-once {
+                                        opacity: 1;
+                                        animation: wrapper-fade 1.25s ease-in-out 1 forwards;
+                                        animation-delay: .25s;
+                                    }
                                 }
 
-                                    .inspect-controls .clarity:hover .glass.explanation-tooltip,
+                                @media (hover: hover) {
+                                    .inspect-wrapper section:last-of-type > .glass:not(:hover):not(:focus-visible) .trail-wrapper-once {
+                                        opacity: 0;
+                                        animation: none;
+                                        transition: opacity .25s ease;
+                                    }
+                                }
+
                                     .inspect-controls .clarity:has(:focus-visible) .glass.explanation-tooltip {
                                         opacity: 1;
                                         transition-delay: 2s;
+                                    }
+
+                                    @media (hover: hover) {
+                                        .inspect-controls .clarity:hover .glass.explanation-tooltip {
+                                            opacity: 1;
+                                            transition-delay: 2s;
+                                        }
                                     }
 
                             .inspect-wrapper section:last-of-type > .glass {
@@ -2563,13 +2810,20 @@
                                     .inspect-wrapper section:last-of-type > .glass .idea span,
                                     .inspect-wrapper section:last-of-type > .glass .idea svg { color: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1)); }
 
-                                    .inspect-wrapper section:last-of-type > .glass:hover .idea span,
                                     .inspect-wrapper section:last-of-type > .glass:focus-visible .idea span,
-                                    .inspect-wrapper section:last-of-type > .glass:hover .idea svg,
                                     .inspect-wrapper section:last-of-type > .glass:focus-visible .idea svg {
                                         color: var(--lum-1);
                                         -webkit-text-fill-color: var(--lum-1);
                                         fill: var(--lum-1);
+                                    }
+
+                                    @media (hover: hover) {
+                                        .inspect-wrapper section:last-of-type > .glass:hover .idea span,
+                                            .inspect-wrapper section:last-of-type > .glass:hover .idea svg {
+                                            color: var(--lum-1);
+                                            -webkit-text-fill-color: var(--lum-1);
+                                            fill: var(--lum-1);
+                                        }
                                     }
 
                 .inspect-popup {
@@ -2708,7 +2962,9 @@
                                     border-radius: .25rem;
                                 }
 
-                                .inspect-wrapper section:last-of-type > div:first-child div:last-child::-webkit-scrollbar-thumb:hover { background-color: var(--lum-1); }
+                                @media (hover: hover) {
+                                    .inspect-wrapper section:last-of-type > div:first-child div:last-child::-webkit-scrollbar-thumb:hover { background-color: var(--lum-1); }
+                                }
 
                                 .inspect-wrapper section:last-of-type > div:first-child div:last-child::-webkit-scrollbar-thumb:active,
                                 .inspect-wrapper section:last-of-type > div:first-child:focus-within div:last-child::-webkit-scrollbar-thumb { background-color: var(--accent-2); }
@@ -2730,7 +2986,9 @@
                                             text-decoration: underline;
                                         }
 
-                                        .inspect-wrapper section:last-of-type > div:first-child div:last-child p a:hover { color: var(--lum-1); }
+                                        @media (hover: hover) {
+                                            .inspect-wrapper section:last-of-type > div:first-child div:last-child p a:hover { color: var(--lum-1); }
+                                        }
 
                                     .inspect-wrapper section:last-of-type > div:first-child div:last-child ul {
                                         display: flex;
@@ -2780,11 +3038,18 @@
                                             border-radius: calc((5rem / 3) - .75rem);
                                         }
 
-                                                .workflow section .glass:hover span,
                                                 .workflow section .glass:focus-visible span {
                                                     color: var(--lum-1);
                                                     -webkit-text-fill-color: var(--lum-1);
                                                     fill: var(--lum-1);
+                                                }
+
+                                                @media (hover: hover) {
+                                                    .workflow section .glass:hover span {
+                                                        color: var(--lum-1);
+                                                        -webkit-text-fill-color: var(--lum-1);
+                                                        fill: var(--lum-1);
+                                                    }
                                                 }
 
                                                 .workflow-content .glass span {
@@ -2904,10 +3169,16 @@
                                         height: auto;
                                     }
 
-                                            .nav-arrow:hover svg,
                                             .nav-arrow:focus-visible svg {
                                                 color: var(--lum-1);
                                                 scale: 1.5;
+                                            }
+
+                                            @media (hover: hover) {
+                                                .nav-arrow:hover svg {
+                                                    color: var(--lum-1);
+                                                    scale: 1.5;
+                                                }
                                             }
 
                                         .nav-arrow.disabled {
@@ -4656,8 +4927,11 @@
                                         border-radius: calc((5rem / 3) - .75rem);
                                     }
 
-                                        #contact .glass:hover svg,
                                         #contact .glass:focus-within svg { color: var(--accent-2); }
+
+                                        @media (hover: hover) {
+                                            #contact .glass:hover svg { color: var(--accent-2); }
+                                        }
 
                         #contact {
                             gap: 3.75rem;
@@ -4781,8 +5055,11 @@
                                                 color: color-mix(in srgb, var(--lum-2) 50%, transparent);
                                             }
 
-                                            .attach > button:not(:disabled):hover,
                                             .attach > button:not(:disabled):focus-visible { color: var(--accent-2); }
+
+                                            @media (hover: hover) {
+                                                .attach > button:not(:disabled):hover { color: var(--accent-2); }
+                                            }
 
                                             .attach > button:disabled { opacity: .5; }
 
@@ -4913,8 +5190,11 @@
                                                         inset: -.5rem -.5rem -.5rem -.25rem;
                                                     }
 
-                                                    .contact-file button:hover,
                                                     .contact-file button:focus-visible { color: var(--accent-2); }
+
+                                                    @media (hover: hover) {
+                                                        .contact-file button:hover { color: var(--accent-2); }
+                                                    }
 
                                         #contact .contact-warning,
                                         #contact .contact-warning * { cursor: default; }
@@ -4969,11 +5249,18 @@
 
                                             #contact .contact-send :is(span, svg) { color: color-mix(in srgb, var(--accent-2) 50%, var(--lum-1)); }
 
-                                            #contact .contact-send:hover :is(span, svg),
                                             #contact .contact-send:focus-visible :is(span, svg) {
                                                 color: var(--lum-1);
                                                 -webkit-text-fill-color: var(--lum-1);
                                                 fill: var(--lum-1);
+                                            }
+
+                                            @media (hover: hover) {
+                                                #contact .contact-send:hover :is(span, svg) {
+                                                    color: var(--lum-1);
+                                                    -webkit-text-fill-color: var(--lum-1);
+                                                    fill: var(--lum-1);
+                                                }
                                             }
 
                                     #contact .glass {
@@ -5021,17 +5308,29 @@
                                                 transition: fill .25s ease .25s;
                                             }
 
-                                        .footer-socials a:hover,
                                         .footer-socials a:focus-visible {
                                             color: var(--lum-1);
                                             scale: 1.125;
                                         }
 
+                                        @media (hover: hover) {
+                                            .footer-socials a:hover {
+                                                color: var(--lum-1);
+                                                scale: 1.125;
+                                            }
+                                        }
+
                 /* RECENTS OVERLAY */
-                                .recents-popup .clarity:hover .explanation-tooltip,
                                 .recents-popup .clarity:has(:focus-visible) .explanation-tooltip {
                                     opacity: 1;
                                     transition-delay: .5s;
+                                }
+
+                                @media (hover: hover) {
+                                    .recents-popup .clarity:hover .explanation-tooltip {
+                                        opacity: 1;
+                                        transition-delay: .5s;
+                                    }
                                 }
 
                     .recents-popup .glass-distort {
@@ -5105,11 +5404,17 @@
 
                                 .recents-item-wrapper > a > span.recents-nav * { cursor: pointer; }
 
-                            .recents-item-wrapper > a > span.recents-nav:hover,
                             .recents-item-wrapper > a > span.recents-nav:focus-visible { color: var(--lum-1); }
 
-                                .recents-item-wrapper > a > span.recents-nav:hover > svg,
+                            @media (hover: hover) {
+                                .recents-item-wrapper > a > span.recents-nav:hover { color: var(--lum-1); }
+                            }
+
                                 .recents-item-wrapper > a > span.recents-nav:focus-visible > svg { scale: 1.25; }
+
+                                @media (hover: hover) {
+                                    .recents-item-wrapper > a > span.recents-nav:hover > svg { scale: 1.25; }
+                                }
 
                                 .recents-item-wrapper > a > span.recents-nav > svg { height: 100%; }
 
@@ -5143,7 +5448,9 @@
                                 cursor: pointer;
                             }
 
-                            .recents-item-wrapper > div:last-child a:hover { text-decoration: underline; }
+                            @media (hover: hover) {
+                                .recents-item-wrapper > div:last-child a:hover { text-decoration: underline; }
+                            }
 
                 /* BEYOND (SEPARATE ROUTE) */
                         #beyond {
@@ -5165,9 +5472,12 @@
                                         height: 5rem;
                                     }
 
-                                    #beyond article:first-child > div:first-child div:hover,
                                     #beyond article:first-child > div:first-child div:focus-visible,
                                     #beyond article:first-child > div:first-child div.active { color: var(--accent-2) }
+
+                                    @media (hover: hover) {
+                                        #beyond article:first-child > div:first-child div:hover { color: var(--accent-2) }
+                                    }
 
                                     #beyond article:first-child > div:first-child > div,
                                     #beyond article:first-child > div:first-child > div * { cursor: pointer; }
@@ -5187,10 +5497,16 @@
                                             transition: var(--tran-2), --mask-stop 0.3s ease 1s;      
                                         }
 
-                                        #beyond article:first-child > div:first-child div:hover img,
                                         #beyond article:first-child > div:first-child div:focus-visible img {
                                             transform: translateX(2rem);
                                             --mask-stop: calc(10% - 2rem);
+                                        }
+
+                                        @media (hover: hover) {
+                                            #beyond article:first-child > div:first-child div:hover img {
+                                                transform: translateX(2rem);
+                                                --mask-stop: calc(10% - 2rem);
+                                            }
                                         }
 
                                 #beyond article:first-child > div:last-child {
@@ -5236,9 +5552,12 @@
                                                 height: fit-content;
                                             }
 
-                                            #beyond article:first-child > div:last-child div:first-child div button:hover,
                                             #beyond article:first-child > div:last-child div:first-child div button:focus-visible,
                                             #beyond article:first-child > div:last-child div:first-child div button.active { color: var(--accent-2); }
+
+                                            @media (hover: hover) {
+                                                #beyond article:first-child > div:last-child div:first-child div button:hover { color: var(--accent-2); }
+                                            }
 
                                                 #beyond article:first-child > div:last-child div:nth-child(2) span {
                                                     height: 2rem;

@@ -1117,7 +1117,7 @@ function Work ({ onOpenRecents }) {
                             />
                         </section>
                     </>
-                ) : <span className = 'flex project-empty'>
+                ) : <span className = 'flex project-empty empty-note'>
                         No projects available under this category at the moment.
                     </span>
                 }

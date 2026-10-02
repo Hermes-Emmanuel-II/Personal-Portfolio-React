@@ -231,10 +231,16 @@
                                         width: fit-content;
                                     }
 
-                                    ul ul li a:hover,
                                     ul ul li a:focus-visible {
                                         color: var(--accent-2);
                                         transition-delay: .25s;
+                                    }
+
+                                    @media (hover: hover) {
+                                        ul ul li a:hover {
+                                            color: var(--accent-2);
+                                            transition-delay: .25s;
+                                        }
                                     }
 
     /* HERO */
@@ -608,7 +614,22 @@
                             flex-direction: column-reverse;
                             height: auto;
                             margin: 0;
+                            gap: 0;
                         }
+
+                            /* divider between the viewer (top) and the categories (bottom), with even space above and below.
+                               column-reverse stacks by order from the bottom up: categories (0), divider (1), viewer (2) */
+                            #beyond::before {
+                                content: '';
+                                order: 1;
+                                flex-shrink: 0;
+                                height: 2px;
+                                margin-block: 2rem;
+                                border-radius: 1px;
+                                background-color: var(--accent-1);
+                            }
+
+                            #beyond > article:nth-child(2) { order: 2; }
 
                             #beyond article { width: 100%; }
 
@@ -626,9 +647,22 @@
 
                             #beyond article:nth-child(2) {
                                 padding-bottom: 0;
-                                height: calc(100vh - var(--beyond-header-h) - 1.5rem - 5rem);
-                                height: calc(100svh - var(--beyond-header-h) - 1.5rem - 5rem);
+                                /* fills from below the header (body padding: header + 1.1875rem) to 2rem above the fold,
+                                   so the divider's top margin ends exactly at the fold and the categories stay out of view */
+                                height: calc(100vh - var(--beyond-header-h) - 1.1875rem - 2rem);
+                                height: calc(100svh - var(--beyond-header-h) - 1.1875rem - 2rem);
                                 min-height: min-content;
+                            }
+
+                        /* nothing to display: the empty panel runs right to the fold, pushing the divider just below it */
+
+                            .beyond-scroll-cue { display: flex; }
+
+                            #beyond > article:first-child { scroll-margin-top: calc(var(--header-h, 107.21px) + 1.1875rem); }
+
+                            #beyond:has(.beyond-empty) article:nth-child(2) {
+                                height: calc(100vh - var(--beyond-header-h) - 1.1875rem);
+                                height: calc(100svh - var(--beyond-header-h) - 1.1875rem);
                             }
 
                                 #beyond .beyond-media {

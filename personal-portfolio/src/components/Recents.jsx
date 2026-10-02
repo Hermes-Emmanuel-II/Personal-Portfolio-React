@@ -46,7 +46,7 @@ export default function Recents ({ isOpen, onClose }) {
     return (
       <Popup isOpen = { isOpen } onClose = { onClose } className = 'recents-popup column'>
         <div className = 'center in-w in-h'>
-          <span>No recent items to show at the moment.</span>
+          <span className = 'empty-note'>No recent items to show at the moment.</span>
         </div>
       </Popup>
     )

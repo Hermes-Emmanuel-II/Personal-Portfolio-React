@@ -15,7 +15,18 @@ import Recents from './components/Recents'
 import Work from './components/Work'
 import disable from './disable.js'
 
-const Beyond = lazy(() => import('./components/Beyond'))
+const loadBeyond = () => import('./components/Beyond')
+const Beyond = lazy(loadBeyond)
+
+// Fetch the Beyond page in the background once the home page has settled, so opening it later is instant
+// and the loading fallback almost never has to show
+if (typeof window !== 'undefined') {
+    const prefetch = () => loadBeyond().catch(() => {})
+    window.addEventListener('load', () => {
+        if ('requestIdleCallback' in window) window.requestIdleCallback(prefetch, { timeout: 4000 })
+        else setTimeout(prefetch, 2000)
+    }, { once: true })
+}
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
@@ -338,7 +349,7 @@ export default function App () {
             <Header menuOpen = { menuOpen } onToggleMenu = { setMenuOpen }/>
             <Routes>
                 <Route path = '/' element = { <Home menuOpen = { menuOpen } closeMenu = { closeMenu }/> } />
-                <Route path = '/beyond' element = {
+                <Route path = '/beyond/:category?' element = {
                     <Suspense fallback = { <div className = 'loading-screen absolute ctr-abs-xy in-w in-h'>Loading…</div> }>
                         <Beyond/>
                     </Suspense>

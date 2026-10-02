@@ -52,6 +52,59 @@ export function Clarity ({ text, children, icon, className = '', tabIndex, onCli
     </div>
 }
 
+const DEFAULT_ROLE = 'Frontend Developer'
+
+// Role shown under the name on each Beyond category. Keys are the category slugs (see slugOf in Beyond.jsx)
+const BEYOND_ROLES = {
+    'motion-graphics': 'Motion Graphics Designer',
+    'pencilling': 'Comic Book Penciller',
+    'pixel-art': 'Pixel Art Illustrator'
+}
+
+function roleFor (pathname) {
+    const [, section, slug] = pathname.split('/')
+    if (section !== 'beyond') return DEFAULT_ROLE
+    return BEYOND_ROLES[slug] ?? Object.values(BEYOND_ROLES)[0]
+}
+
+// Typewriter swap: backspaces to the part both roles share, then types the rest
+function TypedRole ({ text }) {
+    const [shown, setShown] = useState(text)
+    const [caret, setCaret] = useState(false)
+    const shownRef = useRef(text)
+
+    useEffect(() => {
+        if (shownRef.current === text) return
+        let timer
+        setCaret(true)
+        function step () {
+            const cur = shownRef.current
+            let next
+            let delay
+            if (!text.startsWith(cur)) {
+                next = cur.slice(0, -1)
+                delay = 30
+            } else if (cur.length < text.length) {
+                next = text.slice(0, cur.length + 1)
+                delay = 60
+            } else {
+                timer = setTimeout(() => setCaret(false), 1200)
+                return
+            }
+            shownRef.current = next
+            setShown(next)
+            timer = setTimeout(step, delay)
+        }
+        timer = setTimeout(step, 200)
+        return () => clearTimeout(timer)
+    }, [text])
+
+    return <span className = 'nowrap' aria-label = { text }>
+        { shown || '\u00A0' }
+        { caret && <i className = 'role-caret' aria-hidden = 'true'></i> }
+    </span>
+}
+
 export function useWidthCheck (query = '(min-width: 1024.1px)') {
     const [matches, setMatches] = useState(
         () => window.matchMedia(query).matches
@@ -79,6 +132,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
     const drawerRef = useRef(null)
     const location = useLocation()
     const isDesktop = useWidthCheck()
+    const onBeyond = location.pathname === '/beyond' || location.pathname.startsWith('/beyond/')
     const options = { threshold: Array.from({ length: 6 }, (_, i) => i * 0.2) }
 
     function handleNavClick (e, id) {
@@ -272,16 +326,16 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
             </Link> }
             <div className = 'column gap-md'>
                 <span className = "nowrap">Hermes E.</span>
-                <span className = "nowrap">Frontend Developer</span>
+                <TypedRole text = { roleFor(location.pathname) }/>
             </div>
         </section>
         <Glass as = 'nav' ref = { navRef } className = { `center flex ${ navPushed ? 'nav-pushed' : '' }` }>
-                <ul className = { `flex in-w in-h relative ${ location.pathname === '/beyond' ? 'hide' : '' }` }>
+                <ul className = { `flex in-w in-h relative ${ onBeyond ? 'hide' : '' }` }>
                     <li className = 'center block in-w in-h'>
                         <a
                             href = '#work'
                             className = { `pointer center relative in-w in-h ${ !isHome && activeIndex === 0 ? 'active' : '' }` }
-                            tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
+                            tabIndex = { isDesktop && !onBeyond ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'work') }
                         >Work</a>
@@ -290,7 +344,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                         <a
                             href = '#about'
                             className = { `pointer center relative in-w in-h ${ !isHome && activeIndex === 1 ? 'active' : '' }` }
-                            tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
+                            tabIndex = { isDesktop && !onBeyond ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'about') }
                         >About</a>
@@ -299,7 +353,7 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
                         <a
                             href = '#contact'
                             className = { `pointer center relative in-w in-h ${ !isHome && activeIndex === 2 ? 'active' : '' }` }
-                            tabIndex = { isDesktop && location.pathname !== '/beyond' ? 0 : -1 }
+                            tabIndex = { isDesktop && !onBeyond ? 0 : -1 }
                             data-keep-tabbable
                             onClick = { (e) => handleNavClick(e, 'contact') }
                         >Contact</a>
