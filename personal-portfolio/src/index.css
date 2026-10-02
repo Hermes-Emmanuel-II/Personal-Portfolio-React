@@ -4651,7 +4651,13 @@
                                                     }
 
                                                         .maze-tool {
+                                                            /* fixed square, centred in the toolbar, with its glyph dead centre (iOS was stretching it and pinning the glyph top-left) */
+                                                            display: flex;
+                                                            align-items: center;
+                                                            justify-content: center;
+                                                            align-self: center;
                                                             width: 1rem;
+                                                            height: 1rem;
                                                             flex-shrink: 0;
                                                             border: .5px solid var(--lum-2);
                                                             border-radius: .25rem;

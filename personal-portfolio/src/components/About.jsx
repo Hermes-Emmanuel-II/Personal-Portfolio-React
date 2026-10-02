@@ -929,7 +929,6 @@ function About () {
                                 </div>
                                 <div className = 'maze-toolbar flex relative'>
                                     <div className = 'maze-tool square'>+</div>
-                                    <div className = 'maze-tool square'>{ `<` }</div>
                                     <div className = 'maze-share'><span>Share</span></div>
                                     <img className = 'maze-avatar square round absolute' src = { face }/>
                                     <img className = 'maze-avatar square round absolute' src = { face }/>
