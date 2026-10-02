@@ -1,4 +1,4 @@
-import { lazy, memo, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, memo, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -19,11 +19,37 @@ const Beyond = lazy(() => import('./components/Beyond'))
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
-const isTouchOnly = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+const touchQuery = window.matchMedia('(hover: none) and (pointer: coarse)')
+let isTouchOnly = touchQuery.matches
 
 ScrollTrigger.config({ ignoreMobileResize: true })
 
-const scrollNormalizer = isTouchOnly ? null : ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
+let scrollNormalizer = isTouchOnly ? null : ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
+
+// Re-pick touch vs desktop mode live (e.g. DevTools device toggle, tablet with a mouse attached),
+// instead of locking in whatever the page was first loaded as
+const touchListeners = new Set()
+let touchRefreshTimer
+touchQuery.addEventListener('change', (e) => {
+    isTouchOnly = e.matches
+    if (isTouchOnly) {
+        ScrollTrigger.normalizeScroll(false)
+        scrollNormalizer = null
+    } else {
+        scrollNormalizer = ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
+        if (document.documentElement.classList.contains('menu-open')) scrollNormalizer.disable()
+    }
+    touchListeners.forEach(fn => fn())
+    clearTimeout(touchRefreshTimer)
+    touchRefreshTimer = setTimeout(() => ScrollTrigger.refresh(), 350)
+})
+
+function useTouchOnly () {
+    return useSyncExternalStore(
+        (fn) => { touchListeners.add(fn); return () => touchListeners.delete(fn) },
+        () => isTouchOnly
+    )
+}
 
 export function holdScrollNormalizer (hold) {
     if (!scrollNormalizer) return
@@ -58,7 +84,7 @@ export const Inter = memo(function Inter ({ text }) {
     const containerRef = useRef(null)
     const spanRef = useRef(null)
     const timeoutRef = useRef(null)
-    const sticky = isTouchOnly
+    const sticky = useTouchOnly()
 
     useGSAP(() => {
         const anchor = sticky ? trackRef.current : containerRef.current
@@ -124,7 +150,7 @@ export const Inter = memo(function Inter ({ text }) {
                 ease: 'none',
                 duration: .1875
             }, 0.0625)
-    }, { scope: sticky ? trackRef : containerRef })
+    }, { scope: sticky ? trackRef : containerRef, dependencies: [sticky], revertOnUpdate: true })
 
     useEffect(() => () => clearTimeout(timeoutRef.current), [])
 

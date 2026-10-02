@@ -1050,20 +1050,22 @@ function Work ({ onOpenRecents }) {
                                     <div className = { `preview-loader absolute column ${ previewReady ? 'done' : '' }` } role = 'status' aria-hidden = { previewReady }>
                                         <span className = 'nowrap'>Loading…</span>
                                     </div>
-                                </> : <div
-                                    className = 'in-h in-w block'
-                                    style = {{
-                                        backgroundColor: 'var(--accent-1)',
-                                        ...(result[current].mobileImage ? {
+                                </> : <div className = 'in-h in-w block' style = {{ backgroundColor: 'var(--accent-1)' }}>
+                                    { result[current].mobileImage && <img
+                                        src = { result[current].mobileImage }
+                                        alt = { `${ result[current].title } preview` }
+                                        decoding = 'async'
+                                        className = 'block'
+                                        style = {{
                                             // Mirror the zoomed iframe: page width = frame width, pinned top-left, never cropped or stretched
-                                            backgroundColor: 'var(--BGC)',
-                                            backgroundImage: `url(${ result[current].mobileImage })`,
-                                            backgroundSize: '100% auto',
-                                            backgroundRepeat: 'no-repeat',
-                                            backgroundPosition: 'top left'
-                                        } : {})
-                                    }}
-                                /> }
+                                            width: '100%',
+                                            height: 'auto',
+                                            // Image itself fades out from 50% of its height, revealing the teal frame beneath
+                                            WebkitMaskImage: 'linear-gradient(to bottom, #000 50%, transparent 100%)',
+                                            maskImage: 'linear-gradient(to bottom, #000 50%, transparent 100%)'
+                                        }}
+                                    /> }
+                                </div> }
                             </div>
                             <Clarity
                                 icon = {
