@@ -61,7 +61,7 @@
     }
 }
 
-/* AT-RULES */
+/* NON-HOVER AT-RULES */
 @keyframes aura {
     0% { transform: rotate(0deg) scale(1); opacity: 100%; }
     25% { transform: rotate(90deg) scale(1.25); opacity: 50%; }
@@ -432,7 +432,7 @@
 
 .in-w { width: 100%; }
 
-.loading-screen { /* no backdrop: just the label, so it can't flash a block over the header */
+.loading-screen {
     inset: 0;
     z-index: 999;
     pointer-events: none;
@@ -441,12 +441,8 @@
     color: var(--lum-1);
 }
 
-/* Loaders and "nothing here yet" messages all use the body font, whatever section they sit in */
 .empty-note { font-family: var(--font-1) !important; }
 
-/* Beyond: "scroll for more" cue on the empty panel, shown only in stacked layouts (see media-queries.css).
-   Three stacked chevrons (the span + its ::before/::after) light up top to bottom, lum-2 at .25 → accent-2 at 1,
-   for 3s, then the cue fades away */
 .beyond-scroll-cue {
     display: none;
     bottom: 1.5rem;
@@ -485,12 +481,12 @@
             left: 0;
         }
 
-        .scroll-cue-chevrons::before { /* top chevron (offsets run along the rotated axes, so this is straight up) */
+        .scroll-cue-chevrons::before {
             translate: -.45rem -.45rem;
             animation-delay: 0s;
         }
 
-        .scroll-cue-chevrons::after { /* bottom chevron */
+        .scroll-cue-chevrons::after {
             translate: .45rem .45rem;
             animation-delay: .4s;
         }
@@ -566,7 +562,6 @@
                             }
 
             /* SHARED / REUSABLE COMPONENTS */
-
                 .glass::after {
                     content: '';
                     position: absolute;
@@ -699,7 +694,6 @@
                                             transition-delay: .5s;
                                         }
 
-                                        /* touch: the Work filter-table button shows its active look while its table is open (tap elsewhere to close) */
                                         @media (hover: none) {
                                             .quick > .clarity:hover > .glass.round::before { background: var(--accent-2); }
 
@@ -806,9 +800,7 @@
                                 .quick .idea.active,
                                 .quick button:focus-visible { margin-inline: 1rem; }
 
-                                @media (hover: hover) {
-                                    .quick button:hover { margin-inline: 1rem; }
-                                }
+                                @media (hover: hover) { .quick button:hover { margin-inline: 1rem; } }
 
                                     .quick > div:nth-child(2n - 1) *,
                                     .quick > a:nth-child(2n - 1) * { cursor: pointer; }
@@ -912,14 +904,14 @@
                         .gears-bg {
                             position: fixed;
                             inset: 0 0 auto;
-                            height: max(var(--lvh), var(--layout-min)); /* short screens keep the normal spread; the lower gear just sits below the fold */
+                            height: max(var(--lvh), var(--layout-min));
                             z-index: -3;
                             pointer-events: none;
                             overflow: hidden;
                         }
 
                             .gears-bg-layer {
-                                position: absolute; /* placed within .gears-bg (not the bare screen), so it follows the minimum height */
+                                position: absolute;
                                 aspect-ratio: 1 / 1;
                                 width: 35vw;
                                 z-index: 0;
@@ -3386,7 +3378,7 @@
                                                                 flex-shrink: 0;
                                                                 padding: 0 .375rem .375rem;
                                                                 color: #C4C7C5;
-                                                                scale: 1.5;
+                                                                scale: 1.75;
                                                             }
 
                                                             .analytics-window-controls {
@@ -3674,6 +3666,7 @@
                                                         background: #303030;
                                                         border-left: .5px solid #1D1D1D;
                                                         color: #C4C4C4;
+                                                        --frame-border: 2px; /* the services frame's right border (var(--border)) */
                                                     }
 
                                                         .blender-outliner {
@@ -3687,7 +3680,7 @@
                                                             .blender-outliner-bar {
                                                                 height: .75rem;
                                                                 gap: .1875rem;
-                                                                padding-inline: .25rem;
+                                                                padding-inline: .25rem calc(.25rem + var(--frame-border));
                                                                 justify-content: flex-start;
                                                                 flex-shrink: 0;
                                                                 background: #1D1D1D;
@@ -3697,7 +3690,7 @@
 
                                                             .blender-tree {
                                                                 gap: .125rem;
-                                                                padding: .1875rem .25rem;
+                                                                padding: .1875rem calc(.25rem + var(--frame-border)) .1875rem .25rem;
                                                                 list-style: none;
                                                             }
 
@@ -3744,7 +3737,7 @@
                                                                 flex: 1;
                                                                 min-width: 0;
                                                                 gap: .125rem;
-                                                                padding: .25rem;
+                                                                padding: .25rem calc(.25rem + var(--frame-border)) .25rem .25rem;
                                                             }
 
                                                                 .blender-prop-head {
@@ -3799,11 +3792,16 @@
                                                                 padding: 0 0 .125rem .25rem;
                                                                 letter-spacing: 0;
                                                                 color: #7A7A7A;
+                                                                overflow: hidden;
+                                                                text-overflow: ellipsis;
                                                             }
 
                                                             .miro-card {
                                                                 flex: 1;
                                                                 gap: .25rem;
+                                                                min-width: 0;
+                                                                min-height: 0;
+                                                                overflow: hidden;
                                                                 padding: 0 .375rem .25rem;
                                                                 background: #FFFDF7;
                                                                 border-radius: .25rem;
@@ -3820,6 +3818,10 @@
                                                                         letter-spacing: 0;
                                                                         color: #F97316;
                                                                         padding: .125rem;
+                                                                        display: block;
+                                                                        white-space: nowrap;
+                                                                        overflow: hidden;
+                                                                        text-overflow: ellipsis;
                                                                     }
 
                                                                 .miro-heading {
@@ -3828,6 +3830,12 @@
                                                                     line-height: 1.2;
                                                                     letter-spacing: 0;
                                                                     text-align: left;
+                                                                    flex-shrink: 0;
+                                                                    display: -webkit-box;
+                                                                    -webkit-box-orient: vertical;
+                                                                    -webkit-line-clamp: 2;
+                                                                    line-clamp: 2;
+                                                                    overflow: hidden;
                                                                 }
 
                                                                 .miro-row {
@@ -3854,17 +3862,22 @@
                                                                         .miro-row-name {
                                                                             max-width: 100%;
                                                                             overflow: hidden;
+                                                                            text-overflow: ellipsis;
                                                                             font-size: .25rem;
                                                                             letter-spacing: 0;
                                                                         }
 
                                                                         .miro-row-sub {
+                                                                            max-width: 100%;
+                                                                            overflow: hidden;
+                                                                            text-overflow: ellipsis;
                                                                             font-size: .1875rem;
                                                                             color: var(--lum-2);
                                                                         }
 
                                                                     .miro-row-price {
                                                                         margin-left: auto;
+                                                                        flex-shrink: 0;
                                                                         font-size: .25rem;
                                                                         letter-spacing: 0;
                                                                     }
@@ -3872,6 +3885,10 @@
                                                                 .miro-cta {
                                                                     height: .5rem;
                                                                     margin-top: .125rem;
+                                                                    flex-shrink: 0;
+                                                                    padding-inline: .125rem;
+                                                                    white-space: nowrap;
+                                                                    overflow: hidden;
                                                                     background: #F9731675;
                                                                     border-radius: .1875rem;
                                                                     font-size: .25rem;
@@ -3888,6 +3905,13 @@
                                                                     color: var(--lum-2);
                                                                     border-top: .5px solid #EDEDED;
                                                                 }
+
+                                                                    .miro-nav li {
+                                                                        min-width: 0;
+                                                                        white-space: nowrap;
+                                                                        overflow: hidden;
+                                                                        text-overflow: ellipsis;
+                                                                    }
 
                                                                     .miro-nav li:first-child { color: #F97316; }
 
@@ -3943,7 +3967,7 @@
                                                     }
 
                                                     .miro-guide {
-                                                        width: .675rem;
+                                                        width: calc(.5rem + 1px); /* .5rem white border + 1px blue line */
                                                         right: calc(0% + 3rem);
                                                         border-right: .5rem solid var(--lum-1);
                                                         z-index: 3;
