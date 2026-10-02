@@ -634,18 +634,20 @@
 
                             #beyond > article:nth-child(2) { order: 2; }
 
+                            /* every screen-height value below uses --hero-h: the screen height, never less than --layout-min,
+                               so a short (landscape) phone scrolls through the normal layout instead of crushing the viewer */
                             #beyond article { width: 100%; }
 
                             #beyond article:first-child {
                                 height: auto;
                                 min-height: calc(100vh - 9rem - 1.5rem - 37.75px);
-                                min-height: calc(100svh - 9rem - 1.5rem - 37.75px);
+                                min-height: calc(var(--hero-h, 100svh) - 9rem - 1.5rem - 37.75px);
                             }
 
                                         #beyond article:first-child > div:last-child div:first-child .bar-x + div {
                                             height: auto;
                                             max-height: 25vh;
-                                            max-height: 25svh;
+                                            max-height: calc(var(--hero-h, 100svh) * .25);
                                         }
 
                             #beyond article:nth-child(2) {
@@ -653,7 +655,7 @@
                                 /* fills from below the header (body padding: header + 1.1875rem) to 2rem above the fold,
                                    so the divider's top margin ends exactly at the fold and the categories stay out of view */
                                 height: calc(100vh - var(--beyond-header-h) - 1.1875rem - 2rem);
-                                height: calc(100svh - var(--beyond-header-h) - 1.1875rem - 2rem);
+                                height: calc(var(--hero-h, 100svh) - var(--beyond-header-h) - 1.1875rem - 2rem);
                                 min-height: min-content;
                             }
 
@@ -665,13 +667,13 @@
 
                             #beyond:has(.beyond-empty) article:nth-child(2) {
                                 height: calc(100vh - var(--beyond-header-h) - 1.1875rem);
-                                height: calc(100svh - var(--beyond-header-h) - 1.1875rem);
+                                height: calc(var(--hero-h, 100svh) - var(--beyond-header-h) - 1.1875rem);
                             }
 
                                 #beyond .beyond-media {
                                     flex: 1 1 0;
                                     min-height: 30vh;
-                                    min-height: 30svh;
+                                    min-height: calc(var(--hero-h, 100svh) * .3);
                                     max-height: none;
                                 }
 
