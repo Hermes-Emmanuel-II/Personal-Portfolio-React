@@ -247,9 +247,12 @@
                         #hero {
                             flex-direction: column;
                             align-items: flex-start;
+                            /* same floor as desktop (--hero-h never drops below --layout-min), so a short/landscape phone
+                               scrolls through the normal layout instead of squeezing it under the header */
                             height: calc(100vh - var(--header-h, 107.21px) - 1.5rem - 2rem);
-                            height: calc(100svh - var(--header-h, 107.21px) - 1.5rem - 2rem);
+                            height: calc(var(--hero-h, 100svh) - var(--header-h, 107.21px) - 1.5rem - 2rem);
                             min-height: min-content;
+                            justify-content: safe center; /* if content ever outgrows the hero, overflow downward, never up under the header */
                             gap: 0;
                             margin-top: 0;
                         }
@@ -260,7 +263,7 @@
                                 height: 50vw;
                                 right: -15vw;
                                 top: calc(100vh - 16.25rem);
-                                top: calc(100svh - 16.25rem);
+                                top: calc(var(--hero-h, 100svh) - 16.25rem);
                                 z-index: -1;
                                 opacity: .75;
                             }
