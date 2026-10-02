@@ -11,6 +11,12 @@
 
 /* VARIABLES */
 :root {
+    /* VIEWPORT HEIGHT FLOORS — screen-height units never resolve below --vh-floor, so short/landscape screens don't crush layouts */
+    --vh-floor: 600px;
+    --vh: max(100vh, var(--vh-floor));
+    --svh: max(100svh, var(--vh-floor));
+    --lvh: max(100lvh, var(--vh-floor));
+    --dvh: max(100dvh, var(--vh-floor));
     --accent-1: teal;
     --accent-2: lawngreen;
     --BGC: #333;
@@ -40,6 +46,14 @@
     --lum-2: #D5D5D5;
     --tran-1: .25s ease;
     --tran-2: .5s ease;
+}
+
+@supports not (height: 100svh) {
+    :root {
+        --svh: var(--vh);
+        --lvh: var(--vh);
+        --dvh: var(--vh);
+    }
 }
 
 /* AT-RULES */
@@ -679,7 +693,7 @@
                                     }
 
                             #hero > .quick {
-                                top: calc(100vh - 2rem);
+                                top: calc(var(--vh) - 2rem);
                                 translate: 0 -100%;
                             }
 
@@ -1145,8 +1159,7 @@
                                         }
 
                         #hero {
-                            height: 100vh;
-                            height: 100svh;
+                            height: var(--svh);
                             gap: 5rem;
                             margin-top: -6rem;
                             scroll-margin-top: 3rem;
@@ -1156,7 +1169,7 @@
                             content: '';
                             position: absolute;
                             inset: 0 0 auto;
-                            height: 100vh;
+                            height: var(--vh);
                             z-index: -2;
                             background: linear-gradient(to bottom, var(--accent-1) 0%, transparent 75%);
                             opacity: 50%;
@@ -1308,13 +1321,11 @@
 
                 /* SECTION TRANSITIONS (INTER) */
                         .pin-spacer {
-                            height: calc(25vh + 4.25rem) !important;
-                            height: calc(25lvh + 4.25rem) !important;
+                            height: calc(var(--lvh) * .25 + 4.25rem) !important;
                         }
 
                         .inter-track {
-                            height: 75vh;
-                            height: 75lvh;
+                            height: calc(var(--lvh) * .75);
                             pointer-events: none;
                         }
 
@@ -1342,7 +1353,7 @@
                                     white-space: nowrap;
                                     will-change: transform, opacity;
                                     left: 50%;
-                                    top: calc((50% - calc((1em + 1rem)) / 2) + 11.5rem + 12.5vh);
+                                    top: calc((50% - calc((1em + 1rem)) / 2) + 11.5rem + var(--vh) * .125);
                                     height: calc(1em + 1rem);
                                     line-height: 1;
                                     pointer-events: none;
@@ -5131,7 +5142,7 @@
 
                 /* BEYOND (SEPARATE ROUTE) */
                         #beyond {
-                            height: calc(100vh - 10.5rem);
+                            height: calc(var(--vh) - 10.5rem);
                             margin: 1rem;
                             gap: 5rem;
                         }
