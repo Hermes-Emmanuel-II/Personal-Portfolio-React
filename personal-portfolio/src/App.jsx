@@ -62,8 +62,8 @@ export function stableViewportHeight () {
     if (!lvhProbe) {
         lvhProbe = document.createElement('div')
         lvhProbe.setAttribute('aria-hidden', 'true')
-        // Uses the same floored --lvh as the CSS, so GSAP's pin/fade lengths match the inter's track height
-        lvhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:var(--lvh, 100lvh);visibility:hidden;pointer-events:none;'
+        // Uses the same --inter-vh as the CSS (screen height, never below --layout-min), so GSAP's pin/fade lengths match the inter's track
+        lvhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:var(--inter-vh, 100lvh);visibility:hidden;pointer-events:none;'
         document.body.appendChild(lvhProbe)
     }
     return lvhProbe.getBoundingClientRect().height || window.innerHeight

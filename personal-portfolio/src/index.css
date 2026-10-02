@@ -11,12 +11,17 @@
 
 /* VARIABLES */
 :root {
-    /* VIEWPORT HEIGHT FLOORS — screen-height units never resolve below --vh-floor, so short/landscape screens don't crush layouts */
-    --vh-floor: 600px;
+    /* VIEWPORT HEIGHT FLOORS: screen-height units never resolve below --vh-floor; shorter screens see part of the layout and scroll */
+    --vh-floor: 0px;
     --vh: max(100vh, var(--vh-floor));
     --svh: max(100svh, var(--vh-floor));
     --lvh: max(100lvh, var(--vh-floor));
     --dvh: max(100dvh, var(--vh-floor));
+    /* LAYOUT MINIMUM: the hero and the inters size from the screen normally, but never from less than --layout-min,
+       so a short screen shows part of the normal layout and scrolls instead of squashing it */
+    --layout-min: 600px; /* keep this at or below your normal window's innerHeight, or the normal view gets stretched too */
+    --hero-h: max(var(--svh), var(--layout-min));
+    --inter-vh: max(var(--lvh), var(--layout-min));
     --accent-1: teal;
     --accent-2: lawngreen;
     --BGC: #333;
@@ -693,7 +698,7 @@
                                     }
 
                             #hero > .quick {
-                                top: calc(var(--vh) - 2rem);
+                                top: calc(var(--hero-h) - 2rem);
                                 translate: 0 -100%;
                             }
 
@@ -804,16 +809,16 @@
                 /* GEARS BACKGROUND */
                         .gears-bg {
                             position: fixed;
-                            inset: 0;
+                            inset: 0 0 auto;
+                            height: max(var(--lvh), var(--layout-min)); /* short screens keep the normal spread; the lower gear just sits below the fold */
                             z-index: -3;
                             pointer-events: none;
                             overflow: hidden;
                         }
 
                             .gears-bg-layer {
-                                position: absolute;
+                                position: absolute; /* placed within .gears-bg (not the bare screen), so it follows the minimum height */
                                 aspect-ratio: 1 / 1;
-                                position: fixed;
                                 width: 35vw;
                                 z-index: 0;
                                 opacity: calc(1/6);
@@ -1159,7 +1164,7 @@
                                         }
 
                         #hero {
-                            height: var(--svh);
+                            height: var(--hero-h);
                             gap: 5rem;
                             margin-top: -6rem;
                             scroll-margin-top: 3rem;
@@ -1169,7 +1174,7 @@
                             content: '';
                             position: absolute;
                             inset: 0 0 auto;
-                            height: var(--vh);
+                            height: var(--hero-h);
                             z-index: -2;
                             background: linear-gradient(to bottom, var(--accent-1) 0%, transparent 75%);
                             opacity: 50%;
@@ -1321,11 +1326,11 @@
 
                 /* SECTION TRANSITIONS (INTER) */
                         .pin-spacer {
-                            height: calc(var(--lvh) * .25 + 4.25rem) !important;
+                            height: calc(var(--inter-vh) * .25 + 4.25rem) !important;
                         }
 
                         .inter-track {
-                            height: calc(var(--lvh) * .75);
+                            height: calc(var(--inter-vh) * .75);
                             pointer-events: none;
                         }
 
@@ -1353,7 +1358,7 @@
                                     white-space: nowrap;
                                     will-change: transform, opacity;
                                     left: 50%;
-                                    top: calc((50% - calc((1em + 1rem)) / 2) + 11.5rem + var(--vh) * .125);
+                                    top: calc((50% - calc((1em + 1rem)) / 2) + 11.5rem + var(--inter-vh) * .125);
                                     height: calc(1em + 1rem);
                                     line-height: 1;
                                     pointer-events: none;

@@ -241,7 +241,8 @@
                         #hero {
                             flex-direction: column;
                             align-items: flex-start;
-                            height: calc(var(--svh) - var(--header-h, 107.21px) - 1.5rem - 2rem);
+                            height: calc(100vh - var(--header-h, 107.21px) - 1.5rem - 2rem);
+                            height: calc(100svh - var(--header-h, 107.21px) - 1.5rem - 2rem);
                             min-height: min-content;
                             gap: 0;
                             margin-top: 0;
@@ -252,7 +253,8 @@
                                 width: 50vw;
                                 height: 50vw;
                                 right: -15vw;
-                                top: calc(var(--svh) - 16.25rem);
+                                top: calc(100vh - 16.25rem);
+                                top: calc(100svh - 16.25rem);
                                 z-index: -1;
                                 opacity: .75;
                             }
@@ -584,7 +586,8 @@
                         #contact {
                             margin-inline: 0;
                             margin-top: 5rem;
-                            min-height: calc(var(--dvh) - var(--header-h, 107.21px) - 1rem - 3rem);
+                            min-height: calc(100vh - var(--header-h, 107.21px) - 1rem - 3rem);
+                            min-height: calc(100dvh - var(--header-h, 107.21px) - 1rem - 3rem);
                         }
 
                             #contact .content { flex-grow: 1; }
@@ -611,23 +614,27 @@
 
                             #beyond article:first-child {
                                 height: auto;
-                                min-height: calc(var(--svh) - 9rem - 1.5rem - 37.75px);
+                                min-height: calc(100vh - 9rem - 1.5rem - 37.75px);
+                                min-height: calc(100svh - 9rem - 1.5rem - 37.75px);
                             }
 
                                         #beyond article:first-child > div:last-child div:first-child .bar-x + div {
                                             height: auto;
-                                            max-height: calc(var(--svh) * .25);
+                                            max-height: 25vh;
+                                            max-height: 25svh;
                                         }
 
                             #beyond article:nth-child(2) {
                                 padding-bottom: 0;
-                                height: calc(var(--svh) - var(--beyond-header-h) - 1.5rem - 5rem);
+                                height: calc(100vh - var(--beyond-header-h) - 1.5rem - 5rem);
+                                height: calc(100svh - var(--beyond-header-h) - 1.5rem - 5rem);
                                 min-height: min-content;
                             }
 
                                 #beyond .beyond-media {
                                     flex: 1 1 0;
-                                    min-height: calc(var(--svh) * .3);
+                                    min-height: 30vh;
+                                    min-height: 30svh;
                                     max-height: none;
                                 }
 

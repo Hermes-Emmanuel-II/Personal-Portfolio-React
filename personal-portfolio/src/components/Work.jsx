@@ -1229,7 +1229,7 @@ function Work ({ onOpenRecents }) {
                     <Idea text = { recentCount } cltxt = 'fa-solid fa-arrow-up-long rotate' tabIndex = { -1 }/>
                 </Glass>
             </section>
-            <section className = 'quotes flex relative in-w'>
+            <section className = 'quotes flex relative in-w none'>
                 <div className = 'quotes-inner in-h absolute flex'
                     style = {{
                         width: `${ width } * ${ loopedTestimonials.length }`,
