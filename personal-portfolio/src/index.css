@@ -1734,7 +1734,6 @@
 
                                         .stack-orbs.blob .orb { translate: 0 var(--orb-y1); }
 
-                                        /* merging: the centre orb returns only once the outer two have almost arrived, so it never pops in on its own */
                                         .stack-orbs.blob .orb.mid {
                                             transition:
                                                 translate var(--orb-dur, .25s) ease-in-out,
@@ -1745,7 +1744,6 @@
 
                                         .stack-orbs.split .orb.right { translate: var(--orb-x) var(--orb-y1); }
 
-                                        /* splitting: the centre orb shrinks fast while the outer two still overlap it, so it pinches off instead of vanishing */
                                         .stack-orbs.split .orb.mid {
                                             translate: 0 var(--orb-y1);
                                             scale: 0;
@@ -1815,7 +1813,6 @@
                                                 .stack-wrapper li:hover img { filter: grayscale(0); }
                                             }
 
-                                            /* touch: a tapped icon keeps its colour (and sits on top) until you tap elsewhere */
                                             @media (hover: none) {
                                                 .stack-wrapper li:hover { z-index: 2; }
 
@@ -2118,8 +2115,6 @@
                                                 word-spacing: .0625em;
                                             }
 
-                                            /* Eye button tooltip: identical to the site's other tooltips, only placed
-                                               beside the button with the same .75rem gap the actions row uses */
                                             .description .project-actions > .clarity > .explanation-tooltip {
                                                 top: 50%;
                                                 bottom: auto;
@@ -2143,10 +2138,7 @@
                                                 }
                                             }
 
-                                            /* Touch: a tap opens the inspector, so a hover tooltip would only linger behind afterwards */
-                                            @media (hover: none) {
-                                                .description .project-actions > .clarity > .explanation-tooltip { display: none; }
-                                            }
+                                            @media (hover: none) { .description .project-actions > .clarity > .explanation-tooltip { display: none; } }
 
                                             .description .github-action .idea span,
                                             .description .github-action .idea svg {
@@ -2408,10 +2400,7 @@
                                                             }
                                                         }
 
-                                                        /* touch: a tapped row shows its icon in colour until you tap elsewhere */
-                                                        @media (hover: none) {
-                                                            .case-signal-stack li:hover .case-signal-row img { filter: none; }
-                                                        }
+                                                        @media (hover: none) { .case-signal-stack li:hover .case-signal-row img { filter: none; } }
 
                                                         .case-signal-row {
                                                             height: var(--row-h);
@@ -2448,7 +2437,6 @@
                                                         }
 
                                                         .case-signal-toggle {
-                                                            /* even whole-pixel box so both 2px arms sit dead centre — a symmetrical + with no blurry half-pixels */
                                                             width: .75rem;
                                                             height: .75rem;
                                                             width: round(.75rem, 2px);
@@ -2464,14 +2452,14 @@
                                                             transition: background-color var(--tran-1);
                                                         }
 
-                                                        .case-signal-toggle::before { /* horizontal arm */
+                                                        .case-signal-toggle::before {
                                                             left: 0;
                                                             right: 0;
                                                             top: calc(50% - 1px);
                                                             height: 2px;
                                                         }
 
-                                                        .case-signal-toggle::after { /* vertical arm */
+                                                        .case-signal-toggle::after {
                                                             top: 0;
                                                             bottom: 0;
                                                             left: calc(50% - 1px);
@@ -2884,7 +2872,6 @@
                                     }
 
                             .inspect-scroll {
-                                /* centre the design when it's narrower than the view; 'safe' falls back to the left edge once it's wider, so nothing is cut off */
                                 display: flex;
                                 align-items: flex-start;
                                 justify-content: flex-start;
@@ -2935,7 +2922,7 @@
                                     display: block;
                                     -webkit-user-drag: none;
                                     padding: 0rem;
-                                    flex-shrink: 0; /* keep the zoom width; flex would otherwise squeeze it to fit */
+                                    flex-shrink: 0;
                                     margin: 5rem;
                                     cursor: grab;
                                     transition: border var(--tran-1);
@@ -5529,7 +5516,12 @@
                                     #beyond article:first-child > div:first-child div.active { color: var(--accent-2) }
 
                                     @media (hover: hover) {
-                                        #beyond article:first-child > div:first-child div:hover { color: var(--accent-2) }
+                                        #beyond { --category-intent: .2s; }
+
+                                        #beyond article:first-child > div:first-child div:hover {
+                                            color: var(--accent-2);
+                                            transition-delay: var(--category-intent);
+                                        }
                                     }
 
                                     #beyond article:first-child > div:first-child > div,
@@ -5559,6 +5551,7 @@
                                             #beyond article:first-child > div:first-child div:hover img {
                                                 transform: translateX(2rem);
                                                 --mask-stop: calc(10% - 2rem);
+                                                transition-delay: var(--category-intent), calc(1s + var(--category-intent));
                                             }
                                         }
 
