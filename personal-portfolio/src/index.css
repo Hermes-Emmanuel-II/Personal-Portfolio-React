@@ -2884,6 +2884,11 @@
                                     }
 
                             .inspect-scroll {
+                                /* centre the design when it's narrower than the view; 'safe' falls back to the left edge once it's wider, so nothing is cut off */
+                                display: flex;
+                                align-items: flex-start;
+                                justify-content: flex-start;
+                                justify-content: safe center;
                                 overflow: hidden;
                                 cursor: default;
                                 touch-action: none;
@@ -2930,6 +2935,7 @@
                                     display: block;
                                     -webkit-user-drag: none;
                                     padding: 0rem;
+                                    flex-shrink: 0; /* keep the zoom width; flex would otherwise squeeze it to fit */
                                     margin: 5rem;
                                     cursor: grab;
                                     transition: border var(--tran-1);
@@ -3676,7 +3682,7 @@
                                                             .blender-outliner-bar {
                                                                 height: .75rem;
                                                                 gap: .1875rem;
-                                                                padding-inline: .25rem calc(.25rem + 1px);
+                                                                padding-inline: .25rem;
                                                                 justify-content: flex-start;
                                                                 flex-shrink: 0;
                                                                 background: #1D1D1D;
@@ -3686,7 +3692,7 @@
 
                                                             .blender-tree {
                                                                 gap: .125rem;
-                                                                padding: .1875rem calc(.25rem + var(--frame-border)) .1875rem .25rem;
+                                                                padding-inline: .25rem calc(.25rem + 2px);
                                                                 list-style: none;
                                                             }
 
@@ -3733,7 +3739,7 @@
                                                                 flex: 1;
                                                                 min-width: 0;
                                                                 gap: .125rem;
-                                                                padding: .25rem calc(.25rem + var(--frame-border)) .25rem .25rem;
+                                                                padding: .125rem calc(.25rem + 2px) 0 .25rem;
                                                             }
 
                                                                 .blender-prop-head {
@@ -3785,7 +3791,7 @@
 
                                                             .miro-frame-label {
                                                                 font-size: .375rem;
-                                                                padding: 0 0 .125rem .25rem;
+                                                                padding: 0 0 .25rem .25rem;
                                                                 letter-spacing: 0;
                                                                 color: #7A7A7A;
                                                                 overflow: hidden;
@@ -3807,6 +3813,7 @@
                                                                 .miro-card-top {
                                                                     width: 100%;
                                                                     border-bottom: .5px solid #EDEDED;
+                                                                    padding-block: .25rem .1875rem;
                                                                 }
 
                                                                     .miro-brand {

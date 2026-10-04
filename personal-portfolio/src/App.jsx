@@ -91,12 +91,28 @@ export function smoothScrollTo (target, opts = {}) {
     })
 }
 
+// All three inters set up in the same commit; one refresh on the next frame covers them all
+let interRefreshFrame = 0
+function scheduleInterRefresh () {
+    if (interRefreshFrame) return
+    interRefreshFrame = requestAnimationFrame(() => {
+        interRefreshFrame = 0
+        ScrollTrigger.refresh()
+    })
+}
+
+// Switching between touch and desktop builds a brand-new inter (keyed by mode) instead of re-wiring the old one,
+// so after a switch it's set up exactly as it would be on a fresh load in that mode, with no leftover pin/sticky state
 export const Inter = memo(function Inter ({ text }) {
+    const sticky = useTouchOnly()
+    return <InterMode key = { sticky ? 'sticky' : 'pin' } text = { text } sticky = { sticky }/>
+})
+
+function InterMode ({ text, sticky }) {
     const trackRef = useRef(null)
     const containerRef = useRef(null)
     const spanRef = useRef(null)
     const timeoutRef = useRef(null)
-    const sticky = useTouchOnly()
 
     useGSAP(() => {
         const anchor = sticky ? trackRef.current : containerRef.current
@@ -162,16 +178,22 @@ export const Inter = memo(function Inter ({ text }) {
                 ease: 'none',
                 duration: .1875
             }, 0.0625)
-    }, { scope: sticky ? trackRef : containerRef, dependencies: [sticky], revertOnUpdate: true })
+        // Measure again once the swapped-in mode has laid out, so later pins/sections line up behind it
+        scheduleInterRefresh()
+    }, { scope: trackRef })
 
     useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
-    const inter = <div ref = { containerRef } className = 'inter relative in-w'>
-        <span ref = { spanRef } data-text = { text } className = 'absolute emphasis'>{ text }</span>
+    // Same outer element in both modes, so switching mode only swaps its class and React never moves the .inter.
+    // Previously the inter was returned bare on desktop and wrapped on touch, so React reused the track div as the
+    // .inter (or the pinned .inter as the track) while GSAP had it wrapped in a pin-spacer, which left the inter
+    // stranded inside #about after a mobile → desktop switch.
+    return <div ref = { trackRef } className = { `${ sticky ? 'inter-track' : 'inter-pin' } in-w` }>
+        <div ref = { containerRef } className = 'inter relative in-w'>
+            <span ref = { spanRef } data-text = { text } className = 'absolute emphasis'>{ text }</span>
+        </div>
     </div>
-
-    return sticky ? <div ref = { trackRef } className = 'inter-track in-w'>{ inter }</div> : inter
-})
+}
 
 function Home ({ menuOpen, closeMenu }) {
     const [recentsOpen, setRecentsOpen] = useState(false)

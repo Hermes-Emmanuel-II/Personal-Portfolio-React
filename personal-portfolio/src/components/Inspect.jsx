@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { Clarity, Glass, Trail } from './Header'
 import { Idea } from './Hero'
@@ -13,10 +13,32 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
   const atMinZoom = zoomLevel <= 0
   const atMaxZoom = zoomLevel >= maxZoomLevel
 
-  function resetPan () {
+  // The point of the design sitting at the centre of the view, as a fraction of the image (0–1 on each axis).
+  // Captured just before a zoom, then restored after it, so the same spot stays in focus.
+  const anchorRef = useRef(null)
+
+  function captureAnchor () {
     const el = inspectScrollRef.current
-    if (!el) return
-    el.scrollTo({ left: 0, top: 0, behavior: 'smooth' })
+    const img = el && el.querySelector('img')
+    if (!el || !img) return
+    const box = el.getBoundingClientRect()
+    const rect = img.getBoundingClientRect()
+    if (!rect.width || !rect.height) return
+    const clamp = n => Math.min(1, Math.max(0, n))
+    anchorRef.current = {
+      x: clamp((box.left + el.clientWidth / 2 - rect.left) / rect.width),
+      y: clamp((box.top + el.clientHeight / 2 - rect.top) / rect.height)
+    }
+  }
+
+  function zoomIn () {
+    captureAnchor()
+    onZoomIn()
+  }
+
+  function zoomOut () {
+    captureAnchor()
+    onZoomOut()
   }
 
   function onInspectPointerDown (e) {
@@ -97,8 +119,26 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
     if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) e.stopPropagation()
   }
 
-  useEffect(() => {
-    resetPan()
+  // Runs after the image has its new width but before paint, so there's no jump to the top-left first
+  useLayoutEffect(() => {
+    const el = inspectScrollRef.current
+    const img = el && el.querySelector('img')
+    const anchor = anchorRef.current
+    anchorRef.current = null
+    if (!el || !img) return
+
+    // Zoom changed without the buttons (popup reopened, preview refreshed): start from the top-left as before
+    if (!anchor) {
+      el.scrollTo(0, 0)
+      return
+    }
+
+    const box = el.getBoundingClientRect()
+    const rect = img.getBoundingClientRect()
+    const x = rect.left - box.left + el.scrollLeft + anchor.x * rect.width
+    const y = rect.top - box.top + el.scrollTop + anchor.y * rect.height
+    el.scrollLeft = x - el.clientWidth / 2
+    el.scrollTop = y - el.clientHeight / 2
   }, [zoomLevel])
 
   return (
@@ -111,14 +151,14 @@ export default function Inspect ({ isOpen, onClose, project, onZoomIn, onZoomOut
           >
             <Clarity
               icon = { <i className = 'fa-solid fa-expand'></i> }
-              onClick = { onZoomIn }
+              onClick = { zoomIn }
               text = 'Zoom In'
               className = { atMaxZoom ? 'none' : '' }
               tabIndex = { isOpen ? 0 : -1 }
             />
             <Clarity
               icon = { <i className = 'fa-solid fa-compress'></i> }
-              onClick = { onZoomOut }
+              onClick = { zoomOut }
               text = 'Zoom Out'
               className = { atMinZoom ? 'none' : '' }
               tabIndex = { isOpen ? 0 : -1 }
