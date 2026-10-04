@@ -297,8 +297,13 @@ export default function Header ({ menuOpen = false, onToggleMenu }) {
         function publish () {
             const drawer = drawerRef.current
             const rect = el.getBoundingClientRect()
-            const fixed = getComputedStyle(el).position === 'fixed'
-            const h = (fixed ? rect.bottom : rect.height) - (drawer ? drawer.getBoundingClientRect().height : 0)
+            const cs = getComputedStyle(el)
+            const fixed = cs.position === 'fixed'
+            // Fixed header: its height plus its CSS top (scaled by its zoom), not rect.bottom. On iOS, a fast fling back
+            // to the top bounces the page and expands the toolbar, firing resize while the fixed header's rect is
+            // shifted by the bounce, so rect.bottom came back too big and the inflated --header-h pushed the hero down.
+            const top = fixed ? (parseFloat(cs.top) || 0) * (parseFloat(cs.zoom) || 1) : 0
+            const h = rect.height + top - (drawer ? drawer.getBoundingClientRect().height : 0)
             if (!h || h === last) return
             last = h
             root.style.setProperty('--header-h', `${ h }px`)

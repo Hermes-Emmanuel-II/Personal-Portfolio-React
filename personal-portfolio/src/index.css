@@ -3389,7 +3389,7 @@
                                                                 align-self: flex-start;
                                                                 gap: .625rem;
                                                                 margin-left: auto;
-                                                                padding: .3125rem 1rem 0 .5rem;
+                                                                padding: .3125rem .5rem 0 .5rem;
                                                                 color: #C4C7C5;
                                                                 font-size: .3125rem;
                                                             }
@@ -3672,7 +3672,6 @@
                                                     }
 
                                                         .blender-outliner {
-                                                            height: 3.5rem;
                                                             flex-shrink: 0;
                                                             overflow: hidden;
                                                             background: #282828;
@@ -3692,7 +3691,7 @@
 
                                                             .blender-tree {
                                                                 gap: .125rem;
-                                                                padding-inline: .25rem calc(.25rem + 2px);
+                                                                padding: .125rem calc(.25rem + 2px) .125rem .25rem;
                                                                 list-style: none;
                                                             }
 
@@ -3746,6 +3745,7 @@
                                                                     gap: .125rem;
                                                                     justify-content: flex-start;
                                                                     color: #E5E5E5;
+                                                                    padding-block: .125rem;
                                                                 }
 
                                                                 .blender-field {

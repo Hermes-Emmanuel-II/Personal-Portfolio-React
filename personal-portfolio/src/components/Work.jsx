@@ -845,6 +845,7 @@ function Work ({ onOpenRecents }) {
     useEffect(() => { setPreviewReady(false) }, [previewTitle, canLoadPreview])
 
     const signalRef = useRef(null)
+    const hasProject = result.length > 0
     const signalDrag = useRef({ active: false, moved: false, startX: 0, scrollLeft: 0, pointerId: null })
 
     useEffect(() => {
@@ -863,7 +864,7 @@ function Work ({ onOpenRecents }) {
             el.removeEventListener('scroll', update)
             ro.disconnect()
         }
-    }, [])
+    }, [hasProject]) // the case study unmounts when a filter has no projects, so re-attach when it comes back
 
     function onSignalPointerDown (e) {
         if (e.pointerType !== 'mouse' || e.button !== 0) return
@@ -1122,7 +1123,7 @@ function Work ({ onOpenRecents }) {
                     </span>
                 }
             </section>
-            <section
+            { hasProject && <section
                 ref = { signalRef }
                 className = 'case-signal in-w'
                 aria-label = 'Case study'
@@ -1190,7 +1191,7 @@ function Work ({ onOpenRecents }) {
                         </g>
                     </svg>
                 </div>
-            </section>
+            </section> }
             <section className = 'flex count center in-w'>
                 <span className = 'relative'>Curated and non-exhaustive project list</span>
                 <div className = 'flex center'>
