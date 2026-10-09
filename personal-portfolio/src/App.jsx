@@ -18,8 +18,6 @@ import disable from './disable.js'
 const loadBeyond = () => import('./components/Beyond')
 const Beyond = lazy(loadBeyond)
 
-// Fetch the Beyond page in the background once the home page has settled, so opening it later is instant
-// and the loading fallback almost never has to show
 if (typeof window !== 'undefined') {
     const prefetch = () => loadBeyond().catch(() => {})
     window.addEventListener('load', () => {
@@ -37,8 +35,6 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 
 let scrollNormalizer = isTouchOnly ? null : ScrollTrigger.normalizeScroll({ allowNestedScroll: true })
 
-// Re-pick touch vs desktop mode live (e.g. DevTools device toggle, tablet with a mouse attached),
-// instead of locking in whatever the page was first loaded as
 const touchListeners = new Set()
 let touchRefreshTimer
 touchQuery.addEventListener('change', (e) => {
@@ -73,7 +69,6 @@ export function stableViewportHeight () {
     if (!lvhProbe) {
         lvhProbe = document.createElement('div')
         lvhProbe.setAttribute('aria-hidden', 'true')
-        // Uses the same --inter-vh as the CSS (screen height, never below --layout-min), so GSAP's pin/fade lengths match the inter's track
         lvhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:var(--inter-vh, 100lvh);visibility:hidden;pointer-events:none;'
         document.body.appendChild(lvhProbe)
     }
@@ -91,7 +86,6 @@ export function smoothScrollTo (target, opts = {}) {
     })
 }
 
-// All three inters set up in the same commit; one refresh on the next frame covers them all
 let interRefreshFrame = 0
 function scheduleInterRefresh () {
     if (interRefreshFrame) return
@@ -101,8 +95,6 @@ function scheduleInterRefresh () {
     })
 }
 
-// Switching between touch and desktop builds a brand-new inter (keyed by mode) instead of re-wiring the old one,
-// so after a switch it's set up exactly as it would be on a fresh load in that mode, with no leftover pin/sticky state
 export const Inter = memo(function Inter ({ text }) {
     const sticky = useTouchOnly()
     return <InterMode key = { sticky ? 'sticky' : 'pin' } text = { text } sticky = { sticky }/>
@@ -184,10 +176,6 @@ function InterMode ({ text, sticky }) {
 
     useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
-    // Same outer element in both modes, so switching mode only swaps its class and React never moves the .inter.
-    // Previously the inter was returned bare on desktop and wrapped on touch, so React reused the track div as the
-    // .inter (or the pinned .inter as the track) while GSAP had it wrapped in a pin-spacer, which left the inter
-    // stranded inside #about after a mobile → desktop switch.
     return <div ref = { trackRef } className = { `${ sticky ? 'inter-track' : 'inter-pin' } in-w` }>
         <div ref = { containerRef } className = 'inter relative in-w'>
             <span ref = { spanRef } data-text = { text } className = 'absolute emphasis'>{ text }</span>
