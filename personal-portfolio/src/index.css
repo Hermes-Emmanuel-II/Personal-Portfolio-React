@@ -2121,10 +2121,7 @@
                                                 left: calc(100% + .75rem);
                                                 right: auto;
                                                 transform: translateY(-50%);
-                                                cursor: default;
                                             }
-
-                                                .description .project-actions > .clarity > .explanation-tooltip * { cursor: default; }
 
                                             .description .project-actions > .clarity:has(:focus-visible) .explanation-tooltip {
                                                 opacity: 1;

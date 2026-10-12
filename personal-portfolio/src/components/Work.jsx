@@ -1101,7 +1101,7 @@ function Work ({ onOpenRecents }) {
                                     ) }
                                     <Clarity
                                         icon = { <i className = 'fa-regular fa-eye'></i> }
-                                        text = 'View Design'
+                                        text = 'Design'
                                         onClick = { () => setInspectOpen(true) }
                                         tabIndex = { inView ? 0 : -1 }
                                     />
