@@ -1576,6 +1576,8 @@
 
                                     .stats .glass.recents::before { background: none; }
 
+                                    .stats .glass.recents::after { background: linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%); }
+
                                                 .description .glass:has(> .trail-wrapper-once) .trail-wrapper-once .trail-once {
                                                     offset-path: rect(0 100% 100% 0 round 0px);
                                                     opacity: 0;
@@ -5744,6 +5746,19 @@
                                         bottom: 0;
                                     }
 
+
+@media (hover: none) {
+    a, svg, span, button,
+    .stats .glass span::after,
+    .cta > button,
+    .cta a:after,
+    .stats .glass::after,
+    .description > .glass::after,
+    .description > .project-actions > .glass::after,
+    .inspect-wrapper section:last-of-type > a::after,
+    #contact .contact-send::after,
+    .workflow-content .glass::after { transition-delay: 0s; }
+}
 
 /* TAPS (touch screens): index.css's hover looks, played once on a tap. App.jsx marks what's tapped (it and
    everything round it, as hover would) .is-tapped for a moment; these are the hover rules above, generated with
