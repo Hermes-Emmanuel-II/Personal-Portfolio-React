@@ -2204,26 +2204,35 @@
                                                 color: var(--lum-2);
                                             }
 
-                                            .case-signal-step.high .case-signal-pocket { justify-content: flex-start; }
+                                            /* every pocket the same, high step or low: its content from the top, the number at the
+                                               foot (no longer a high/low arrangement, the low ones' content dropped to the bottom) */
+                                            .case-signal-pocket { justify-content: flex-start; }
 
                                             .case-signal-step:is(:nth-child(2), :nth-child(3), :nth-child(4)) .case-signal-pocket { padding-right: 2.5rem; }
 
-                                            .case-signal-step.low .case-signal-pocket {
-                                                justify-content: flex-end;
-                                                padding-bottom: calc(1.5rem + var(--fs-1-3) + 1rem);
-                                            }
-
-                                            .case-signal-pocket.highlight { --hl-h: calc((1.75rem + 1rem) * 3 + .5rem + .5rem + var(--fs-1-2) * 1.2); }
-
-                                            .case-signal-pocket.highlight .case-signal-body { height: var(--hl-h); }
-
-                                            .case-signal-step.high .case-signal-pocket.highlight .case-signal-index {
-                                                bottom: auto;
-                                                top: calc(1.5rem + var(--hl-h) + .5rem);
-                                            }
-
                                             .case-signal-pocket.purpose,
                                             .case-signal-pocket.outcome { isolation: isolate; }
+
+                                            /* every pocket's content runs on down to just above its number (room kept for it at the
+                                               foot): the illustrated ones' body (its drawing, .purpose-target, flex: 1, centred in
+                                               what's left under the text; wide drawings, already as wide as the pocket, so they keep
+                                               their size rather than crop), the lists (Stack, Challenges, Trade-offs: more rows show
+                                               before they scroll) and the clips */
+                                            /* the room under the content: the number's 1.5rem from the foot, its own height (its digits' cap height, the box
+                                               trimmed to them below; about .7 of its size in Michroma) and a clear 1rem between
+                                               the content's end and the tops of the digits */
+                                            .case-signal-pocket { padding-bottom: calc(1.5rem + var(--fs-1-3) * .7 + 1rem); }
+
+                                            /* the scrolling lists end a clear 2rem above the number */
+                                            .case-signal-pocket:has(.case-signal-scroll) { padding-bottom: calc(1.5rem + var(--fs-1-3) * .7 + 2rem); }
+
+                                            .case-signal-pocket:is(.purpose, .outcome, .highlight) .case-signal-body { flex: 1 1 0; height: auto; }
+
+                                            .case-signal-stack-wrap { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+
+                                            .case-signal-pocket .case-signal-stack { flex: 1 1 0; min-height: 0; max-height: none; }
+
+                                            .case-signal-pocket .case-signal-notes { flex: 1 1 0; min-height: 0; height: auto; }
 
                                                 .case-signal-label {
                                                     font-family: var(--font-2);
@@ -2238,6 +2247,7 @@
                                                 .case-signal-index {
                                                     left: 1.5rem;
                                                     bottom: 1.5rem;
+                                                    text-box: trim-both cap alphabetic; /* its box just the digits, top of them to their foot, so the gap above is measured to what shows */
                                                     font-family: var(--font-2);
                                                     font-size: var(--fs-1-3);
                                                     line-height: 1;
@@ -2281,11 +2291,10 @@
 
                                                     .pin-mark path.pin-line { fill: none; }
 
-                                                .case-signal-label .case-signal-index {
-                                                    left: 0;
-                                                    bottom: auto;
-                                                    top: calc(100% + .5rem + (1.75rem + 1rem) * 3 + 1rem);
-                                                }
+                                                /* the high steps' number sits inside their label (Work.jsx): the label steps aside as
+                                                   its anchor, so the number takes the pocket's, and lands at its foot, where the low
+                                                   steps' does. Every pocket the same, high or low */
+                                                .case-signal-label:has(> .case-signal-index) { position: static; }
 
                                                 .case-signal-scroll {
                                                     --fade: 1.25rem;
@@ -2502,28 +2511,34 @@
                                                     overflow: hidden;
                                                 }
 
+                                                /* a clip pocket: the clip on top, at a fixed height (below), and the
+                                                   text underneath it rather than laid over it (so no fade behind the words). The clip
+                                                   and its fallback picture take the frame's rounding and hairline themselves */
                                                 .case-signal-reel-frame {
-                                                    overflow: hidden;
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    gap: .75rem;
+                                                }
+
+                                                /* the clip at the height it had when the text sat on it: the old highlight body's,
+                                                   three list rows, two half-rem gaps and a label line */
+                                                .case-signal-reel-frame > :is(video, img) {
+                                                    position: relative;
+                                                    flex: 0 0 auto;
+                                                    height: calc((1.75rem + 1rem) * 3 + .5rem + .5rem + var(--fs-1-2) * 1.2);
+                                                    object-fit: cover;
                                                     border-radius: .75rem;
                                                     outline: 1px solid color-mix(in srgb, var(--lum-2) 15%, transparent);
                                                     outline-offset: -1px;
-                                                }
-
-                                                .case-signal-reel-frame video { object-fit: cover; }
-
-                                                .case-signal-reel-frame::after {
-                                                    content: '';
-                                                    position: absolute;
-                                                    inset: 0;
-                                                    background: linear-gradient(to top, var(--BGC) 0%, var(--BGC) 25%, transparent 75%);
-                                                    pointer-events: none;
+                                                    /* its old fade, now on the clip itself, a little shorter: gone over its bottom 15%, solid from
+                                                       55% up, so it sinks into the page above the caption */
+                                                    -webkit-mask-image: linear-gradient(to top, transparent 0%, transparent 15%, #000 55%);
+                                                    mask-image: linear-gradient(to top, transparent 0%, transparent 15%, #000 55%);
                                                 }
 
                                                     .case-signal-pocket p.case-signal-reel-text {
-                                                        left: 1.5rem;
-                                                        right: 1.5rem;
-                                                        bottom: 1rem;
-                                                        z-index: 1;
+                                                        position: static;
+                                                        flex-shrink: 0;
                                                         -webkit-line-clamp: 3;
                                                         line-clamp: 3;
                                                         animation: stack-name-in .45s ease both;
