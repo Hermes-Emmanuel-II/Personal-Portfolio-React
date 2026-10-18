@@ -51,6 +51,41 @@ touchQuery.addEventListener('change', (e) => {
     touchRefreshTimer = setTimeout(() => ScrollTrigger.refresh(), 350)
 })
 
+// Hover looks on touch screens, once per tap. The stylesheets keep their hover rules for mice only (@media (hover: hover)),
+// as a hover left behind by a finger stays on until something else is tapped. Instead, a tap marks what's under the finger,
+// and every element round it (as hover would), .is-tapped for a moment, and the copies of the hover rules at the end of
+// index.css and media-queries.css (@media (hover: none), :hover swapped for .is-tapped) play the same look: it eases in
+// with the hover's own transitions, holds briefly, and eases out. A tap that turns into a scroll clears it at once, so
+// scrolling past things doesn't light them up. Mouse input is ignored: desktops keep their real hover
+const TAP_HOLD = 800 // ms the look holds after the finger lifts
+let tapped = []
+let tapTimer = 0
+
+function clearTapped () {
+    clearTimeout(tapTimer)
+    tapped.forEach(el => el.classList.remove('is-tapped'))
+    tapped = []
+}
+
+document.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse') return
+    clearTapped()
+    for (let el = e.target; el && el !== document.documentElement; el = el.parentElement) {
+        el.classList.add('is-tapped')
+        tapped.push(el)
+    }
+}, { capture: true, passive: true })
+
+document.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'mouse' || !tapped.length) return
+    clearTimeout(tapTimer)
+    tapTimer = setTimeout(clearTapped, TAP_HOLD)
+}, { capture: true, passive: true })
+
+document.addEventListener('pointercancel', (e) => {
+    if (e.pointerType !== 'mouse') clearTapped() // the browser took the touch for a scroll
+}, { capture: true, passive: true })
+
 function useTouchOnly () {
     return useSyncExternalStore(
         (fn) => { touchListeners.add(fn); return () => touchListeners.delete(fn) },
