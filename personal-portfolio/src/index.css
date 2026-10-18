@@ -5781,7 +5781,7 @@
     .workflow-content .glass::after,
     #contact .contact-send::after {
         transition-delay: 0s;
-        transition-duration: .25s;
+        transition-duration: .15s;
     }
 }
 
