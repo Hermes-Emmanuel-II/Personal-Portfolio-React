@@ -5769,19 +5769,22 @@
 @media (hover: none) {
     a, svg, span, button,
     .stats .glass span::after,
+    .stats .glass.recents::before,
     .cta > button::after,
     .cta a:after,
+    .stats .glass.recents::after,
     .stats .glass::after,
     .description > .glass::after,
     .description > .project-actions > .glass::after,
+    .description .project-actions > .glass.github-action::after,
     .inspect-wrapper section:last-of-type > a::after,
-    #contact .contact-send::after,
     .workflow-content .glass::after,
-    .stats .glass.recents::before {
+    #contact .contact-send::after {
         transition-delay: 0s;
         transition-duration: .25s;
     }
 }
+
 
 
 /* TAPS (touch screens): index.css's hover looks, played once on a tap. App.jsx marks what's tapped (it and
