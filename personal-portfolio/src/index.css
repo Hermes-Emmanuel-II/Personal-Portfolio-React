@@ -1444,30 +1444,24 @@
                                     gap: .75rem;
                                 }
 
-                                .cta::after,
-                                .cta a {
+                                .cta::after {
                                     background:
                                         linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
                                         linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
                                 }
 
-                                .cta button {
-                                    background:
-                                        linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
-                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
-                                }
-
-                                .cta > button {
-                                    --glass-tint: rgba(0, 128, 128, .5);
-                                    transition: all var(--tran-2) .25s, --glass-tint var(--tran-2) .25s;
-                                    background:
-                                        linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
-                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
-                                }
+                                .cta > button { --glass-tint: rgba(0, 128, 128, .5); }
 
                                     .cta > button:focus-visible { --glass-tint: rgba(124, 252, 0, .25); }
 
                                     @media (hover: hover) { .cta > button:hover { --glass-tint: rgba(124, 252, 0, .25); } }
+
+                                .cta > button::after {
+                                    transition: --glass-tint var(--tran-2) .25s;
+                                    background:
+                                        linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
+                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                }
 
                                     .cta > button:last-child,
                                     .cta a {
@@ -5775,7 +5769,7 @@
 @media (hover: none) {
     a, svg, span, button,
     .stats .glass span::after,
-    .cta > button,
+    .cta > button::after,
     .cta a:after,
     .stats .glass::after,
     .description > .glass::after,

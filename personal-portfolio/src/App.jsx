@@ -55,11 +55,12 @@ touchQuery.addEventListener('change', (e) => {
 // as a hover left behind by a finger stays on until something else is tapped. Instead, a tap marks what's under the finger,
 // and every element round it (as hover would), .is-tapped for a moment, and the copies of the hover rules at the end of
 // index.css and media-queries.css (@media (hover: none), :hover swapped for .is-tapped) play the same look: it eases in
-// with the hover's own transitions, holds briefly, and eases out. A tap that turns into a scroll clears it at once, so
+// with the hover's own transitions, holds briefly, and eases out, 1s in all. A tap that turns into a scroll clears it at once, so
 // scrolling past things doesn't light them up. Mouse input is ignored: desktops keep their real hover
-const TAP_HOLD = 400 // ms the look holds after the finger lifts
+const TAP_SPAN = 750 // ms from the touch until the look starts back: with its .25s fade out, 1s in all
 let tapped = []
 let tapTimer = 0
+let tapAt = 0
 
 function clearTapped () {
     clearTimeout(tapTimer)
@@ -70,6 +71,7 @@ function clearTapped () {
 document.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse') return
     clearTapped()
+    tapAt = performance.now()
     for (let el = e.target; el && el !== document.documentElement; el = el.parentElement) {
         el.classList.add('is-tapped')
         tapped.push(el)
@@ -79,7 +81,7 @@ document.addEventListener('pointerdown', (e) => {
 document.addEventListener('pointerup', (e) => {
     if (e.pointerType === 'mouse' || !tapped.length) return
     clearTimeout(tapTimer)
-    tapTimer = setTimeout(clearTapped, TAP_HOLD)
+    tapTimer = setTimeout(clearTapped, Math.max(0, TAP_SPAN - (performance.now() - tapAt)))
 }, { capture: true, passive: true })
 
 document.addEventListener('pointercancel', (e) => {
