@@ -302,6 +302,12 @@
     100% { opacity: 0; }
 }
 
+@property --glass-tint {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: transparent;
+}
+
 @property --fade-start {
     syntax: '<length>';
     inherits: false;
@@ -1433,12 +1439,29 @@
                                 }
 
                                 .cta::after,
-                                .cta button,
                                 .cta a {
                                     background:
                                         linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
                                         linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
                                 }
+
+                                .cta button {
+                                    background:
+                                        linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
+                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                }
+
+                                .cta > button {
+                                    --glass-tint: rgba(0, 128, 128, .5);
+                                    transition: all var(--tran-2) .25s, --glass-tint var(--tran-2) .25s;
+                                    background:
+                                        linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
+                                        linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
+                                }
+
+                                    .cta > button:focus-visible { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                    @media (hover: hover) { .cta > button:hover { --glass-tint: rgba(124, 252, 0, .25); } }
 
                                     .cta > button:last-child,
                                     .cta a {
@@ -1448,9 +1471,16 @@
                                         border-radius: calc((5rem / 3) - .75rem);
                                     }
 
+                                    .cta a { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                        .cta a:focus-visible { --glass-tint: rgba(0, 128, 128, .5); }
+
+                                        @media (hover: hover) { .cta a:hover { --glass-tint: rgba(0, 128, 128, .5); } }
+
                                     .cta a:after {
+                                        transition: --glass-tint var(--tran-2) .25s;
                                         background:
-                                            linear-gradient(rgba(124, 252, 0, .25) 0%, rgba(124, 252, 0, .25) 100%),
+                                            linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
                                             linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
                                     }
 
@@ -1542,8 +1572,9 @@
                                 }
 
                 /* WORK */
-                                    .stats .glass.recents::before,
-                                    .stats .glass.recents::after { background: none; }
+                                    .stats .glass.recents { --glass-tint: transparent; }
+
+                                    .stats .glass.recents::before { background: none; }
 
                                                 .description .glass:has(> .trail-wrapper-once) .trail-wrapper-once .trail-once {
                                                     offset-path: rect(0 100% 100% 0 round 0px);
@@ -1603,11 +1634,26 @@
                                                 }
                                             }
 
+                                    .stats .glass,
+                                    .description > .glass,
+                                    .description > .project-actions > .glass { --glass-tint: rgba(0, 128, 128, .5); }
+
+                                        .stats .glass:focus-visible,
+                                        .description > .glass:focus-visible,
+                                        .description > .project-actions > .glass:focus-visible { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                        @media (hover: hover) {
+                                            .stats .glass:hover,
+                                            .description > .glass:hover,
+                                            .description > .project-actions > .glass:hover { --glass-tint: rgba(124, 252, 0, .25); }
+                                        }
+
                                     .stats .glass::after,
                                     .description > .glass::after,
                                     .description > .project-actions > .glass::after {
+                                        transition: --glass-tint var(--tran-2) .25s;
                                         background:
-                                            linear-gradient(rgba(0, 128, 128, .5) 0%, rgba(0, 128, 128, .5) 100%),
+                                            linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
                                             linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
                                     }
 
@@ -2101,9 +2147,16 @@
                                                 fill: var(--lum-2);
                                             }
 
+                                            .description .project-actions > .glass.github-action { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                                .description .project-actions > .glass.github-action:focus-visible { --glass-tint: rgba(0, 128, 128, .5); }
+
+                                                @media (hover: hover) { .description .project-actions > .glass.github-action:hover { --glass-tint: rgba(0, 128, 128, .5); } }
+
                                             .description .project-actions > .glass.github-action::after {
+                                                transition: --glass-tint var(--tran-2) .25s;
                                                 background:
-                                                    linear-gradient(rgba(124, 252, 0, .25) 0%, rgba(124, 252, 0, .25) 100%),
+                                                    linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
                                                     linear-gradient(transparent 0%, rgba(236, 236, 236, .375) 100%);
                                             }
 
@@ -2813,9 +2866,16 @@
                                 border-radius: calc((5rem / 3) - .75rem);
                             }
 
+                            .inspect-wrapper section:last-of-type > a { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                .inspect-wrapper section:last-of-type > a:focus-visible { --glass-tint: rgba(0, 128, 128, .5); }
+
+                                @media (hover: hover) { .inspect-wrapper section:last-of-type > a:hover { --glass-tint: rgba(0, 128, 128, .5); } }
+
                             .inspect-wrapper section:last-of-type > a::after {
+                                transition: --glass-tint var(--tran-2) .25s;
                                 background:
-                                    linear-gradient(rgba(124, 252, 0, .25) 0%, rgba(124, 252, 0, .25) 100%),
+                                    linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
                                     linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
                             }
 
@@ -4956,9 +5016,16 @@
 
                                             .workflow-content .glass { margin-top: .5rem; }
 
+                                            .workflow-content .glass { --glass-tint: rgba(51, 51, 51, .4); }
+
+                                                .workflow-content .glass:focus-visible { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                                @media (hover: hover) { .workflow-content .glass:hover { --glass-tint: rgba(124, 252, 0, .25); } }
+
                                             .workflow-content .glass::after {
+                                                transition: --glass-tint var(--tran-2) .25s;
                                                 background:
-                                                    linear-gradient(rgba(51, 51, 51, .4) 0%, rgba(51, 51, 51, .4) 100%),
+                                                    linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
                                                     linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
                                             }
 
@@ -5293,9 +5360,16 @@
 
                                         .contact-send:disabled { opacity: .75; }
 
+                                        #contact .contact-send { --glass-tint: rgba(124, 252, 0, .25); }
+
+                                            #contact .contact-send:focus-visible { --glass-tint: rgba(0, 128, 128, .5); }
+
+                                            @media (hover: hover) { #contact .contact-send:hover:not(:disabled) { --glass-tint: rgba(0, 128, 128, .5); } }
+
                                         #contact .contact-send::after {
+                                            transition: --glass-tint var(--tran-2) .25s;
                                             background:
-                                                linear-gradient(rgba(124, 252, 0, .25) 0%, rgba(124, 252, 0, .25) 100%),
+                                                linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
                                                 linear-gradient(transparent 0%, rgba(236,236,236,.375) 100%);
                                         }
 
@@ -5695,12 +5769,17 @@
     .cta button.is-tapped .trail-wrapper-once .trail-once { animation: trail-move-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .cta button.is-tapped .trail-wrapper-once { opacity: 1; animation: wrapper-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .cta button:not(.is-tapped):not(:focus-visible) .trail-wrapper-once { opacity: 0; animation: none; transition: opacity .25s ease; }
+    .cta > button.is-tapped { --glass-tint: rgba(124, 252, 0, .25); }
+    .cta a.is-tapped { --glass-tint: rgba(0, 128, 128, .5); }
     .cta a.is-tapped span,
     .cta a.is-tapped svg { color: var(--lum-1); -webkit-text-fill-color: var(--lum-1); fill: var(--lum-1); }
     .description .glass:has(> .trail-wrapper-once).is-tapped .trail-wrapper-once .trail-once { animation: trail-move-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .description .glass:has(> .trail-wrapper-once).is-tapped .trail-wrapper-once { opacity: 1; animation: wrapper-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .description .glass:has(> .trail-wrapper-once):not(.is-tapped):not(:focus-within) .trail-wrapper-once { opacity: 0; animation: none; transition: opacity .25s ease; }
     .current-project section:first-of-type > .clarity.is-tapped .explanation-tooltip { opacity: 1; transition-delay: 2s; }
+    .stats .glass.is-tapped,
+    .description > .glass.is-tapped,
+    .description > .project-actions > .glass.is-tapped { --glass-tint: rgba(124, 252, 0, .25); }
     .description .glass.is-tapped .idea span,
     .description .glass.is-tapped .idea svg,
     .stats .glass.is-tapped .idea span::after,
@@ -5714,6 +5793,7 @@
     .current-project > span.is-tapped svg { color: var(--lum-1); scale: 1.25; }
     .current-project section:first-of-type > .clarity.is-tapped .glass svg:nth-child(2),
     .current-project section:first-of-type > .clarity.is-tapped .glass svg:nth-child(3) { transform: rotate(0deg) !important; }
+    .description .project-actions > .glass.github-action.is-tapped { --glass-tint: rgba(0, 128, 128, .5); }
     .description .project-actions > .clarity.is-tapped .explanation-tooltip { opacity: 1; transition-delay: 2s; }
     .description .github-action.is-tapped .idea span,
     .description .github-action.is-tapped .idea svg { color: var(--lum-1); fill: var(--lum-1); }
@@ -5724,14 +5804,17 @@
     .inspect-wrapper section:last-of-type > .glass.is-tapped .trail-wrapper-once { opacity: 1; animation: wrapper-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .inspect-wrapper section:last-of-type > .glass:not(.is-tapped):not(:focus-visible) .trail-wrapper-once { opacity: 0; animation: none; transition: opacity .25s ease; }
     .inspect-controls .clarity.is-tapped .glass.explanation-tooltip { opacity: 1; transition-delay: 2s; }
+    .inspect-wrapper section:last-of-type > a.is-tapped { --glass-tint: rgba(0, 128, 128, .5); }
     .inspect-wrapper section:last-of-type > .glass.is-tapped .idea span,
     .inspect-wrapper section:last-of-type > .glass.is-tapped .idea svg { color: var(--lum-1); -webkit-text-fill-color: var(--lum-1); fill: var(--lum-1); }
     .inspect-wrapper section:last-of-type > div:first-child div:last-child p a.is-tapped { color: var(--lum-1); }
     .workflow section .glass.is-tapped span { color: var(--lum-1); -webkit-text-fill-color: var(--lum-1); fill: var(--lum-1); }
     .nav-arrow.is-tapped svg { color: var(--lum-1); scale: 1.5; }
+    .workflow-content .glass.is-tapped { --glass-tint: rgba(124, 252, 0, .25); }
     #contact .glass.is-tapped svg { color: var(--accent-2); }
     .attach > button:not(:disabled).is-tapped { color: var(--accent-2); }
     .contact-file button.is-tapped { color: var(--accent-2); }
+    #contact .contact-send.is-tapped:not(:disabled) { --glass-tint: rgba(0, 128, 128, .5); }
     #contact .contact-send.is-tapped :is(span, svg) { color: var(--lum-1); -webkit-text-fill-color: var(--lum-1); fill: var(--lum-1); }
     .footer-socials a.is-tapped { color: var(--lum-1); scale: 1.125; }
     .recents-popup .clarity.is-tapped .explanation-tooltip { opacity: 1; transition-delay: .5s; }

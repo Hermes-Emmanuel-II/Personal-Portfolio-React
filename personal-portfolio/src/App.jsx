@@ -86,6 +86,19 @@ document.addEventListener('pointercancel', (e) => {
     if (e.pointerType !== 'mouse') clearTapped() // the browser took the touch for a scroll
 }, { capture: true, passive: true })
 
+// A link that leaves the page (another route, another site, a new tab) lets go of focus once clicked, so coming back
+// doesn't find it still lit. Clicks only: a keyboard user keeps their place
+document.addEventListener('click', (e) => {
+    if (!e.detail) return
+    const link = e.target.closest('a[href]')
+    if (!link) return
+    const leaves = link.target === '_blank' || link.origin !== location.origin || link.pathname !== location.pathname
+    if (leaves) requestAnimationFrame(() => link.blur())
+}, true)
+
+window.addEventListener('pageshow', clearTapped)
+document.addEventListener('visibilitychange', clearTapped)
+
 function useTouchOnly () {
     return useSyncExternalStore(
         (fn) => { touchListeners.add(fn); return () => touchListeners.delete(fn) },
