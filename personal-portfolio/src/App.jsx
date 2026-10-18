@@ -57,7 +57,7 @@ touchQuery.addEventListener('change', (e) => {
 // index.css and media-queries.css (@media (hover: none), :hover swapped for .is-tapped) play the same look: it eases in
 // with the hover's own transitions, holds briefly, and eases out. A tap that turns into a scroll clears it at once, so
 // scrolling past things doesn't light them up. Mouse input is ignored: desktops keep their real hover
-const TAP_HOLD = 800 // ms the look holds after the finger lifts
+const TAP_HOLD = 400 // ms the look holds after the finger lifts
 let tapped = []
 let tapTimer = 0
 

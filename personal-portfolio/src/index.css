@@ -308,6 +308,12 @@
     initial-value: transparent;
 }
 
+@property --glass-sheen {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: transparent;
+}
+
 @property --fade-start {
     syntax: '<length>';
     inherits: false;
@@ -1572,11 +1578,30 @@
                                 }
 
                 /* WORK */
-                                    .stats .glass.recents { --glass-tint: transparent; }
+                                    .stats .glass.recents {
+                                        --glass-tint: transparent;
+                                        --glass-sheen: transparent;
+                                    }
 
-                                    .stats .glass.recents::before { background: none; }
+                                        .stats .glass.recents:focus-visible { --glass-sheen: rgba(236, 236, 236, .375); }
 
-                                    .stats .glass.recents::after { background: linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%); }
+                                        @media (hover: hover) { .stats .glass.recents:hover { --glass-sheen: rgba(236, 236, 236, .375); } }
+
+                                    .stats .glass.recents::before {
+                                        opacity: 0;
+                                        transition: opacity var(--tran-2) .25s;
+                                    }
+
+                                        .stats .glass.recents:focus-visible::before { opacity: 1; }
+
+                                        @media (hover: hover) { .stats .glass.recents:hover::before { opacity: 1; } }
+
+                                    .stats .glass.recents::after {
+                                        transition: --glass-tint var(--tran-2) .25s, --glass-sheen var(--tran-2) .25s;
+                                        background:
+                                            linear-gradient(var(--glass-tint) 0%, var(--glass-tint) 100%),
+                                            linear-gradient(transparent 0%, var(--glass-sheen) 100%);
+                                    }
 
                                                 .description .glass:has(> .trail-wrapper-once) .trail-wrapper-once .trail-once {
                                                     offset-path: rect(0 100% 100% 0 round 0px);
@@ -5757,8 +5782,13 @@
     .description > .project-actions > .glass::after,
     .inspect-wrapper section:last-of-type > a::after,
     #contact .contact-send::after,
-    .workflow-content .glass::after { transition-delay: 0s; }
+    .workflow-content .glass::after,
+    .stats .glass.recents::before {
+        transition-delay: 0s;
+        transition-duration: .25s;
+    }
 }
+
 
 /* TAPS (touch screens): index.css's hover looks, played once on a tap. App.jsx marks what's tapped (it and
    everything round it, as hover would) .is-tapped for a moment; these are the hover rules above, generated with
@@ -5788,6 +5818,8 @@
     .cta a.is-tapped { --glass-tint: rgba(0, 128, 128, .5); }
     .cta a.is-tapped span,
     .cta a.is-tapped svg { color: var(--lum-1); -webkit-text-fill-color: var(--lum-1); fill: var(--lum-1); }
+    .stats .glass.recents.is-tapped { --glass-sheen: rgba(236, 236, 236, .375); }
+    .stats .glass.recents.is-tapped::before { opacity: 1; }
     .description .glass:has(> .trail-wrapper-once).is-tapped .trail-wrapper-once .trail-once { animation: trail-move-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .description .glass:has(> .trail-wrapper-once).is-tapped .trail-wrapper-once { opacity: 1; animation: wrapper-fade 1.25s ease-in-out 1 forwards; animation-delay: .25s; }
     .description .glass:has(> .trail-wrapper-once):not(.is-tapped):not(:focus-within) .trail-wrapper-once { opacity: 0; animation: none; transition: opacity .25s ease; }
