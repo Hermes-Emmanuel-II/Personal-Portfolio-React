@@ -786,10 +786,6 @@
                                     .contact-form { --gear-top: 6.325rem; }
 }
 
-
-/* TAPS (touch screens): media-queries.css's hover looks, played once on a tap. App.jsx marks what's tapped (it and
-   everything round it, as hover would) .is-tapped for a moment; these are the hover rules above, generated with
-   :hover swapped for .is-tapped, for touch screens only (where the hover rules are off). Regenerate if those change */
 @media (hover: none) {
     @media (max-width: 1024px) {
         .hamburger-menu.is-tapped .bar { background-color: var(--accent-2); }
