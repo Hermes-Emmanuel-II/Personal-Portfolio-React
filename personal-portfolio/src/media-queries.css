@@ -16,6 +16,7 @@
                             padding: 1.5rem var(--card-pad);
                             border-radius: 1.5rem;
                             z-index: 11;
+                            zoom: var(--header-zoom);
                         }
 
                         header::before {
@@ -685,7 +686,7 @@
         html {
             --header-top: 1rem;
             --header-x: 1rem;
-            --header-zoom: 1;
+            --header-zoom: calc(.75 / .675);
         }
 
         html { scrollbar-gutter: stable; }
@@ -702,6 +703,26 @@
             }
 }
 
+@media (min-width: 550.1px) and (max-width: 1024px) {
+    /* SHARED / REUSABLE COMPONENTS */
+        :root {
+            --fs-1-0: calc(2rem * .9);
+            --fs-1-1: calc(1.5rem * .9);
+            --fs-1-2: calc(1.25rem * .9);
+            --fs-1-3: calc(1rem * .9);
+            --fs-1-4: calc(.75rem * .9);
+        }
+
+    /* HEADER */
+                        header {
+                            --fs-1-0: 2rem;
+                            --fs-1-1: 1.5rem;
+                            --fs-1-2: 1.25rem;
+                            --fs-1-3: 1rem;
+                            --fs-1-4: .75rem;
+                        }
+}
+
 @media (max-width: 620px) {
     /* HEADER */
                             .status { display: none; }
@@ -714,7 +735,6 @@
     /* HEADER */
                         header {
                             padding: 1.5rem 2.25rem;
-                            zoom: var(--header-zoom);
                         }
 
                         header:has(~ #beyond) { padding-inline: 1.5rem; }
@@ -766,6 +786,10 @@
                                     .contact-form { --gear-top: 6.325rem; }
 }
 
+
+/* TAPS (touch screens): media-queries.css's hover looks, played once on a tap. App.jsx marks what's tapped (it and
+   everything round it, as hover would) .is-tapped for a moment; these are the hover rules above, generated with
+   :hover swapped for .is-tapped, for touch screens only (where the hover rules are off). Regenerate if those change */
 @media (hover: none) {
     @media (max-width: 1024px) {
         .hamburger-menu.is-tapped .bar { background-color: var(--accent-2); }
